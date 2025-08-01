@@ -1,0 +1,12 @@
+{
+    "sections": {
+        "text_cta": {
+            "type": "text_cta"
+        }
+    },
+    "layout": "theme",
+    "wrapper": "main.main-wrapper",
+    "order": [
+        "text_cta"
+    ]
+}

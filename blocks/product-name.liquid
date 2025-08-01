@@ -1,0 +1,27 @@
+<div li-block="Product Name" class="mini-cart_header-slots">
+                    
+                    <div li-object:text="product.title" class="mini-cart_header slot">
+{{ product.title }}
+</div>
+                    
+                    <div li-block="Product Price" class="mini-cart_header slot">
+                    
+                    <div class="product-header_price-wrapper"><div li-js-price="product.selected_or_first_available_variant.compare_at_price" class="old-price" x-text="LiquifyHelper.moneyFormat(product.selected_or_first_available_variant.compare_at_price, true, '{{ shop.money_with_currency_format }}')">$55</div><div li-js-price="product.selected_or_first_available_variant.price" x-text="LiquifyHelper.moneyFormat(product.selected_or_first_available_variant.price, true, '{{ shop.money_with_currency_format }}')">$55</div><template x-if="product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price">
+            <div li-js-if="product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price">
+                </div>
+    </template>
+<div class="product-header_tag-list hide"><template x-if="product.selected_or_first_available_variant.available != true">
+            <div li-js-if="product.selected_or_first_available_variant.available != true" class="product-item_tag">
+        Not in Stock        </div>
+    </template>
+<template x-if="product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price">
+            <div li-js-if="product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price" class="product-item_tag is-red">
+        Sale        </div>
+    </template>
+</div></div>
+                    
+                </div>
+    
+                    
+                </div>
+     {% schema %} {"name":"Product Name","settings":[],"presets":[{"name":"Product Name"}]} {% endschema %}
