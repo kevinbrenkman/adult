@@ -1,16 +1,32 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "featured_products": {
-            "type": "featured_products"
-        },
-        "custom_liquid": {
-            "type": "custom_liquid"
-        }
+  "sections": {
+    "featured_products": {
+      "type": "featured_products",
+      "settings": {
+        "collection_collection": "frontpage",
+        "collection_collection_limit": 6
+      }
     },
-    "layout": "theme",
-    "wrapper": "main.main-wrapper",
-    "order": [
-        "featured_products",
-        "custom_liquid"
-    ]
+    "custom_liquid": {
+      "type": "custom_liquid",
+      "settings": {
+        "custom_liquid": ""
+      }
+    }
+  },
+  "layout": "theme",
+  "wrapper": "main.main-wrapper",
+  "order": [
+    "featured_products",
+    "custom_liquid"
+  ]
 }
