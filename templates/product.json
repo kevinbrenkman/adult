@@ -1,0 +1,45 @@
+{
+    "sections": {
+        "product_hero": {
+            "type": "product_hero",
+            "blocks": {
+                "vendor": {
+                    "type": "vendor",
+                    "name": "Vendor"
+                },
+                "product-name": {
+                    "type": "product-name",
+                    "name": "Product Name"
+                },
+                "availability": {
+                    "type": "availability",
+                    "name": "Availability"
+                },
+                "add-to-cart": {
+                    "type": "add-to-cart",
+                    "name": "Add to Cart"
+                },
+                "description": {
+                    "type": "description",
+                    "name": "Description"
+                }
+            },
+            "block_order": [
+                "vendor",
+                "product-name",
+                "availability",
+                "add-to-cart",
+                "description"
+            ]
+        },
+        "recommended_products": {
+            "type": "recommended_products"
+        }
+    },
+    "layout": "theme",
+    "wrapper": "main.main-wrapper",
+    "order": [
+        "product_hero",
+        "recommended_products"
+    ]
+}

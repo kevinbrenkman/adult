@@ -1,0 +1,16 @@
+{
+    "sections": {
+        "featured_products": {
+            "type": "featured_products"
+        },
+        "custom_liquid": {
+            "type": "custom_liquid"
+        }
+    },
+    "layout": "theme",
+    "wrapper": "main.main-wrapper",
+    "order": [
+        "featured_products",
+        "custom_liquid"
+    ]
+}

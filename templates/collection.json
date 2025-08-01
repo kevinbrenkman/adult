@@ -1,0 +1,12 @@
+{
+    "sections": {
+        "collection_products": {
+            "type": "collection_products"
+        }
+    },
+    "layout": "theme",
+    "wrapper": "main.main-wrapper",
+    "order": [
+        "collection_products"
+    ]
+}

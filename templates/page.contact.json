@@ -1,0 +1,12 @@
+{
+    "sections": {
+        "contact": {
+            "type": "contact"
+        }
+    },
+    "layout": "theme",
+    "wrapper": "main.main-wrapper",
+    "order": [
+        "contact"
+    ]
+}
