@@ -300,6 +300,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+</script><script>document.addEventListener('DOMContentLoaded', () => {
+  const aboutWrapper = document.querySelector('.about_component-wrapper');
+  const aboutBtn = document.getElementById('aboutBtn');
+  const closeBtn = document.getElementById('closeAbout');
+  const modalBg = document.querySelector('.about-modal-bg');
+  if (!aboutWrapper) return;
+  // Open modal
+  aboutBtn?.addEventListener('click', () => {
+    aboutWrapper.classList.add('open');
+  });
+  // Close modal
+  closeBtn?.addEventListener('click', () => {
+    aboutWrapper.classList.remove('open');
+  });
+  // Close when clicking background
+  modalBg?.addEventListener('click', () => {
+    aboutWrapper.classList.remove('open');
+  });
+});
 </script>
 </body>
 </html>
