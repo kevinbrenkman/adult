@@ -17,7 +17,7 @@
         "richtext_body_text": "<h1>However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps…<br/>              </h1>",
         "text_small_title": "This is some text inside of a div block.",
         "image_text_color": "#e10b1d",
-        "image_text_background": "#ffffff",
+        "image_text_background": "#fcfcf7",
         "flex-direction": "row",
         "padding": "on"
       }
@@ -69,7 +69,7 @@
       "settings": {
         "image_image_1": "shopify://shop_images/9a21b5f437a747c479e7d50135b3697dca49dd11_2.jpg",
         "image_image_2": "shopify://shop_images/3fe0e8bb5ed6eb137c5f1865c7e1277556a75564_2.jpg",
-        "background": "#e10b1d",
+        "background": "#fcfcf7",
         "padding": "on"
       }
     },
