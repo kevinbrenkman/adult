@@ -3824,7 +3824,7 @@ figcaption {
   display: flex;
 }
 
-.menu_link:hover {
+.menu_link:hover, .menu_link.w--current {
   text-underline-offset: 2px;
   text-decoration: underline;
 }
@@ -4127,6 +4127,10 @@ figcaption {
 
 .flex-placeholder {
   height: 0;
+}
+
+.link:hover {
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 991px) {
@@ -4732,6 +4736,10 @@ figcaption {
 
   .section_images-inside {
     grid-template-columns: 1fr;
+  }
+
+  .link:hover {
+    text-underline-offset: 2px;
   }
 }
 
