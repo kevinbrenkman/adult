@@ -27,9 +27,8 @@
       "name": "Full Image",
       "settings": {
         "image_image": "shopify://shop_images/4f7ad42c9e578be5115b958f572826c02742feee_2.jpg",
-        "color": "#ffffff",
-        "background": "#000000",
-        "height": "100vh"
+        "height": "100vh",
+        "background": "#000000"
       }
     },
     "image_and_text_XmpKkM": {
@@ -37,14 +36,11 @@
       "name": "Image and text",
       "settings": {
         "image_image": "shopify://shop_images/36d2c7176a78fd710de33741eaf060e056714d37_2.jpg",
-        "richtext_body_text": "<p><br/>                However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps…<br/>              </p>",
+        "richtext_body_text": "<h1>However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps…<br/>              </h1>",
         "text_small_title": "Small Text Title",
-        "image_text_color": "#e10b1d",
         "image_text_background": "#fcfcf7",
         "flex-direction": "row",
-        "padding": "on",
-        "btn-color": "#ffffff",
-        "btn-background": "#000000"
+        "padding": "on"
       }
     },
     "images_with_heading_BAQ6G7": {
@@ -53,7 +49,7 @@
       "settings": {
         "image_image_1": "shopify://shop_images/684e0503f43a25ce246d0c2a2960e98149e29ddc_2.jpg",
         "image_image_2": "shopify://shop_images/1ddd6aab4dc741ec017c3c32c88d9237d0be9d70_2.jpg",
-        "color": "#000000",
+        "color": "#e10b1d",
         "background": "#e10b1d",
         "padding": "on"
       }
