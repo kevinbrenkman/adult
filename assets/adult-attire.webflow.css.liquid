@@ -212,7 +212,7 @@ img {
 }
 
 label {
-  margin-bottom: .25rem;
+  margin-bottom: .1rem;
   font-weight: 400;
 }
 
@@ -712,6 +712,10 @@ figcaption {
 .button.is-secondary.max-width-full.pointer-events-off {
   border-left-style: none;
   border-right-style: none;
+}
+
+.button.is-secondary.max-width-full.pointer-events-off.is-not-in-stock {
+  border-bottom-style: none;
 }
 
 .button.is-outline {
@@ -1612,7 +1616,6 @@ figcaption {
 
 .product-item_image {
   aspect-ratio: 4 / 5;
-  background-color: var(--base-color-neutral--neutral-lightest\<deleted\|variable-46cf9033\>);
   object-fit: cover;
   width: 100%;
   height: 100%;
@@ -1904,9 +1907,11 @@ figcaption {
   position: relative;
 }
 
+.product-header_form-block {
+  margin-bottom: 0;
+}
+
 .product-header_default-state {
-  grid-column-gap: 1.5rem;
-  grid-row-gap: 1.5rem;
   flex-flow: column;
   display: flex;
 }
@@ -2391,7 +2396,6 @@ figcaption {
 }
 
 .product-header_buy-wrappper {
-  grid-column-gap: .5rem;
   grid-row-gap: .5rem;
   display: flex;
 }
@@ -2410,11 +2414,13 @@ figcaption {
 }
 
 .product-header_radio-list {
+  min-height: var(--_adult---default-height);
   grid-column-gap: .4rem;
   grid-row-gap: .4rem;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  padding: .3rem 1rem;
   display: flex;
 }
 
@@ -3911,9 +3917,8 @@ figcaption {
   display: flex;
 }
 
-.modal-btn {
+.modal-button {
   height: var(--_adult---default-height);
-  border-bottom: 1px solid var(--_adult---adult-red);
   cursor: pointer;
   justify-content: center;
   align-items: center;
@@ -3921,9 +3926,19 @@ figcaption {
   position: relative;
 }
 
+.modal-button.is-size {
+  border-top: 1px solid var(--_adult---adult-red);
+}
+
 .modal {
-  opacity: 0;
-  height: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.modal.open {
+  border-top: 1px solid var(--_adult---adult-red);
+  pointer-events: auto;
+  display: block;
 }
 
 .plus {
@@ -3937,6 +3952,15 @@ figcaption {
 
 .modal-inside {
   padding: 1rem;
+}
+
+.minus {
+  justify-content: center;
+  align-items: center;
+  margin-left: .25rem;
+  display: flex;
+  position: absolute;
+  inset: 0% auto 0% 0%;
 }
 
 @media screen and (max-width: 991px) {
