@@ -38,6 +38,7 @@
         "image_image": "shopify://shop_images/36d2c7176a78fd710de33741eaf060e056714d37_2.jpg",
         "richtext_body_text": "<h1>However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps…<br/>              </h1>",
         "text_small_title": "Small Text Title",
+        "image_text_color": "#000000",
         "image_text_background": "#fcfcf7",
         "flex-direction": "row",
         "padding": "on"
@@ -59,8 +60,8 @@
   "order": [
     "featured_products",
     "custom_liquid",
-    "full_image_DJcyKG",
     "image_and_text_XmpKkM",
-    "images_in_columns_zb8JiG"
+    "images_in_columns_zb8JiG",
+    "full_image_DJcyKG"
   ]
 }
