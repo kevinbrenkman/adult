@@ -30,7 +30,7 @@
   --base-color-neutral--neutral-darkest\<deleted\|variable-454b8d8d-8481-8a0b-f57a-1f5034f60cbd\>: #111;
   --base-color-neutral--neutral-lighter\<deleted\|variable-99c2d104-3745-5553-55ef-b86d1ff513a1\>: #ccc;
   --base-color-neutral--neutral-lightest\<deleted\|variable-46cf9033\>: #eee;
-  --_adult---modal-width: calc(100% / 3 - 2rem);
+  --_adult---modal-width: calc(100% / 3 - 3rem);
   --accessible-components-dark-grey\<deleted\|variable-c4d8099c\>: #9b9b9b;
   --text-color--text-error: var(--base-color-system--error-red-dark);
   --base-color-system--success-green-dark: #17660f;
@@ -1466,13 +1466,14 @@ figcaption {
   background-color: var(--_adult---adult-off-white);
   flex-direction: column;
   align-items: stretch;
-  height: calc(100svh - 2rem);
-  margin: 1rem;
+  height: calc(100svh - 3rem);
+  margin: 1.5rem;
   display: flex;
 }
 
 .mini-cart_component.about-modal {
   z-index: 999;
+  height: calc(100svh - 3rem);
   position: fixed;
   inset: 0% 0% 0% auto;
 }
@@ -3792,7 +3793,7 @@ figcaption {
 
 .section_nav {
   z-index: 10000;
-  padding: 1rem;
+  padding: 1.5rem;
   position: fixed;
   inset: 0% 0% auto;
 }
