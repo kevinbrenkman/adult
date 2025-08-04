@@ -774,6 +774,10 @@ figcaption {
   border-right-style: none;
 }
 
+.button.is-continue-shopping {
+  width: 100%;
+}
+
 .li-styleguide_classes {
   grid-column-gap: 1px;
   grid-row-gap: 1px;
@@ -1887,8 +1891,6 @@ figcaption {
 
 .product-header_product-details {
   width: var(--_adult---modal-width);
-  grid-column-gap: 1rem;
-  grid-row-gap: 1rem;
   border: 1px solid var(--_adult---adult-red);
   flex-flow: column;
   display: flex;
@@ -2395,8 +2397,8 @@ figcaption {
 }
 
 .product-header_radio {
-  background-color: var(--base-color-neutral--neutral-lightest\<deleted\|variable-46cf9033\>);
-  padding: .4rem 1rem .3rem;
+  margin-bottom: 0;
+  padding: 0;
   font-weight: 600;
   position: relative;
 }
@@ -2408,15 +2410,18 @@ figcaption {
 }
 
 .product-header_radio-list {
-  grid-column-gap: .5rem;
-  grid-row-gap: .5rem;
+  grid-column-gap: .4rem;
+  grid-row-gap: .4rem;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   display: flex;
 }
 
 .product-header_radio-button {
-  border-width: 0;
-  border-color: var(--base-color-neutral--black);
+  background-color: #0000;
+  border: 0 solid #0000;
+  border-radius: 0;
   width: auto;
   height: auto;
   margin-top: 0;
@@ -2426,8 +2431,9 @@ figcaption {
 }
 
 .product-header_radio-button.w--redirected-checked {
-  border-width: 1px;
-  border-color: var(--base-color-neutral--black);
+  border-style: none none solid;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--_adult---adult-red);
 }
 
 .product-header_shipping-wrapper {
@@ -3661,7 +3667,6 @@ figcaption {
   grid-column-gap: 1.5rem;
   grid-row-gap: 1.5rem;
   flex-flow: column;
-  margin-top: .5rem;
   display: flex;
 }
 
@@ -3904,6 +3909,34 @@ figcaption {
   width: 100%;
   height: 100%;
   display: flex;
+}
+
+.modal-btn {
+  height: var(--_adult---default-height);
+  border-bottom: 1px solid var(--_adult---adult-red);
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.modal {
+  opacity: 0;
+  height: 0;
+}
+
+.plus {
+  justify-content: center;
+  align-items: center;
+  margin-left: .25rem;
+  display: flex;
+  position: absolute;
+  inset: 0% auto 0% 0%;
+}
+
+.modal-inside {
+  padding: 1rem;
 }
 
 @media screen and (max-width: 991px) {
