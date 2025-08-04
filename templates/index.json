@@ -27,7 +27,7 @@
       "name": "Full Image",
       "settings": {
         "image_image": "shopify://shop_images/4f7ad42c9e578be5115b958f572826c02742feee_2.jpg",
-        "background": "#000000",
+        "background": "#e10b1d",
         "padding": "on"
       }
     },
