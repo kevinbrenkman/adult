@@ -42,17 +42,6 @@
         "flex-direction": "row",
         "padding": "on"
       }
-    },
-    "images_with_heading_BAQ6G7": {
-      "type": "images_with_heading",
-      "name": "Images with Heading",
-      "settings": {
-        "image_image_1": "shopify://shop_images/684e0503f43a25ce246d0c2a2960e98149e29ddc_2.jpg",
-        "image_image_2": "shopify://shop_images/1ddd6aab4dc741ec017c3c32c88d9237d0be9d70_2.jpg",
-        "color": "#e10b1d",
-        "background": "#e10b1d",
-        "padding": "on"
-      }
     }
   },
   "layout": "theme",
@@ -61,7 +50,6 @@
     "featured_products",
     "custom_liquid",
     "full_image_DJcyKG",
-    "image_and_text_XmpKkM",
-    "images_with_heading_BAQ6G7"
+    "image_and_text_XmpKkM"
   ]
 }
