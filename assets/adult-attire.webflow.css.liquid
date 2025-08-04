@@ -764,6 +764,7 @@ figcaption {
   color: var(--_adult---adult-red);
   background-color: #0000;
   border-style: none;
+  width: 100%;
 }
 
 .button.is-cart.max-width-full.pointer-events-off {
@@ -3767,6 +3768,11 @@ figcaption {
   display: flex;
 }
 
+.menu_link:hover {
+  text-underline-offset: 2px;
+  text-decoration: underline;
+}
+
 .cart_menu_link_wrapper {
   display: flex;
 }
@@ -3881,6 +3887,14 @@ figcaption {
 .text-field-wrapper {
   width: 100%;
   overflow: clip;
+}
+
+.cart-empty-msg {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  display: flex;
 }
 
 @media screen and (max-width: 991px) {
