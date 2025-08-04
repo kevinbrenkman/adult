@@ -1,11 +1,16 @@
 <div li-block="Add to Cart">
                     
-                    <div class="product-header_form-block w-form">{% form 'product', product, class: 'product-header_default-state' %}
+                    <div class="product-header_form-block w-form"><div><div class="modal-btn"><div class="plus">+</div><div>info</div></div><div class="modal"><div class="modal-inside"><div li-block="Description" class="li-block-description">
+                    
+                    <div class="product-header_description"><div li-object="product.description" class="text-rich-text max-width-large w-richtext">{{ product.description }}</div></div>
+                    
+                </div>
+    </div></div></div>{% form 'product', product, class: 'product-header_default-state' %}
 {% if product.has_only_default_variant != true %}    <div li-if="product.has_only_default_variant != true" class="product-header_option-list">
     <template x-for="(option, optionKey) in product.options" :key="optionKey">
-    <div li-element="product-options-loop" class="product-header_option" data-ProductVariantsLoop="true"><div li-element="product-options-name" x-text="option">Variant</div><div class="product-header_radio-list"><template x-for="(variantName, variantKey) in options_by_name[option].option.values" :key="variantName">
+    <div li-element="product-options-loop" class="product-header_option" data-ProductVariantsLoop="true"><div li-element="product-options-name" x-text="option">Select size</div><div class="product-header_radio-list"><template x-for="(variantName, variantKey) in options_by_name[option].option.values" :key="variantName">
     <label li-element="product-option-loop" class="product-header_radio w-radio"><div class="w-form-formradioinput w-form-formradioinput--inputType-custom product-header_radio-button w-radio-input"></div><input type="radio" li-element="product-option-input" style="opacity:0;position:absolute;z-index:-1" x-on:click="setVariant" :name="option" :data-name="option" :value="variantName" :id="variantName.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')" :checked="selected_or_first_available_variant?.options.includes(variantName)" data-selectorType="radio" :class="firstOptionHasAvailableChildren[variantName] ? '' : 'data-disabled'">
-<span li-element="product-option-name" class="text-size-regular text-weight-semibold w-form-label" for="radio-6" x-text="variantName" :for="variantName">XS</span></label></template>
+<span li-element="product-option-name" class="w-form-label" for="radio-6" x-text="variantName" :for="variantName">XS</span></label></template>
 </div></div></template>
     </div>
 {% endif %}<div class="product-header_add-to-cart-wrapper"><input class="form_input hide w-input" maxlength="256" name="properties[Note]" data-name="Field" placeholder="Note" type="text" id="field">
