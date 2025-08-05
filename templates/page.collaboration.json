@@ -22,6 +22,19 @@
         "padding": "on"
       }
     },
+    "contact_WAAzHf": {
+      "type": "contact",
+      "name": "Contact",
+      "settings": {
+        "image_image": "shopify://shop_images/3ad285bfe36c90479f7f9ee11714eb7afdcb4fc0_2.jpg",
+        "text_first_name": "First Name",
+        "text_last_name": "Last Name",
+        "text_email": "Email",
+        "text_message": "Message",
+        "richtext_i_accept_the_terms": "<p>I accept the Terms</p>",
+        "text_small_title": "contact form"
+      }
+    },
     "full_image_pGRjUj": {
       "type": "full_image",
       "name": "Full Image",
@@ -93,17 +106,6 @@
         "image_image": "shopify://shop_images/89a545e16983ab026f2a66c616e732be4b27715e_2.jpg",
         "background": "{{ shop.brand.colors.primary[0].background }}",
         "padding": "on"
-      }
-    },
-    "contact_WAAzHf": {
-      "type": "contact",
-      "name": "Contact",
-      "settings": {
-        "text_first_name": "First Name",
-        "text_last_name": "Last Name",
-        "text_email": "Email",
-        "text_message": "Message",
-        "richtext_i_accept_the_terms": "<p>I accept the Terms</p>"
       }
     }
   },
