@@ -13,6 +13,7 @@
   "sections": {
     "footer": {
       "type": "footer",
+      "name": "Footer",
       "settings": {
         "text_heading": "Subscribe to the inbox affair.",
         "richtext_checkbox_text": "<p>Get the hottest heels and freshest updates, just for you.<br/>By subscribing you agree to the <a href=\"/policies/privacy-policy\" title=\"Privacy Policy\">Privacy Policy</a>.<br/>                  </p>",
