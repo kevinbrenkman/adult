@@ -28,9 +28,6 @@
       "settings": {
         "image_image": "shopify://shop_images/3ad285bfe36c90479f7f9ee11714eb7afdcb4fc0_2.jpg",
         "text_first_name": "First Name",
-        "text_last_name": "Last Name",
-        "text_email": "Email",
-        "text_message": "Message",
         "richtext_i_accept_the_terms": "<p>I accept the Terms</p>",
         "text_small_title": "contact form",
         "image_text_color": "{{ shop.brand.colors.primary[0].foreground }}",
