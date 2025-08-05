@@ -94,12 +94,24 @@
         "background": "{{ shop.brand.colors.primary[0].background }}",
         "padding": "on"
       }
+    },
+    "contact_WAAzHf": {
+      "type": "contact",
+      "name": "Contact",
+      "settings": {
+        "text_first_name": "First Name",
+        "text_last_name": "Last Name",
+        "text_email": "Email",
+        "text_message": "Message",
+        "richtext_i_accept_the_terms": "<p>I accept the Terms</p>"
+      }
     }
   },
   "layout": "theme",
   "wrapper": "main.main-wrapper",
   "order": [
     "image_and_text_Wb33WV",
+    "contact_WAAzHf",
     "full_image_pGRjUj",
     "images_in_columns_6mkzLy",
     "image_and_text_B6TdUe",
