@@ -1,1 +1,26 @@
-{"type":"footer","name":"Footer Group","sections":{"footer":{"type":"footer","settings":{}}},"order":["footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer Group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "text_heading": "Subscribe to the inbox affair.",
+        "richtext_checkbox_text": "<p>Get the hottest heels and freshest updates, just for you.<br/>By subscribing you agree to the <a href=\"/policies/privacy-policy\" title=\"Privacy Policy\">Privacy Policy</a>.<br/>                  </p>",
+        "menu": "footer"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}
