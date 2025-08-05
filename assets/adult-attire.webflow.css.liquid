@@ -306,6 +306,10 @@ figcaption {
   display: none;
 }
 
+.form_checkbox.show {
+  display: block;
+}
+
 .form_checkbox-icon {
   flex: none;
   margin: .3rem .5rem 0 0;
@@ -331,6 +335,7 @@ figcaption {
 
 .form_checkbox-label.text-size-tiny {
   text-transform: none;
+  display: none;
 }
 
 .icon-1x1-small {
@@ -625,6 +630,10 @@ figcaption {
 
 .form_input.is-select-input {
   color: var(--text-color--text-secondary);
+}
+
+.form_input.is-newsletter {
+  border-style: solid;
 }
 
 .heading-style-h6 {
@@ -4058,7 +4067,7 @@ figcaption {
   grid-row-gap: 0px;
   flex-flow: row;
   grid-template-rows: auto;
-  height: calc(100dvh - 4rem);
+  min-height: 100svh;
   display: flex;
 }
 
@@ -4121,6 +4130,7 @@ figcaption {
   grid-template-rows: auto;
   grid-template-columns: 1fr 1fr;
   grid-auto-columns: 1fr;
+  min-height: 100svh;
   display: grid;
 }
 
