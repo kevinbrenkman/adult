@@ -1,16 +1,90 @@
-<div class="footer_main-wrapper"><div id="w-node-_5eccf730-c887-5204-0e0c-693f99a7329a-99a7328f" class="footer_newsletter"><h2 class="academia">
+<div class="footer_main-wrapper">
+          <div id="w-node-_5eccf730-c887-5204-0e0c-693f99a7329a-99a7328f" class="footer_newsletter">
+            <h2 class="academia">
 {{ section.settings.text_heading }}
 </h2>
-<div class="footer_form-block w-form">{% form 'customer', return_to: '/', class: 'footer_form' %}
+            <div class="footer_form-block w-form">
+              {% form 'customer', return_to: '/', class: 'footer_form' %}
 <label id="w-node-_5eccf730-c887-5204-0e0c-693f99a732a6-99a7328f" class="w-checkbox form_checkbox show" name="contact[accepts_marketing]"><input type="checkbox" name="Accepts-Marketing-2" id="Accepts-Marketing-2" data-name="Accepts Marketing 2" class="w-checkbox-input form_checkbox-icon" checked="">
-<div class="text-rich-text w-richtext"> {{ section.settings.richtext_checkbox_text }} </div>
-<span class="form_checkbox-label text-size-tiny w-form-label" for="Accepts-Marketing-2">Checkbox text</span></label><div class="form_field-wrapper"><label for="email-2" class="form_hidden-label">Your E-Mail-Address</label><div class="div-block"><div class="text-field-wrapper"><input class="form_input is-newsletter w-input" maxlength="256" name="contact[email]" data-name="Email 2" placeholder="{{ section.settings.placeholder_text }}" type="email" id="email-2" required="">
-</div><input type="submit" data-wait="" id="w-node-_5eccf730-c887-5204-0e0c-693f99a732ae-99a7328f" class="button wide w-button" value="Subscribe">
-</div></div><div li-object="form.errors | default_errors" class="error-msg">{{ form.errors | default_errors }}</div><div id="w-node-_5eccf730-c887-5204-0e0c-693f99a732a5-99a7328f" class="hide w-embed"><input type="hidden" name="contact[accepts_marketing]" value="false">
-</div>{% endform %}
-<div class="hide w-form-done"><div>Thank you! Your submission has been received!</div></div><div class="hide w-form-fail"><div>Oops! Something went wrong while submitting the form.</div></div></div></div></div><div class="footer_logo"><div class="logo-embed w-embed"><svg width="100%" height="100%" viewbox="0 0 1656 507" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M441.604 470.906L263.534 9.02832H242.275L62.7384 469.681L0.5625 486.711V501.986H200.873V487.186L86.7531 470.939L147.848 323.043L313.603 322.259L372.019 469.482L262.982 487.086V501.986H502.589V486.744L442.023 471.977L441.604 470.895V470.906ZM153.141 301.035L231.503 94.5874L307.682 301.035H153.13H153.141Z" fill="currentColor"></path><path d="M1173.57 145.402L1027.86 170.975V184.849L1108.47 184.827V387.544C1108.47 417.454 1096.36 439.837 1072.48 454.075C1049.96 467.507 1030.02 468.953 1020.13 468.953C993.712 468.953 974.879 458.733 964.129 438.557C957.172 425.489 953.787 408.801 953.787 387.533V145.557L834.275 170.732V184.727L888.005 184.816V397.952C888.005 447.983 917.754 506.402 1001.57 506.402C1048.02 506.402 1081.63 486.943 1100.73 454.362L1108.99 440.268L1108.9 472.794L1137 501.976H1236.44V486.69L1173.58 469.35V145.369L1173.57 145.402Z" fill="currentColor"></path><path d="M796.908 0.0110141L661.122 25.5838V39.4574L731.137 39.4353V195.499L723.088 183.789C707.288 160.776 675.037 147.035 636.809 147.035C592.209 147.035 551.953 164.739 523.473 196.89C495.081 228.93 480.681 275.495 480.681 335.294C480.681 442.442 530.331 506.423 613.489 506.423C637.041 506.423 656.722 502.925 673.669 495.717C693.638 487.23 710.088 473.599 723.959 454.064L731.997 442.74L731.931 472.816L760.025 501.997H859.767V486.711L796.908 469.372V0V0.0110141ZM731.137 387.554C731.137 416.483 721.037 439.881 701.929 455.2C686.305 467.727 665.069 474.626 642.146 474.626C609.818 474.626 585.097 460.587 568.668 432.884C553.078 406.593 545.823 373.262 545.823 327.966C545.823 279.734 554.93 241.965 573.652 212.507C592.176 183.369 619.091 167.962 651.463 167.962C706.505 167.962 731.137 207.342 731.137 246.38V387.554Z" fill="currentColor"></path><path d="M1358.87 0.0107422L1223.08 25.5836V39.4681L1293.1 39.435V469.383L1260.25 486.711V501.997H1469.84V487.13L1358.87 469.791V0.0107422Z" fill="currentColor"></path><path d="M1594.54 469.759C1567.9 469.759 1547.25 457.762 1547.25 413.095V335.482V184.838L1655.81 184.86V170.986L1547.25 153.647V63H1530.49L1479.94 153.769L1426.33 170.677V184.849L1481.48 184.827V335.471V417.752C1481.48 479.085 1499.3 506.424 1552.59 506.424C1584.55 506.424 1619.86 495.089 1655.83 473.754V450.422C1634.51 462.419 1613.2 469.759 1594.55 469.759H1594.54Z" fill="currentColor"></path></svg></div></div><div class="footer_sub-footer"><div li-for:inside="link in linklists['footer'].links" id="w-node-_5eccf730-c887-5204-0e0c-693f99a732d3-99a7328f" class="footer_legal-links">
+                  <div class="text-rich-text w-richtext"> {{ section.settings.richtext_checkbox_text }} </div><span class="form_checkbox-label text-size-tiny w-form-label" for="Accepts-Marketing-2">Checkbox text</span>
+                </label>
+                <div class="form_field-wrapper"><label for="email-2" class="form_hidden-label">Your E-Mail-Address</label>
+                  <div class="div-block">
+                    <div class="text-field-wrapper"><input class="form_input is-newsletter w-input" maxlength="256" name="contact[email]" data-name="Email 2" placeholder="{{ section.settings.placeholder_text }}" type="email" id="email-2" required=""></div><input type="submit" data-wait="" id="w-node-_5eccf730-c887-5204-0e0c-693f99a732ae-99a7328f" class="button wide w-button" value="Subscribe">
+                  </div>
+                </div>
+                <div li-object="form.errors | default_errors" class="error-msg">{{ form.errors | default_errors }}</div>
+                <div id="w-node-_5eccf730-c887-5204-0e0c-693f99a732a5-99a7328f" class="hide w-embed"><input type="hidden" name="contact[accepts_marketing]" value="false"></div>
+              {% endform %}
+              <div class="hide w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="hide w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer_logo">
+          <div class="logo-embed w-embed"><svg width="100%" height="100%" viewbox="0 0 1656 507" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M441.604 470.906L263.534 9.02832H242.275L62.7384 469.681L0.5625 486.711V501.986H200.873V487.186L86.7531 470.939L147.848 323.043L313.603 322.259L372.019 469.482L262.982 487.086V501.986H502.589V486.744L442.023 471.977L441.604 470.895V470.906ZM153.141 301.035L231.503 94.5874L307.682 301.035H153.13H153.141Z" fill="currentColor"></path>
+              <path d="M1173.57 145.402L1027.86 170.975V184.849L1108.47 184.827V387.544C1108.47 417.454 1096.36 439.837 1072.48 454.075C1049.96 467.507 1030.02 468.953 1020.13 468.953C993.712 468.953 974.879 458.733 964.129 438.557C957.172 425.489 953.787 408.801 953.787 387.533V145.557L834.275 170.732V184.727L888.005 184.816V397.952C888.005 447.983 917.754 506.402 1001.57 506.402C1048.02 506.402 1081.63 486.943 1100.73 454.362L1108.99 440.268L1108.9 472.794L1137 501.976H1236.44V486.69L1173.58 469.35V145.369L1173.57 145.402Z" fill="currentColor"></path>
+              <path d="M796.908 0.0110141L661.122 25.5838V39.4574L731.137 39.4353V195.499L723.088 183.789C707.288 160.776 675.037 147.035 636.809 147.035C592.209 147.035 551.953 164.739 523.473 196.89C495.081 228.93 480.681 275.495 480.681 335.294C480.681 442.442 530.331 506.423 613.489 506.423C637.041 506.423 656.722 502.925 673.669 495.717C693.638 487.23 710.088 473.599 723.959 454.064L731.997 442.74L731.931 472.816L760.025 501.997H859.767V486.711L796.908 469.372V0V0.0110141ZM731.137 387.554C731.137 416.483 721.037 439.881 701.929 455.2C686.305 467.727 665.069 474.626 642.146 474.626C609.818 474.626 585.097 460.587 568.668 432.884C553.078 406.593 545.823 373.262 545.823 327.966C545.823 279.734 554.93 241.965 573.652 212.507C592.176 183.369 619.091 167.962 651.463 167.962C706.505 167.962 731.137 207.342 731.137 246.38V387.554Z" fill="currentColor"></path>
+              <path d="M1358.87 0.0107422L1223.08 25.5836V39.4681L1293.1 39.435V469.383L1260.25 486.711V501.997H1469.84V487.13L1358.87 469.791V0.0107422Z" fill="currentColor"></path>
+              <path d="M1594.54 469.759C1567.9 469.759 1547.25 457.762 1547.25 413.095V335.482V184.838L1655.81 184.86V170.986L1547.25 153.647V63H1530.49L1479.94 153.769L1426.33 170.677V184.849L1481.48 184.827V335.471V417.752C1481.48 479.085 1499.3 506.424 1552.59 506.424C1584.55 506.424 1619.86 495.089 1655.83 473.754V450.422C1634.51 462.419 1613.2 469.759 1594.55 469.759H1594.54Z" fill="currentColor"></path>
+            </svg></div>
+        </div>
+        <div class="footer_sub-footer">
+          <div li-for:inside="link in linklists['footer'].links" id="w-node-_5eccf730-c887-5204-0e0c-693f99a732d3-99a7328f" class="footer_legal-links">
         {% for link in linklists['footer'].links %}                            
+            
                             <a li-object="link.title" li-object:href="link.url" href="{{ link.url }}" class="link">{{ link.title }}</a>
                             
+          
                     {% endfor %}    </div>
-<div class="footer_legal-links"><p><span class="is--orange">©</span>Adult attire, <span data-current-year="">20??</span></p><a href="#" target="_blank" class="link">Design by Jordy Philips</a><a href="https://www.kevinbrenkman.com/" target="_blank" class="link">website by kevin brenkman</a></div></div> {% schema %} {"tag":"footer","name":"footer","class":"section_footer","settings":[{"id":"text_heading","type":"text","label":"Heading","default":"Subscribe to the inbox affair."},{"id":"richtext_checkbox_text","type":"richtext","label":"Checkbox Text","default":"<p>\n                    Get the hottest heels and freshest updates, just for you.<br\/>By subscribing you agree to the Privacy Policy.\n                  <\/p>"},{"type":"header","content":"Navigation"},{"type":"link_list","id":"menu","label":"Footer Menu","default":"footer"}],"presets":[{"name":"footer","category":"Liquify","blocks":[]}],"enabled_on":{"groups":["*"]}} {% endschema %}
+          <div class="footer_legal-links">
+            <p><span class="is--orange">©</span> Adult attire, <span data-current-year="">20??</span> </p>
+            <a href="#" target="_blank" class="link">Design by Jordy Philips</a>
+            <a href="https://www.kevinbrenkman.com/" target="_blank" class="link">website by kevin brenkman</a>
+          </div>
+        </div> {% schema %} {
+    "tag": "footer",
+    "name": "footer",
+    "class": "section_footer",
+    "settings": [
+        {
+            "id": "text_heading",
+            "type": "text",
+            "label": "Heading",
+            "default": "Subscribe to the inbox affair."
+        },
+        {
+            "id": "richtext_checkbox_text",
+            "type": "richtext",
+            "label": "Checkbox Text",
+            "default": "<p>\n                    Get the hottest heels and freshest updates, just for you.<br\/>By subscribing you agree to the Privacy Policy.\n                  <\/p>"
+        },
+        {
+            "type": "header",
+            "content": "Navigation"
+        },
+        {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Footer Menu",
+            "default": "footer"
+        }
+    ],
+    "presets": [
+        {
+            "name": "footer",
+            "category": "Liquify",
+            "blocks": []
+        }
+    ],
+    "enabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+} {% endschema %}

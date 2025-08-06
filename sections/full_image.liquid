@@ -1,2 +1,53 @@
-<div class="header_background-image-wrapper wh-padding-{{ section.settings.padding }}" style="background-color: {{ section.settings.background }}"><img loading="eager" alt="{{ section.settings.image_image.alt }}" src="{{ section.settings.image_image | img_url: 'master' }}" class="header_background-image">
-</div> {% schema %} {"tag":"header","name":"Full Image","class":"section_header-home","settings":[{"id":"image_image","type":"image_picker","label":"Image"},{"type":"header","content":"Color"},{"type":"color","id":"background","label":"Background Color","default":"#ffffff"},{"type":"header","content":"Padding"},{"type":"select","id":"padding","label":"Image padding","options":[{"value":"on","label":"On"},{"value":"off","label":"Off"}],"default":"on"}],"presets":[{"name":"Full Image","category":"Liquify","blocks":[]}]} {% endschema %}
+<div class="header_background-image-wrapper wh-padding-{{ section.settings.padding }}" style="background-color: {{ section.settings.background }}">{% if section.settings.image_image %}
+{{ section.settings.image_image | image_url: width: 1000 | image_tag: loading: 'eager', class: 'header_background-image' }}
+{% else %}
+<img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="header_background-image">
+{% endif %}</div> {% schema %} {
+    "tag": "header",
+    "name": "Full Image",
+    "class": "section_header-home",
+    "settings": [
+        {
+            "id": "image_image",
+            "type": "image_picker",
+            "label": "Image"
+        },
+        {
+            "type": "header",
+            "content": "Color"
+        },
+        {
+            "type": "color",
+            "id": "background",
+            "label": "Background Color",
+            "default": "#ffffff"
+        },
+        {
+            "type": "header",
+            "content": "Padding"
+        },
+        {
+            "type": "select",
+            "id": "padding",
+            "label": "Image padding",
+            "options": [
+                {
+                    "value": "on",
+                    "label": "On"
+                },
+                {
+                    "value": "off",
+                    "label": "Off"
+                }
+            ],
+            "default": "on"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Full Image",
+            "category": "Liquify",
+            "blocks": []
+        }
+    ]
+} {% endschema %}

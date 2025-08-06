@@ -1,3 +1,65 @@
-<div class="section_images-inside wh-padding-{{ section.settings.padding }}" style="background-color: {{ section.settings.background }}"><div class="image-block"><img loading="eager" alt="{{ section.settings.image_image_1.alt }}" src="{{ section.settings.image_image_1 | img_url: 'master' }}" class="image">
-</div><div class="image-block"><img loading="eager" alt="{{ section.settings.image_image_2.alt }}" src="{{ section.settings.image_image_2 | img_url: 'master' }}" class="image">
-</div></div> {% schema %} {"tag":"div","name":"Images in columns","class":"section_images-w-heading","settings":[{"id":"image_image_1","type":"image_picker","label":"Image 1"},{"id":"image_image_2","type":"image_picker","label":"Image 2"},{"type":"header","content":"Color"},{"type":"color","id":"background","label":"Background Color","default":"#ffffff"},{"type":"header","content":"Padding"},{"type":"select","id":"padding","label":"Image padding","options":[{"value":"on","label":"On"},{"value":"off","label":"Off"}],"default":"on"}],"presets":[{"name":"Images in columns","category":"Liquify","blocks":[]}]} {% endschema %}
+<div class="section_images-inside wh-padding-{{ section.settings.padding }}" style="background-color: {{ section.settings.background }}">
+          <div class="image-block">{% if section.settings.image_image_1 %}
+{{ section.settings.image_image_1 | image_url: width: 1000 | image_tag: loading: 'eager', class: 'image' }}
+{% else %}
+<img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="image">
+{% endif %}</div>
+          <div class="image-block">{% if section.settings.image_image_2 %}
+{{ section.settings.image_image_2 | image_url: width: 1000 | image_tag: loading: 'eager', class: 'image' }}
+{% else %}
+<img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="image">
+{% endif %}</div>
+        </div> {% schema %} {
+    "tag": "div",
+    "name": "Images in columns",
+    "class": "section_images-w-heading",
+    "settings": [
+        {
+            "id": "image_image_1",
+            "type": "image_picker",
+            "label": "Image 1"
+        },
+        {
+            "id": "image_image_2",
+            "type": "image_picker",
+            "label": "Image 2"
+        },
+        {
+            "type": "header",
+            "content": "Color"
+        },
+        {
+            "type": "color",
+            "id": "background",
+            "label": "Background Color",
+            "default": "#ffffff"
+        },
+        {
+            "type": "header",
+            "content": "Padding"
+        },
+        {
+            "type": "select",
+            "id": "padding",
+            "label": "Image padding",
+            "options": [
+                {
+                    "value": "on",
+                    "label": "On"
+                },
+                {
+                    "value": "off",
+                    "label": "Off"
+                }
+            ],
+            "default": "on"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Images in columns",
+            "category": "Liquify",
+            "blocks": []
+        }
+    ]
+} {% endschema %}
