@@ -1,12 +1,25 @@
-<div class="filter_product-list-wrapper w-dyn-list"><div role="list" class="filter_product-list w-dyn-items">{% for product in collection.products %}    <div li-for="product in collection.products" role="listitem" class="filter_product-list-item w-dyn-item">
+<div class="filter_product-list-wrapper w-dyn-list">
+          <div role="list" class="filter_product-list w-dyn-items">
+            {% for product in collection.products %}    <div li-for="product in collection.products" role="listitem" class="filter_product-list-item w-dyn-item">
                                     
+              
                             {% render 'product_item', product: product %}
-
                             
+            
                         </div>
-{% endfor %}</div>{% if collection.products == blank %}    <div li-if="collection.products == blank" class="filter_empty w-dyn-empty">
-    <div class="heading-style-h6">No results found.</div><div class="spacer-xxsmall"></div><div>There are no results with this criteria. Try changing your search.</div>    </div>
-{% endif %}</div><div class="hide w-embed w-script"><script>//sortierung
+{% endfor %}
+          </div>
+          {% if collection.products == blank %}    <div li-if="collection.products == blank" class="filter_empty w-dyn-empty">
+    
+            <div class="heading-style-h6">No results found.</div>
+            <div class="spacer-xxsmall"></div>
+            <div>There are no results with this criteria. Try changing your search.</div>
+              </div>
+{% endif %}
+        </div>
+        <div class="hide w-embed w-script">
+          <script>
+//sortierung
   Shopify.queryParams = {};
   // Preserve existing query parameters
   if (location.search.length) {
@@ -24,4 +37,21 @@
     Shopify.queryParams.sort_by = value;
     location.search = new URLSearchParams(Shopify.queryParams).toString();
   });
-</script></div> {% schema %} {"tag":"section","name":"Collection Products","class":"section_filter","presets":[{"name":"Collection Products","category":"Liquify","blocks":[]}],"enabled_on":{"templates":["collection"]}} {% endschema %}
+</script>
+        </div> {% schema %} {
+    "tag": "section",
+    "name": "Collection Products",
+    "class": "section_filter",
+    "presets": [
+        {
+            "name": "Collection Products",
+            "category": "Liquify",
+            "blocks": []
+        }
+    ],
+    "enabled_on": {
+        "templates": [
+            "collection"
+        ]
+    }
+} {% endschema %}
