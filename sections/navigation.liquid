@@ -420,6 +420,7 @@
                   </div>
                   <nav li-element="mini-cart-container" class="nav_mini-cart-holder w-dropdown-list" :class="open || 'mini-cart-closed'">
                     <div li-element="dropdown-toggle" class="nav_mini-cart-close" data-dropdowntoggle="" @click="LiquifyHelper.triggerClick($event.target.closest('.w-dropdown').querySelector('.w-dropdown-toggle.w--open'))"></div>
+                    <div li-element="dropdown-toggle" class="nav_mini-cart-close fill" data-dropdowntoggle="" @click="LiquifyHelper.triggerClick($event.target.closest('.w-dropdown').querySelector('.w-dropdown-toggle.w--open'))"></div>
                     <div class="mini-cart_component">
                       <div li-element="mini-cart-full" class="mini-cart_full" :style="total.items < 1 && { display: 'none' }">
                         <div class="mini-cart_header-slots">
@@ -442,7 +443,7 @@
                                 <div class="mini-cart_header-slots">
                                   <div class="mini-cart_header slot _50">
                                     <div>Size</div>
-                                    <div li-js="product.selected_variant.option1">xx</div>
+                                    <div li-js-object="product.variant_title" x-text="product.variant_title">xx</div>
                                   </div>
                                   <div class="mini-cart_line-item_price mini-cart_header">
                                     <template x-if="product.price < product.original_price">

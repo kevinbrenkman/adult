@@ -1,4 +1,5 @@
-<div data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4&intent=related">
+{% if recommendations.products.size > 0 %}    <div li-if="recommendations.products.size > 0" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4&intent=related">
+    
           <div class="headline-wrapper">
             <div>
 {{ section.settings.text_heading }}
@@ -16,7 +17,8 @@
 {% endfor %}
             </ul>
           </div>
-        </div>
+            </div>
+{% endif %}
         <div class="hide w-embed w-script">
           <script>
   document.addEventListener('DOMContentLoaded', function() {
