@@ -17,7 +17,7 @@
                         </div>
 {% endfor %}
         </div>
-        <div class="product-header_component">
+        <div class="product-header_component sticky">
           <script src="{{ 'li_custom.js' | asset_url }}" type="text/javascript"></script>
 <div li-element="product-variant-container" class="product-header_layout" x-data="handleVariant({{ product | json | escape }}, {{ product.options_by_name | json | escape }}, {{ product.selected_or_first_available_variant | json | escape }})" x-init="$nextTick(() => { activateVariants() })" @setbundleitem.window="updateBundleItem($event.detail.product, $event.detail.quantity)">
             <div li-content-for-theme-blocks="" id="w-node-_4b0e9b61-6f53-1185-9fdd-143753136879-5313685d" class="product-header_product-details">
@@ -25,6 +25,7 @@
 </div>
           </div>
         </div>
+        <div class="viewport-trigger"></div>
         <div class="hide w-embed w-script">
           <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
           <script>
@@ -55,8 +56,7 @@
     });
   }); 
 </script>
-        </div>
-        <div class="viewport-trigger"></div> {% schema %} {
+        </div> {% schema %} {
     "tag": "section",
     "name": "Product Hero",
     "class": "section_product-header",
