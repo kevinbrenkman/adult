@@ -364,14 +364,16 @@ document.addEventListener('DOMContentLoaded', () => {
  document.addEventListener("DOMContentLoaded", function () {
   const trigger = document.querySelector(".viewport-trigger");
   const stickyTarget = document.querySelector(".product-header_component");
-  if (!trigger || !stickyTarget) return;
+  const mediaList = document.querySelector(".product-media-list");
+  if (!trigger || !stickyTarget || !mediaList) return;
   const observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
         stickyTarget.classList.add("sticky");
+        mediaList.classList.add("remove-margin");
       } else if (entry.boundingClientRect.top > 0) {
-        // We scrolled back up above the trigger
         stickyTarget.classList.remove("sticky");
+        mediaList.classList.remove("remove-margin");
       }
     },
     {
