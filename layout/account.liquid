@@ -383,5 +383,17 @@ document.addEventListener('DOMContentLoaded', () => {
   observer.observe(trigger);
 });
 </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.querySelector("#openLogin");
+    const target = document.querySelector(".section_under-construction");
+    if (trigger && target) {
+      trigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        target.classList.add("open");
+      });
+    }
+  });
+</script>
 </body>
 </html>
