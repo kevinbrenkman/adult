@@ -10,6 +10,17 @@
 {
   "type": "header",
   "name": "Header Group",
-  "sections": {},
-  "order": []
+  "sections": {
+    "navigation": {
+      "type": "navigation",
+      "settings": {
+        "menu": "main-menu",
+        "text_about": "About",
+        "richtext_about_rich_text": "<h1>THE BRAND</h1><p>Adult Attire is light-hearted and tongue-in-cheek. By designing high-heeled shoes for women and men alike, we are not trying to provide heavy political statements. </p><p>We want to suggest that the decision is up to the person that takes it, and that there is a lot of fun to be had with the way you present yourself. We also pay particular attention to details and manufacturing, as we want to propose products that bring together timeless craftsmanship and bold contemporary aesthetics. </p><p>Adult shoes are crafted using high-quality genuine leather. </p><p>However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps… Coming from a fashion design background, the first part of our design process consists of trying out a wide range of materials, and playing with textures and surface treatments.</p><h1>THE DESIGNER</h1><p>Adult Attire is light-hearted and tongue-in-cheek. By designing high-heeled shoes for women and men alike, we are not trying to provide heavy political statements. </p><p>We want to suggest that the decision is up to the person that takes it, and that there is a lot of fun to be had with the way you present yourself. We also pay particular attention to details and manufacturing, as we want to propose products that bring together timeless craftsmanship and bold contemporary aesthetics. </p><p>Adult shoes are crafted using high-quality genuine leather. </p><p>However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps… Coming from a fashion design background, the first part of our design process consists of trying out a wide range of materials, and playing with textures and surface treatments.</p>"
+      }
+    }
+  },
+  "order": [
+    "navigation"
+  ]
 }
