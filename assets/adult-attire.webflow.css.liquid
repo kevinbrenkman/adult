@@ -612,6 +612,7 @@ figcaption {
   background-color: var(--_adult---adult-off-white);
   color: var(--_adult---adult-red);
   text-transform: uppercase;
+  border-radius: 0;
   width: 100%;
   margin-bottom: 0;
   padding: .3rem .3rem .2rem;
@@ -3933,8 +3934,14 @@ figcaption {
   display: flex;
 }
 
-.menu-spacer.right {
+.menu-spacer.right, .menu-spacer.right-cs {
   justify-content: flex-end;
+  align-items: flex-start;
+  display: flex;
+}
+
+.menu-spacer.center-cs {
+  justify-content: center;
   align-items: flex-start;
   display: flex;
 }
@@ -4363,8 +4370,12 @@ figcaption {
   }
 
   .login_form {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-top: var(--_adult---default-height);
+    padding-right: var(--_adult---default-height);
+    padding-bottom: var(--_adult---default-height);
+    padding-left: var(--_adult---default-height);
+    min-width: 100%;
+    max-width: none;
   }
 
   .nav_component {
@@ -4559,6 +4570,10 @@ figcaption {
   .footer_icon-grid {
     grid-row-gap: 2em;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .footer_logo.coming-soon-page {
+    width: 100%;
   }
 
   .product-header_radio {
@@ -4845,6 +4860,23 @@ figcaption {
     height: 3.6rem;
   }
 
+  .section_nav.cs {
+    inset: auto 0% 0%;
+  }
+
+  .menu-spacer.right-cs {
+    margin: var(--_adult---default-height);
+    justify-content: center;
+    align-items: flex-start;
+    position: fixed;
+    inset: 0% 0% auto;
+  }
+
+  .menu-spacer.center-cs {
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
   .product_gallery-image {
     max-width: 100vw;
   }
@@ -4870,6 +4902,16 @@ figcaption {
 
   .link:hover {
     text-underline-offset: 2px;
+  }
+
+  .cs-body {
+    flex-flow: column-reverse;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .button-float {
+    right: 6rem;
   }
 }
 
@@ -5053,8 +5095,6 @@ figcaption {
   .login_form {
     width: 100%;
     min-width: auto;
-    padding-left: 2.5em;
-    padding-right: 2.5em;
   }
 
   .login_image {
@@ -5474,14 +5514,8 @@ figcaption {
     align-items: flex-start;
   }
 
-  .login_tabs {
+  .login_tabs, .login_form {
     border-style: none;
-  }
-
-  .login_form {
-    border-style: none;
-    margin-bottom: 1em;
-    padding: 0;
   }
 
   .login_image {
