@@ -735,8 +735,12 @@ figcaption {
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
-  padding: .25rem .3rem .2rem;
+  justify-content: center;
+  align-items: center;
+  padding-left: .3rem;
+  padding-right: .3rem;
   font-weight: 400;
+  display: flex;
 }
 
 .button:hover {
@@ -838,6 +842,8 @@ figcaption {
   border-color: var(--_adult---adult-off-white);
   width: 100%;
   margin-top: .5rem;
+  padding-top: .2rem;
+  padding-bottom: .2rem;
 }
 
 .li-styleguide_classes {
@@ -1435,6 +1441,11 @@ figcaption {
   overflow: hidden;
 }
 
+.login_tabs.is-password {
+  z-index: 100000;
+  position: relative;
+}
+
 .login_form {
   max-width: var(--_adult---modal-width);
   min-width: var(--_adult---modal-width);
@@ -1561,13 +1572,12 @@ figcaption {
 }
 
 .mini-cart_footer {
-  border-top: 1px solid var(--base-color-neutral--neutral-lightest\<deleted\|variable-46cf9033\>);
   flex-direction: column;
   display: flex;
 }
 
 .mini-cart_line-item {
-  max-height: calc(100vh - 6 * var(--_adult---default-height));
+  max-height: calc(100svh - 6 * var(--_adult---default-height));
   flex: 1;
   padding: 0;
   overflow: scroll;
@@ -2984,6 +2994,7 @@ figcaption {
 }
 
 .nav_dropdown {
+  cursor: default;
   display: block;
 }
 
@@ -4271,6 +4282,12 @@ figcaption {
   display: none;
 }
 
+.close-password {
+  background-color: #0000;
+  position: absolute;
+  inset: 0%;
+}
+
 @media screen and (max-width: 991px) {
   .padding-medium {
     padding: 1.5rem;
@@ -5027,6 +5044,10 @@ figcaption {
     font-size: 2rem;
   }
 
+  .button {
+    padding-top: .2rem;
+  }
+
   .padding-section-medium {
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -5100,6 +5121,10 @@ figcaption {
     margin-bottom: 2rem;
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  .login_tabs.is-password {
+    z-index: 100000;
   }
 
   .login_form {
@@ -5391,7 +5416,7 @@ figcaption {
   }
 
   .menu_link {
-    padding-top: .25rem;
+    padding-top: .2rem;
   }
 
   .product_gallery-image {
@@ -5404,6 +5429,11 @@ figcaption {
 
   .body-text {
     font-size: 1em;
+  }
+
+  .close-password {
+    position: absolute;
+    inset: 0%;
   }
 }
 
