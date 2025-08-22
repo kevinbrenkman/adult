@@ -4395,6 +4395,23 @@ figcaption {
   display: flex;
 }
 
+.logo-wrapper {
+  padding: var(--_adult---default-height);
+  opacity: 0;
+  pointer-events: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4rem;
+  position: fixed;
+  inset: auto 0% 0%;
+}
+
+.logo-wrapper.coming-soon-page {
+  margin-top: 0;
+  padding: 0;
+}
+
 @media screen and (max-width: 991px) {
   .padding-medium {
     padding: 1.5rem;
@@ -5039,6 +5056,10 @@ figcaption {
 
   .seq-image-wrapper.small, .seq-image-wrapper.medium, .seq-image-wrapper.large {
     width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
+  }
+
+  .logo-wrapper.coming-soon-page {
+    width: 100%;
   }
 }
 
