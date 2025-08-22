@@ -222,12 +222,18 @@
         "align": "center",
         "padding": 0
       }
+    },
+    "sequence_logo_EeV3ic": {
+      "type": "sequence_logo",
+      "name": "Sequence Logo",
+      "settings": {}
     }
   },
   "layout": "culture",
   "wrapper": "main.main-wrapper",
   "order": [
     "custom_liquid",
+    "sequence_logo_EeV3ic",
     "sequence_image_qEhyNP",
     "sequence_image_4Hct4B",
     "sequence_image_TwhqxM",
