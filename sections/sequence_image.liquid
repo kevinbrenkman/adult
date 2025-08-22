@@ -1,8 +1,8 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
           <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image {{ section.settings.width }}', sizes: '(max-width: 634px) 100vw, 634px', loading: 'lazy' }}
+{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 634px) 100vw, 634px', loading: 'lazy' }}
 {% else %}
-<img class="seq-image {{ section.settings.width }}" src="{{ 'chubcover-1-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 634px) 100vw, 634px" loading="lazy" srcset="{{ 'chubcover-1-Large.jpeg' | asset_url }} 500w, {{ 'chubcover-1-Large.jpeg' | asset_url }} 634w">
+<img class="seq-image" src="{{ 'chubcover-1-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 634px) 100vw, 634px" loading="lazy" srcset="{{ 'chubcover-1-Large.jpeg' | asset_url }} 500w, {{ 'chubcover-1-Large.jpeg' | asset_url }} 634w">
 {% endif %}</div>
         </div> {% schema %} {
     "tag": "div",
