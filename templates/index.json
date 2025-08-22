@@ -44,6 +44,17 @@
         "height": 50
       }
     },
+    "sequence_image_TwhqxM": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/Fresco1_1_Large_b8c376c8-5954-4f9e-9732-ea578304aba4.jpg",
+        "align": "flex-start",
+        "width": "large",
+        "padding": 2,
+        "height": 80
+      }
+    },
     "sequence_text_NTB8D8": {
       "type": "sequence_text",
       "name": "Sequence Text",
@@ -59,6 +70,7 @@
     "custom_liquid",
     "sequence_image_qEhyNP",
     "sequence_image_4Hct4B",
+    "sequence_image_TwhqxM",
     "sequence_text_NTB8D8"
   ]
 }
