@@ -1,18 +1,36 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
-          <div style="padding: {{ section.settings.padding }}rem;height: {{ section.settings.height }}%" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 634px) 100vw, 634px', loading: 'lazy' }}
-{% else %}
-<img class="seq-image" src="{{ 'chubcover-1-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 634px) 100vw, 634px" loading="lazy" srcset="{{ 'chubcover-1-Large.jpeg' | asset_url }} 500w, {{ 'chubcover-1-Large.jpeg' | asset_url }} 634w">
-{% endif %}</div>
+          <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper x-small {{ section.settings.width }}">
+            <div style="" src="{{ section.settings.image }}" class="seq-image">object-fit: {{ section.settings.contain }}</div>
+          </div>
         </div> {% schema %} {
     "tag": "div",
     "name": "Sequence Image",
     "class": "section_seq_image",
     "settings": [
         {
-            "id": "image_image",
+            "type": "header",
+            "content": "Image"
+        },
+        {
             "type": "image_picker",
+            "id": "image",
             "label": "Image"
+        },
+        {
+            "type": "select",
+            "id": "contain",
+            "label": "Contain or cover Image",
+            "options": [
+                {
+                    "value": "contain",
+                    "label": "Contain"
+                },
+                {
+                    "value": "cover",
+                    "label": "Cover"
+                }
+            ],
+            "default": "contain"
         },
         {
             "type": "header",
@@ -21,7 +39,7 @@
         {
             "type": "select",
             "id": "align",
-            "label": "Switch columns",
+            "label": "Align Image",
             "options": [
                 {
                     "value": "flex-start",
@@ -40,13 +58,17 @@
         },
         {
             "type": "header",
-            "content": "Align Image"
+            "content": "Image Width"
         },
         {
             "type": "select",
             "id": "width",
             "label": "Image Width",
             "options": [
+                {
+                    "value": "x-small",
+                    "label": "Extra Small"
+                },
                 {
                     "value": "small",
                     "label": "Small"
@@ -79,20 +101,6 @@
             "max": 5,
             "step": 1,
             "unit": "rem"
-        },
-        {
-            "type": "header",
-            "content": "Image Padding"
-        },
-        {
-            "type": "range",
-            "id": "height",
-            "label": "Image Height",
-            "default": 50,
-            "min": 10,
-            "max": 100,
-            "step": 1,
-            "unit": "%"
         }
     ],
     "presets": [
