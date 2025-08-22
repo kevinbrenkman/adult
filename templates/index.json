@@ -26,10 +26,9 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
-        "contain": "cover",
-        "align": "center",
+        "image_image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
         "width": "full",
+        "align": "center",
         "padding": 0
       }
     },
@@ -37,21 +36,19 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image": "shopify://shop_images/chubcover_1_Large_d6ec6dd4-17eb-496b-be49-28df8b79e47d.jpg",
-        "contain": "contain",
+        "image_image": "shopify://shop_images/chubcover_1_Large_d6ec6dd4-17eb-496b-be49-28df8b79e47d.jpg",
+        "width": "medium",
         "align": "center",
-        "width": "small",
-        "padding": 0
+        "padding": 2
       }
     },
     "sequence_image_TwhqxM": {
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image": "shopify://shop_images/Fresco1_1_Large_b8c376c8-5954-4f9e-9732-ea578304aba4.jpg",
-        "contain": "contain",
-        "align": "flex-start",
+        "image_image": "shopify://shop_images/Fresco1_1_Large_b8c376c8-5954-4f9e-9732-ea578304aba4.jpg",
         "width": "medium",
+        "align": "flex-start",
         "padding": 2
       }
     },
@@ -59,10 +56,9 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image": "shopify://shop_images/ADULT_SS_189_3_Large_ecc1e2aa-f3b1-48e3-97ae-2586515d706c.jpg",
-        "contain": "cover",
-        "align": "center",
+        "image_image": "shopify://shop_images/ADULT_SS_189_3_Large_ecc1e2aa-f3b1-48e3-97ae-2586515d706c.jpg",
         "width": "full",
+        "align": "center",
         "padding": 0
       }
     },
