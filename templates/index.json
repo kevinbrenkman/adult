@@ -26,7 +26,11 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "align": "flex-end"
+        "image_image": "shopify://shop_images/3fe0e8bb5ed6eb137c5f1865c7e1277556a75564_2.jpg",
+        "align": "center",
+        "width": 100,
+        "height": 100,
+        "padding": 0
       }
     },
     "sequence_text_NTB8D8": {
