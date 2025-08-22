@@ -1,64 +1,22 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
-          <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper x-small {{ section.settings.width }}">
-            <div style="" src="{{ section.settings.image }}" class="seq-image">object-fit: {{ section.settings.contain }}</div>
-          </div>
+          <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
+{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image {{ section.settings.width }}', sizes: '(max-width: 634px) 100vw, 634px', loading: 'lazy' }}
+{% else %}
+<img class="seq-image {{ section.settings.width }}" src="{{ 'chubcover-1-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 634px) 100vw, 634px" loading="lazy" srcset="{{ 'chubcover-1-Large.jpeg' | asset_url }} 500w, {{ 'chubcover-1-Large.jpeg' | asset_url }} 634w">
+{% endif %}</div>
         </div> {% schema %} {
     "tag": "div",
     "name": "Sequence Image",
     "class": "section_seq_image",
     "settings": [
         {
-            "type": "header",
-            "content": "Image"
-        },
-        {
+            "id": "image_image",
             "type": "image_picker",
-            "id": "image",
             "label": "Image"
         },
         {
-            "type": "select",
-            "id": "contain",
-            "label": "Contain or cover Image",
-            "options": [
-                {
-                    "value": "contain",
-                    "label": "Contain"
-                },
-                {
-                    "value": "cover",
-                    "label": "Cover"
-                }
-            ],
-            "default": "contain"
-        },
-        {
             "type": "header",
-            "content": "Align Image"
-        },
-        {
-            "type": "select",
-            "id": "align",
-            "label": "Align Image",
-            "options": [
-                {
-                    "value": "flex-start",
-                    "label": "Left"
-                },
-                {
-                    "value": "center",
-                    "label": "Center"
-                },
-                {
-                    "value": "flex-end",
-                    "label": "Right"
-                }
-            ],
-            "default": "center"
-        },
-        {
-            "type": "header",
-            "content": "Image Width"
+            "content": "Size"
         },
         {
             "type": "select",
@@ -90,7 +48,31 @@
         },
         {
             "type": "header",
-            "content": "Image Padding"
+            "content": "Align"
+        },
+        {
+            "type": "select",
+            "id": "align",
+            "label": "Switch columns",
+            "options": [
+                {
+                    "value": "flex-start",
+                    "label": "Left"
+                },
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "flex-end",
+                    "label": "Right"
+                }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "header",
+            "content": "Padding"
         },
         {
             "type": "range",
