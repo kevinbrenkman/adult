@@ -102,6 +102,13 @@
         "padding": 0
       }
     },
+    "sequence_text_QKbRmT": {
+      "type": "sequence_text",
+      "name": "Sequence Text",
+      "settings": {
+        "text_text": "Adult plays dress-up. More men in heels, more people in whatever they please. We design for individuals, not categories. We offer the world’s widest size-range: your piece is made-to-order to fit you. Whatever your size."
+      }
+    },
     "sequence_image_bwipbf": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -152,6 +159,13 @@
         "padding": 0
       }
     },
+    "sequence_text_yDkfB3": {
+      "type": "sequence_text",
+      "name": "Sequence Text",
+      "settings": {
+        "text_text": "Adult values craft. All pieces are produced entirely by hand between Belgium and France, by a network of trusted artisans we all know by name. In that way, we honour heritage. Our culture is disruptive, but our execution is millennia-old."
+      }
+    },
     "sequence_image_pLrGmF": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -192,6 +206,13 @@
         "padding": 0
       }
     },
+    "sequence_text_cC74py": {
+      "type": "sequence_text",
+      "name": "Sequence Text",
+      "settings": {
+        "text_text": "Adult speaks with intention We make things with purpose and without haste, looking for long-lasting impact. Our pieces aren’t meant to be liked by everyone but rather loved by someone. Adult is a community of like-minded adventurers."
+      }
+    },
     "sequence_image_V6HEtj": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -216,15 +237,18 @@
     "sequence_image_Fx4LCP",
     "sequence_image_QKzNTP",
     "sequence_image_xpemPj",
+    "sequence_text_QKbRmT",
     "sequence_image_bwipbf",
     "sequence_image_wphQc3",
     "sequence_image_N8EDqg",
     "sequence_image_NTH4DQ",
     "sequence_image_Ew8d3U",
+    "sequence_text_yDkfB3",
     "sequence_image_pLrGmF",
     "sequence_image_YeM7Eb",
     "sequence_image_bC4tiM",
     "sequence_image_T78wRn",
+    "sequence_text_cC74py",
     "sequence_image_V6HEtj"
   ]
 }
