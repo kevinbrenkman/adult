@@ -224,7 +224,7 @@
       }
     }
   },
-  "layout": "theme",
+  "layout": "culture",
   "wrapper": "main.main-wrapper",
   "order": [
     "custom_liquid",
