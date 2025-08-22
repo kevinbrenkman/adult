@@ -1,11 +1,22 @@
-<div style="justify-content: {{ section.settings.align }}" class="seq-image-flex"><img src="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }}" loading="lazy" sizes="(max-width: 1280px) 100vw, 1280px" srcset="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 500w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 800w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1080w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1280w" alt="" class="seq-image"></div> {% schema %} {
+<div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
+          <div style="width: {{ section.settings.width }}; height: {{ section.settings.width }};padding: {{ section.settings.padding }}" class="seq-image-wrapper">{% if section.settings.image_image %}
+{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 1280px) 100vw, 1280px', loading: 'lazy' }}
+{% else %}
+<img class="seq-image" src="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 1280px) 100vw, 1280px" loading="lazy" srcset="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 500w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 800w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1080w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1280w">
+{% endif %}</div>
+        </div> {% schema %} {
     "tag": "div",
     "name": "Sequence Image",
     "class": "section_seq_image",
     "settings": [
         {
+            "id": "image_image",
+            "type": "image_picker",
+            "label": "Image"
+        },
+        {
             "type": "header",
-            "content": "Layout"
+            "content": "Align Image"
         },
         {
             "type": "select",
@@ -26,6 +37,44 @@
                 }
             ],
             "default": "center"
+        },
+        {
+            "type": "header",
+            "content": "Image Size"
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "label": "Width",
+            "default": 33.33333,
+            "min": 10,
+            "max": 100,
+            "step": 1,
+            "unit": "%"
+        },
+        {
+            "type": "range",
+            "id": "height",
+            "label": "Height",
+            "default": 50,
+            "min": 10,
+            "max": 100,
+            "step": 1,
+            "unit": "%"
+        },
+        {
+            "type": "header",
+            "content": "Image Padding"
+        },
+        {
+            "type": "range",
+            "id": "padding",
+            "label": "Padding",
+            "default": 0,
+            "min": 0,
+            "max": 5,
+            "step": 1,
+            "unit": "rem"
         }
     ],
     "presets": [
