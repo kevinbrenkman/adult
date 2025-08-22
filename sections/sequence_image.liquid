@@ -1,8 +1,8 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
-          <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 1280px) 100vw, 1280px', loading: 'lazy' }}
+          <div style="padding: {{ section.settings.padding }}rem;height: {{ section.settings.height }}%" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
+{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 634px) 100vw, 634px', loading: 'lazy' }}
 {% else %}
-<img class="seq-image" src="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 1280px) 100vw, 1280px" loading="lazy" srcset="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 500w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 800w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1080w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1280w">
+<img class="seq-image" src="{{ 'chubcover-1-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 634px) 100vw, 634px" loading="lazy" srcset="{{ 'chubcover-1-Large.jpeg' | asset_url }} 500w, {{ 'chubcover-1-Large.jpeg' | asset_url }} 634w">
 {% endif %}</div>
         </div> {% schema %} {
     "tag": "div",
@@ -79,6 +79,20 @@
             "max": 5,
             "step": 1,
             "unit": "rem"
+        },
+        {
+            "type": "header",
+            "content": "Image Padding"
+        },
+        {
+            "type": "range",
+            "id": "height",
+            "label": "Image Height",
+            "default": 50,
+            "min": 10,
+            "max": 100,
+            "step": 1,
+            "unit": "%"
         }
     ],
     "presets": [
