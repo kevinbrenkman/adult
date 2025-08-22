@@ -37,7 +37,7 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/chubcover_1_Large_d6ec6dd4-17eb-496b-be49-28df8b79e47d.jpg",
-        "width": "medium",
+        "width": "small",
         "align": "center",
         "padding": 2
       }
