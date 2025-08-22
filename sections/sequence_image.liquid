@@ -1,5 +1,5 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
-          <div style="width: {{ section.settings.width }}; height: {{ section.settings.width }};padding: {{ section.settings.padding }}" class="seq-image-wrapper">{% if section.settings.image_image %}
+          <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
 {{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 1280px) 100vw, 1280px', loading: 'lazy' }}
 {% else %}
 <img class="seq-image" src="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 1280px) 100vw, 1280px" loading="lazy" srcset="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 500w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 800w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1080w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1280w">
@@ -40,27 +40,31 @@
         },
         {
             "type": "header",
-            "content": "Image Size"
+            "content": "Align Image"
         },
         {
-            "type": "range",
+            "type": "select",
             "id": "width",
-            "label": "Width",
-            "default": 33,
-            "min": 10,
-            "max": 100,
-            "step": 1,
-            "unit": "%"
-        },
-        {
-            "type": "range",
-            "id": "height",
-            "label": "Height",
-            "default": 50,
-            "min": 10,
-            "max": 100,
-            "step": 1,
-            "unit": "%"
+            "label": "Image Width",
+            "options": [
+                {
+                    "value": "small",
+                    "label": "Small"
+                },
+                {
+                    "value": "medium",
+                    "label": "Medium"
+                },
+                {
+                    "value": "large",
+                    "label": "Large"
+                },
+                {
+                    "value": "full",
+                    "label": "Full"
+                }
+            ],
+            "default": "medium"
         },
         {
             "type": "header",
