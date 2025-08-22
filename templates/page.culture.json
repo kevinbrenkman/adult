@@ -1,0 +1,20 @@
+{
+    "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
+        "sequence_image": {
+            "type": "sequence_image"
+        },
+        "sequence_text": {
+            "type": "sequence_text"
+        }
+    },
+    "layout": "page.culture",
+    "wrapper": "main.main-wrapper",
+    "order": [
+        "navigation",
+        "sequence_image",
+        "sequence_text"
+    ]
+}
