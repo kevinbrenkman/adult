@@ -28,8 +28,7 @@
       "settings": {
         "image_image": "shopify://shop_images/3fe0e8bb5ed6eb137c5f1865c7e1277556a75564_2.jpg",
         "align": "center",
-        "width": 100,
-        "height": 100,
+        "width": "full",
         "padding": 1
       }
     },
