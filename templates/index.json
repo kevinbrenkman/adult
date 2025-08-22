@@ -32,6 +32,16 @@
         "padding": 0
       }
     },
+    "sequence_image_4Hct4B": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/chubcover_1_Large_d6ec6dd4-17eb-496b-be49-28df8b79e47d.jpg",
+        "align": "center",
+        "width": "medium",
+        "padding": 0
+      }
+    },
     "sequence_text_NTB8D8": {
       "type": "sequence_text",
       "name": "Sequence Text",
@@ -46,6 +56,7 @@
     "featured_products",
     "custom_liquid",
     "sequence_image_qEhyNP",
+    "sequence_image_4Hct4B",
     "sequence_text_NTB8D8"
   ]
 }
