@@ -21,12 +21,28 @@
       "settings": {
         "custom_liquid": ""
       }
+    },
+    "sequence_image_qEhyNP": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "align": "flex-start"
+      }
+    },
+    "sequence_text_NTB8D8": {
+      "type": "sequence_text",
+      "name": "Sequence Text",
+      "settings": {
+        "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one - but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
+      }
     }
   },
   "layout": "theme",
   "wrapper": "main.main-wrapper",
   "order": [
     "featured_products",
-    "custom_liquid"
+    "custom_liquid",
+    "sequence_image_qEhyNP",
+    "sequence_text_NTB8D8"
   ]
 }
