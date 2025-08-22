@@ -9,13 +9,6 @@
  */
 {
   "sections": {
-    "featured_products": {
-      "type": "featured_products",
-      "settings": {
-        "collection_collection": "frontpage",
-        "collection_collection_limit": 6
-      }
-    },
     "custom_liquid": {
       "type": "custom_liquid",
       "settings": {
@@ -73,7 +66,6 @@
   "layout": "theme",
   "wrapper": "main.main-wrapper",
   "order": [
-    "featured_products",
     "custom_liquid",
     "sequence_image_qEhyNP",
     "sequence_image_4Hct4B",
