@@ -1,0 +1,38 @@
+<div style="justify-content: {{ section.settings.align }}" class="seq-image-flex"><img src="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }}" loading="lazy" sizes="(max-width: 1280px) 100vw, 1280px" srcset="{{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 500w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 800w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1080w, {{ 'ADULT_SS_1811-2-Large.jpeg' | asset_url }} 1280w" alt="" class="seq-image"></div> {% schema %} {
+    "tag": "div",
+    "name": "Sequence: Image",
+    "class": "section_seq_image",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "select",
+            "id": "align",
+            "label": "Switch columns",
+            "options": [
+                {
+                    "value": "flex-start",
+                    "label": "Left"
+                },
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "flex-end",
+                    "label": "Right"
+                }
+            ],
+            "default": "center"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Sequence: Image",
+            "category": "Liquify",
+            "blocks": []
+        }
+    ]
+} {% endschema %}
