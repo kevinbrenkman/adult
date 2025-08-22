@@ -61,6 +61,146 @@
       "settings": {
         "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one - but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
       }
+    },
+    "sequence_image_MjrFBp": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/slingback_1_Large_09db90a6-d2c8-481f-a610-d6b132c7383e.jpg",
+        "width": "large",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_Fx4LCP": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_185_1_Large_22e10cef-6a4a-4dd0-992a-b4f3e1cc727d.jpg",
+        "width": "medium",
+        "align": "flex-start",
+        "padding": 2
+      }
+    },
+    "sequence_image_QKzNTP": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/Quarantine_1_Large_a7559a73-3e58-431c-a019-947edb8431ab.jpg",
+        "width": "small",
+        "align": "flex-end",
+        "padding": 2
+      }
+    },
+    "sequence_image_xpemPj": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/IMG_4602_1_Large_3cb19ba3-e14e-4aa4-a8ac-735f3e7d4773.jpg",
+        "width": "full",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_bwipbf": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/Quarantine_1_Large_a7559a73-3e58-431c-a019-947edb8431ab.jpg",
+        "width": "medium",
+        "align": "flex-end",
+        "padding": 2
+      }
+    },
+    "sequence_image_wphQc3": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/WHITE_1_Large_2c811833-19ac-480f-b48a-55b5f13fa900.jpg",
+        "width": "large",
+        "align": "center",
+        "padding": 2
+      }
+    },
+    "sequence_image_N8EDqg": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_1812_1_Large_0650c90b-530d-4ec8-9d81-8ef81f6599e3.jpg",
+        "width": "medium",
+        "align": "flex-end",
+        "padding": 2
+      }
+    },
+    "sequence_image_NTH4DQ": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/IMG_5194_1_Large_d0382676-9233-43ef-99e7-09eac0bd0943.jpg",
+        "width": "large",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_Ew8d3U": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/PUSSY_RED_BELT_1_Large_680eb230-3ca4-4910-9743-2c792f6bf3ab.jpg",
+        "width": "large",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_pLrGmF": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_1816_1_Large_ebff3a3c-8670-4b7c-9fe5-b8c883e00e09.jpg",
+        "width": "medium",
+        "align": "flex-end",
+        "padding": 2
+      }
+    },
+    "sequence_image_YeM7Eb": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_s03_0243_-_copie_1_Large_df8757f1-70fb-4605-bb59-590d30724537.jpg",
+        "width": "medium",
+        "align": "flex-start",
+        "padding": 2
+      }
+    },
+    "sequence_image_bC4tiM": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_186_1_Large_eaba1c8f-9af3-4e0d-a91b-a36deed8dbc7.jpg",
+        "width": "large",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_T78wRn": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_s07_0570_1_Large_e3693f84-6af9-4ea1-8f8f-6b4d75f91e31.jpg",
+        "width": "full",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_V6HEtj": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
+        "width": "full",
+        "align": "center",
+        "padding": 0
+      }
     }
   },
   "layout": "theme",
@@ -71,6 +211,20 @@
     "sequence_image_4Hct4B",
     "sequence_image_TwhqxM",
     "sequence_image_8ccAwL",
-    "sequence_text_NTB8D8"
+    "sequence_text_NTB8D8",
+    "sequence_image_MjrFBp",
+    "sequence_image_Fx4LCP",
+    "sequence_image_QKzNTP",
+    "sequence_image_xpemPj",
+    "sequence_image_bwipbf",
+    "sequence_image_wphQc3",
+    "sequence_image_N8EDqg",
+    "sequence_image_NTH4DQ",
+    "sequence_image_Ew8d3U",
+    "sequence_image_pLrGmF",
+    "sequence_image_YeM7Eb",
+    "sequence_image_bC4tiM",
+    "sequence_image_T78wRn",
+    "sequence_image_V6HEtj"
   ]
 }
