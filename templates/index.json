@@ -26,10 +26,10 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image_image": "shopify://shop_images/3fe0e8bb5ed6eb137c5f1865c7e1277556a75564_2.jpg",
+        "image_image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
         "align": "center",
         "width": "full",
-        "padding": 1
+        "padding": 0
       }
     },
     "sequence_text_NTB8D8": {
