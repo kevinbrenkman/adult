@@ -1,5 +1,3 @@
-{% comment %} snippets/seq-stack.liquid {% endcomment %}
-<script>
 (() => {
   const MAX_VISIBLE = 2;        
   const WHEEL_SPEED = 0.0001;
@@ -8,6 +6,7 @@
   const CURSOR_THRESHOLD = 3;
   const PIN_TO = '.main-wrapper';
 
+  // Skip inside Shopify customizer
   if (window.Shopify && Shopify.designMode) {
     console.log("[seqStack] Skipped: in Shopify Customizer/Preview");
     return;
@@ -127,4 +126,3 @@
     };
   })();
 })();
-</script>
