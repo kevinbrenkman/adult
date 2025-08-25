@@ -31,7 +31,11 @@
     const fadeLogoOnce = () => {
       if (logoFaded) return;
       logoFaded = true;
-      gsap.to(".shopify-section.logo-wrapper", { opacity: 0, duration: 0.8, ease: "power2.out" });
+      gsap.to(".shopify-section.logo-wrapper", {
+        opacity: 0,
+        duration: 0.5,   // ⬅️ slower fade (half a second)
+        ease: "power2.out"
+      });
       const logo = document.querySelector('.shopify-section.logo-wrapper');
       if (logo) logo.style.opacity = 0; // keep it hidden against re-renders
     };
