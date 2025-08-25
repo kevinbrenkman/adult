@@ -26,6 +26,9 @@
     await loadScriptOnce('https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js');
     gsap.registerPlugin();
 
+    // 🔥 fade out logo wrapper right away
+    gsap.to(".shopify-section.logo-wrapper", { opacity: 0, duration: 0.8, ease: "power2.out" });
+
     const all = Array.from(document.querySelectorAll('.section_seq_image, .section_seq_text'));
     const imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
     const textSecs = all.filter(n => n.classList.contains('section_seq_text'));
