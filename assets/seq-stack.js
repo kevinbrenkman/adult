@@ -1,5 +1,5 @@
 (() => {
-  const MAX_VISIBLE = 2;        
+  const MAX_VISIBLE = 2;
   const WHEEL_SPEED = 0.0001;
   const TOUCH_SPEED = 0.0002;
   const CURSOR_SPEED = 0.0005;
@@ -26,8 +26,15 @@
     await loadScriptOnce('https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js');
     gsap.registerPlugin();
 
-    // 🔥 fade out logo wrapper right away
-    gsap.to(".shopify-section.logo-wrapper", { opacity: 0, duration: 0.8, ease: "power2.out" });
+    // fade logo only after first interaction
+    let logoFaded = false;
+    const fadeLogoOnce = () => {
+      if (logoFaded) return;
+      logoFaded = true;
+      gsap.to(".shopify-section.logo-wrapper", { opacity: 0, duration: 0.8, ease: "power2.out" });
+      const logo = document.querySelector('.shopify-section.logo-wrapper');
+      if (logo) logo.style.opacity = 0; // keep it hidden against re-renders
+    };
 
     const all = Array.from(document.querySelectorAll('.section_seq_image, .section_seq_text'));
     const imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
@@ -81,17 +88,30 @@
     const dur = tl.duration();
     const setProgress = (p) => { pos = (p % dur + dur) % dur; tl.time(pos, false); };
 
-    const onWheel = (e) => { e.preventDefault(); setProgress(pos + e.deltaY * WHEEL_SPEED * dur); };
+    // Wheel / touch input (can go both ways)
+    const onWheel = (e) => {
+      e.preventDefault();
+      fadeLogoOnce(); // first interaction
+      setProgress(pos + e.deltaY * WHEEL_SPEED * dur);
+    };
     const activeTouches = { id: null, y: 0 };
-    const onTouchStart = (e) => { if (e.touches.length){ activeTouches.id = e.touches[0].identifier; activeTouches.y = e.touches[0].clientY; } };
+    const onTouchStart = (e) => {
+      if (e.touches.length){
+        activeTouches.id = e.touches[0].identifier;
+        activeTouches.y = e.touches[0].clientY;
+      }
+    };
     const onTouchMove = (e) => {
       const t = [...e.touches].find(t => t.identifier === activeTouches.id) || e.touches[0];
-      if (!t) return; e.preventDefault();
+      if (!t) return;
+      e.preventDefault();
+      fadeLogoOnce(); // first interaction
       const dy = activeTouches.y - t.clientY;
       setProgress(pos + dy * TOUCH_SPEED * dur);
       activeTouches.y = t.clientY;
     };
 
+    // Cursor-driven virtual scroll (all movement = forward only)
     let lastX = null, lastY = null;
     const onMouseMove = (e) => {
       if (lastX != null && lastY != null) {
@@ -99,6 +119,7 @@
         const dy = e.clientY - lastY;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist >= CURSOR_THRESHOLD) {
+          fadeLogoOnce(); // first interaction
           setProgress(pos + dist * CURSOR_SPEED * dur);
         }
       }
