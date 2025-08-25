@@ -811,8 +811,8 @@ figcaption {
 }
 
 .button.is-cart {
+  background-color: var(--_adult---adult-off-white);
   color: var(--_adult---adult-red);
-  background-color: #0000;
   border-style: none;
   width: 100%;
 }
@@ -1680,7 +1680,7 @@ figcaption {
 .mini-cart_footer-total.mini-cart_header-slots {
   border-top: 1px solid var(--_adult---adult-red);
   background-color: var(--_adult---adult-off-white);
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -3767,6 +3767,9 @@ figcaption {
 .mini-cart_footer-price {
   grid-column-gap: .5em;
   grid-row-gap: .5em;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
   margin-right: .25rem;
   display: flex;
 }
@@ -5370,9 +5373,16 @@ figcaption {
 
   .mini-cart_line-item {
     margin-bottom: var(--_adult---default-height);
-    border-right: 1px solid var(--_adult---adult-red);
-    border-bottom: 1px solid var(--_adult---adult-red);
-    border-left: 1px solid var(--_adult---adult-red);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: var(--_adult---adult-red);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--_adult---adult-red);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: var(--_adult---adult-red);
+    max-height: calc(100svh - 6 * var(--_adult---default-height));
   }
 
   .mini-cart_line-item_item {
