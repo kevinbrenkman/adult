@@ -339,27 +339,6 @@ document.querySelectorAll('.modal-button').forEach(button => {
 });
 </script>
   <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const aboutWrapper = document.querySelector('.about_component-wrapper');
-  const aboutBtn = document.getElementById('aboutBtn');
-  const closeBtn = document.getElementById('closeAbout');
-  const modalBg = document.querySelector('.about-modal-bg');
-  if (!aboutWrapper) return;
-  // Open modal
-  aboutBtn?.addEventListener('click', () => {
-    aboutWrapper.classList.add('open');
-  });
-  // Close modal
-  closeBtn?.addEventListener('click', () => {
-    aboutWrapper.classList.remove('open');
-  });
-  // Close when clicking background
-  modalBg?.addEventListener('click', () => {
-    aboutWrapper.classList.remove('open');
-  });
-});
-</script>
-  <script>
   document.addEventListener('DOMContentLoaded', () => {
     const countEl = document.querySelector('[li-element="mini-cart-item-count"]');
     const pluralEl = document.querySelector('.cart-plural');
@@ -417,6 +396,86 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+</script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const aboutWrapper = document.querySelector('.about_component-wrapper');
+  const aboutBtn = document.getElementById('aboutBtn');
+  const closeBtn = document.getElementById('closeAbout');
+  const modalBg = document.getElementById('bgcloseAbout');
+  const cartDropdown = document.querySelector('.nav_mini-cart-holder.w-dropdown-list');
+  const mobileBg = document.querySelector('.mobile-menu-background');
+  if (!aboutWrapper || !cartDropdown || !mobileBg) return;
+  // --- About toggle helpers ---
+  function openAbout() {
+    aboutWrapper.classList.add('open');
+    aboutBtn?.setAttribute('aria-expanded', 'true');
+  }
+  function closeAbout() {
+    aboutWrapper.classList.remove('open');
+    aboutBtn?.setAttribute('aria-expanded', 'false');
+  }
+  function toggleAbout() {
+    if (aboutWrapper.classList.contains('open')) {
+      closeAbout();
+    } else {
+      openAbout();
+    }
+  }
+  // --- About events ---
+  aboutBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleAbout();
+  });
+  closeBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeAbout();
+  });
+  modalBg?.addEventListener('click', () => {
+    closeAbout();
+  });
+  // --- Mobile background logic (cart only) ---
+  function updateMobileBg() {
+    if (window.innerWidth < 767) {
+      if (cartDropdown.classList.contains('w--open')) {
+        mobileBg.classList.add('open');
+        closeAbout(); // &#9989; ensure About closes when cart opens
+      } else {
+        mobileBg.classList.remove('open');
+      }
+    } else {
+      mobileBg.classList.remove('open'); // reset on larger screens
+    }
+  }
+  // Watch cart open/close
+  const observer = new MutationObserver(updateMobileBg);
+  observer.observe(cartDropdown, { attributes: true, attributeFilter: ['class'] });
+  // Handle resize
+  window.addEventListener('resize', updateMobileBg);
+});
+</script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileBg = document.querySelector('.mobile-menu-background');
+  const cartDropdown = document.querySelector('.nav_mini-cart-holder.w-dropdown-list');
+  if (!mobileBg || !cartDropdown) return;
+  function updateMobileBg() {
+    if (window.innerWidth < 767) {
+      if (cartDropdown.classList.contains('w--open')) {
+        mobileBg.classList.add('open');
+      } else {
+        mobileBg.classList.remove('open');
+      }
+    } else {
+      mobileBg.classList.remove('open'); // reset on larger screens
+    }
+  }
+  // Watch for cart open/close
+  const observer = new MutationObserver(updateMobileBg);
+  observer.observe(cartDropdown, { attributes: true, attributeFilter: ['class'] });
+  // Update on resize too
+  window.addEventListener('resize', updateMobileBg);
+});
 </script>
   <script src="{{ 'seq-stack.js' | asset_url }}" defer=""></script>
 </body>
