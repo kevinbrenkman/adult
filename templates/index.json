@@ -15,6 +15,11 @@
         "custom_liquid": ""
       }
     },
+    "sequence_logo_EeV3ic": {
+      "type": "sequence_logo",
+      "name": "Sequence Logo",
+      "settings": {}
+    },
     "sequence_image_qEhyNP": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -210,7 +215,7 @@
       "type": "sequence_text",
       "name": "Sequence Text",
       "settings": {
-        "text_text": "Adult speaks with intention We make things with purpose and without haste, looking for long-lasting impact. Our pieces aren’t meant to be liked by everyone but rather loved by someone. Adult is a community of like-minded adventurers."
+        "text_text": "Adult speaks with intention. We make things with purpose and without haste, looking for long-lasting impact. Our pieces aren’t meant to be liked by everyone but rather loved by someone. Adult is a community of like-minded adventurers."
       }
     },
     "sequence_image_V6HEtj": {
@@ -222,11 +227,6 @@
         "align": "center",
         "padding": 0
       }
-    },
-    "sequence_logo_EeV3ic": {
-      "type": "sequence_logo",
-      "name": "Sequence Logo",
-      "settings": {}
     }
   },
   "layout": "culture",
