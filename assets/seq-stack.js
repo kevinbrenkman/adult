@@ -26,25 +26,12 @@
     await loadScriptOnce('https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js');
     gsap.registerPlugin();
 
-    // fade logo only after first interaction
-    let logoFaded = false;
-    const fadeLogoOnce = () => {
-      if (logoFaded) return;
-      logoFaded = true;
-      gsap.to(".shopify-section.logo-wrapper", {
-        opacity: 0,
-        duration: 0.5,   // ⬅️ slower fade (half a second)
-        ease: "power2.out"
-      });
-      const logo = document.querySelector('.shopify-section.logo-wrapper');
-      if (logo) logo.style.opacity = 0; // keep it hidden against re-renders
-    };
-
     const all = Array.from(document.querySelectorAll('.section_seq_image, .section_seq_text'));
     const imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
     const textSecs = all.filter(n => n.classList.contains('section_seq_text'));
     if (!imgSecs.length) return;
 
+    // Stage container + minimal styles
     const stage = document.createElement('div'); stage.id = 'seqStageStack';
     const style = document.createElement('style'); style.id = 'seqStageStack-style';
     style.textContent = `
@@ -59,6 +46,7 @@
     const pinContainer = document.querySelector(PIN_TO) || document.body;
     pinContainer.insertBefore(stage, pinContainer.firstChild);
 
+    // Move nodes into stage (with backups for cleanup)
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
@@ -68,6 +56,7 @@
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
 
+    // Build the scrub timeline: 2 images visible at once
     const tl = gsap.timeline({ paused: true });
     imgs.forEach((img, i) => {
       if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
@@ -76,6 +65,7 @@
       }
     });
 
+    // Text visibility (visible for 2 image steps)
     let seen = 0;
     const startIndex = new Map();
     all.forEach(node => {
@@ -88,14 +78,36 @@
       tl.to(txt, { opacity: 0, duration: 0.5 }, sIdx + 2);
     });
 
+    // Logo scrub-fade: fade out over the first N "image steps"
+    const logoEl = document.querySelector('.shopify-section.logo-wrapper');
+    const LOGO_FADE_STEPS = 2;                   // fade across first 2 image steps
+    let logoMinOpacity = 1;                      // one-way fade: never increase opacity
+
+    // Scrub driver
     let pos = 0;
     const dur = tl.duration();
-    const setProgress = (p) => { pos = (p % dur + dur) % dur; tl.time(pos, false); };
+
+    const applyLogoOpacityFromTime = (t) => {
+      if (!logoEl) return;
+      const fadeEnd = Math.min(LOGO_FADE_STEPS, dur || 1);
+      const calc = 1 - Math.max(0, Math.min(1, t / fadeEnd));
+      // enforce one-way: only reduce opacity
+      if (calc < logoMinOpacity) {
+        logoMinOpacity = calc;
+        gsap.set(logoEl, { opacity: logoMinOpacity });
+      }
+    };
+
+    const setProgress = (p) => {
+      // wrap timeline
+      pos = (p % dur + dur) % dur;
+      tl.time(pos, false);
+      applyLogoOpacityFromTime(pos);
+    };
 
     // Wheel / touch input (can go both ways)
     const onWheel = (e) => {
       e.preventDefault();
-      fadeLogoOnce(); // first interaction
       setProgress(pos + e.deltaY * WHEEL_SPEED * dur);
     };
     const activeTouches = { id: null, y: 0 };
@@ -109,13 +121,12 @@
       const t = [...e.touches].find(t => t.identifier === activeTouches.id) || e.touches[0];
       if (!t) return;
       e.preventDefault();
-      fadeLogoOnce(); // first interaction
       const dy = activeTouches.y - t.clientY;
       setProgress(pos + dy * TOUCH_SPEED * dur);
       activeTouches.y = t.clientY;
     };
 
-    // Cursor-driven virtual scroll (all movement = forward only)
+    // Cursor movement (all motion = forward only)
     let lastX = null, lastY = null;
     const onMouseMove = (e) => {
       if (lastX != null && lastY != null) {
@@ -123,7 +134,6 @@
         const dy = e.clientY - lastY;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist >= CURSOR_THRESHOLD) {
-          fadeLogoOnce(); // first interaction
           setProgress(pos + dist * CURSOR_SPEED * dur);
         }
       }
@@ -137,6 +147,7 @@
     stage.addEventListener('touchmove', onTouchMove, opts);
     window.addEventListener('mousemove', onMouseMove);
 
+    // Cleanup
     window.seqStackDestroy = () => {
       tl.kill();
       backups.forEach(({node, parent, next}) => {
