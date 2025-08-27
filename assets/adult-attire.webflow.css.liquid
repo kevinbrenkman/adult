@@ -18,11 +18,11 @@
   --_adult---adult-off-white: #fcfcf7;
   --_adult---adult-red: #e10b1d;
   --_adult---modal-width: calc(100% / 3 - 3rem);
+  --_adult---default-height: 1.6rem;
   --base-color-neutral--neutral\<deleted\|variable-f2e05ad4-c1a5-9e13-07b5-a71d15650ff5\>: #666;
   --text-color--text-alternate: var(--base-color-neutral--white\<deleted\|variable-1aff3ce7\>);
   --base-color-neutral--white\<deleted\|variable-1aff3ce7\>: white;
   --base-color-neutral--black: black;
-  --_adult---default-height: 1.6rem;
   --base-color-neutral--neutral-darker\<deleted\|variable-a6dcd961-5568-643f-6371-e356d1cf5717\>: #222;
   --text-color--text-secondary: var(--base-color-neutral--neutral-darker\<deleted\|variable-a6dcd961-5568-643f-6371-e356d1cf5717\>);
   --border-radius--small\<deleted\|variable-3dc0247c-0be0-4b6b-546b-81c5bfd25b6e\>: .25rem;
@@ -309,6 +309,13 @@ figcaption {
   padding-right: 0;
 }
 
+.padding-bottom.padding-medium.center {
+  padding-bottom: var(--_adult---default-height);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
 .form_checkbox {
   flex-direction: row;
   align-items: flex-start;
@@ -473,6 +480,11 @@ figcaption {
 
 .padding-global {
   padding: 0;
+}
+
+.padding-global.padding-section-medium {
+  padding-top: calc(3 * var(--_adult---default-height));
+  padding-bottom: calc(3 * var(--_adult---default-height));
 }
 
 .text-weight-normal {
@@ -704,6 +716,8 @@ figcaption {
 }
 
 .container-large {
+  padding-right: var(--_adult---default-height);
+  padding-left: var(--_adult---default-height);
   width: 100%;
   max-width: 85rem;
   margin-left: auto;
@@ -5289,6 +5303,11 @@ figcaption {
 
   .heading-style-h2 {
     font-size: 2rem;
+  }
+
+  .container-large {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .button.is-cart {
