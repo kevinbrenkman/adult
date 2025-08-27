@@ -134,26 +134,21 @@ h1 {
 h2 {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-size: 2.5rem;
-  font-weight: 600;
   line-height: 1.2;
 }
 
 h3 {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-size: 1.625rem;
-  font-weight: 600;
   line-height: 1.2;
 }
 
 h4 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1em;
   line-height: 1.4;
 }
 
@@ -435,26 +430,39 @@ figcaption {
 }
 
 .text-rich-text h1 {
+  margin-top: var(--_adult---default-height);
+  margin-bottom: var(--_adult---default-height);
   text-align: center;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  font-size: .7rem;
-  line-height: 1.5;
+  font-size: 1em;
+  line-height: 1.2em;
 }
 
-.text-rich-text h2, .text-rich-text h3, .text-rich-text h4 {
+.text-rich-text h2 {
+  margin-top: var(--_adult---default-height);
+  margin-bottom: var(--_adult---default-height);
+  font-size: 1em;
+}
+
+.text-rich-text h3 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: 1em;
+}
+
+.text-rich-text h4 {
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .text-rich-text h5, .text-rich-text h6 {
-  margin-top: 1.25rem;
-  margin-bottom: 1rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: 1em;
 }
 
 .text-rich-text p {
   text-transform: none;
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
 }
 
 .text-rich-text ul, .text-rich-text ol {
@@ -716,8 +724,6 @@ figcaption {
 }
 
 .container-large {
-  padding-right: var(--_adult---default-height);
-  padding-left: var(--_adult---default-height);
   width: 100%;
   max-width: 85rem;
   margin-left: auto;
@@ -5303,11 +5309,6 @@ figcaption {
 
   .heading-style-h2 {
     font-size: 2rem;
-  }
-
-  .container-large {
-    padding-left: 0;
-    padding-right: 0;
   }
 
   .button.is-cart {
