@@ -2,11 +2,11 @@
 <html data-wf-page="68a85f767a090afb436f9102" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8">
-  <title>{{ page_title }}</title>
+  <title>{% - assign is_home = request.page_type == 'index' or request.path == '/' -%} {% - if is_home -%} {{ shop.name }} {% - elsif request.page_type == 'collection' and collection.handle == 'all' -%} {{ shop.name }} – Shop {% - else -%} {{ shop.name }} – {{ page_title }} {% - endif -%}</title>
   <meta content="{{ page_description }}" name="description">
-  <meta content="{{ page_title }}" property="og:title">
+  <meta content="{% - assign is_home = request.page_type == 'index' or request.path == '/' -%} {% - if is_home -%}   {{ shop.name }} {% - elsif request.page_type == 'collection' and collection.handle == 'all' -%}   {{ shop.name }} – Shop {% - else -%}   {{ shop.name }} – {{ page_title }} {% - endif -%}" property="og:title">
   <meta content="{{ page_description }}" property="og:description">
-  <meta content="{{ page_title }}" property="twitter:title">
+  <meta content="{% - assign is_home = request.page_type == 'index' or request.path == '/' -%} {% - if is_home -%}   {{ shop.name }} {% - elsif request.page_type == 'collection' and collection.handle == 'all' -%}   {{ shop.name }} – Shop {% - else -%}   {{ shop.name }} – {{ page_title }} {% - endif -%}" property="twitter:title">
   <meta content="{{ page_description }}" property="twitter:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
@@ -167,6 +167,12 @@ input:-webkit-autofill {
 html.shopify-design-mode .shopify-section.logo-wrapper { 
     display: none !important;
   }
+</style>
+  <style>
+  *[tabindex]:focus-visible, input[type="file"]:focus-visible {
+    outline: none;
+    outline-offset: 0.125rem;
+}
 </style><!--  
 IMPORTANT: If you want to make changes to the head or body code on this page, 
 please remove the `li-layout` tag from the body element. 
@@ -460,6 +466,14 @@ document.addEventListener('DOMContentLoaded', () => {
   modalBg?.addEventListener('click', () => {
     closeAbout();
   });
+  // --- ESC key support for About modal ---
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      if (aboutWrapper.classList.contains('open')) {
+        closeAbout();
+      }
+    }
+  });
   // --- Cart watcher: when cart opens, close About; also drive mobile background ---
   function isCartOpen() {
     return cartDropdown.classList.contains('w--open');
@@ -496,6 +510,62 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial sync (in case of SSR/first paint states)
   updateState();
 });
+</script>
+  <script>
+(function () {
+  function findMiniCartRoot() {
+    return document.querySelector('.w-dropdown[li-element="mini-cart"], [li-element="mini-cart"].w-dropdown');
+  }
+  function findMiniCartToggle(root) {
+    return root ? root.querySelector('.w-dropdown-toggle') : null;
+  }
+  function focusMiniCart(root) {
+    var panel = root && root.querySelector('[li-element="mini-cart-container"]');
+    if (panel) { panel.setAttribute('tabindex', '-1'); panel.focus(); }
+  }
+  // Opens your mini-cart:
+  // - Dispatches Alpine's "toggleminicart" (your component listens with @toggleminicart.window="toggleMiniCart()")
+  // - Ensures the Webflow dropdown is opened by clicking the .w-dropdown-toggle if needed
+  function openMiniCart() {
+    var root = findMiniCartRoot();
+    var toggle = findMiniCartToggle(root);
+    // Trigger your Alpine flow (fetches cart + LiquifyHelper.handleTriggerClick())
+    try {
+      window.dispatchEvent(new CustomEvent('toggleminicart'));
+    } catch (e) { /* safe no-op */ }
+    // Ensure the dropdown is visually opened
+    if (toggle && !toggle.classList.contains('w--open')) {
+      toggle.click();
+    }
+    focusMiniCart(root);
+  }
+  function onReady(fn) {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+  onReady(function () {
+    // 1) Auto-open when landing with ?open_cart=1
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('open_cart') === '1') {
+      openMiniCart();
+      // Clean the URL (no reload)
+      params.delete('open_cart');
+      var clean = window.location.pathname +
+        (params.toString() ? '?' + params.toString() : '') +
+        window.location.hash;
+      history.replaceState({}, '', clean);
+    }
+    // 2) Intercept any clicks to /cart (works across the site, including nested elements)
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href="/cart"], a[href$="/cart"]');
+      if (!a) return;
+      // Allow default inside Shopify Theme Editor to avoid confusion
+      if (window.Shopify && Shopify.designMode) return;
+      e.preventDefault();
+      openMiniCart();
+    }, true);
+  });
+})();
 </script>
   <script src="{{ 'seq-stack.js' | asset_url }}" defer=""></script>
 </body>
