@@ -120,13 +120,13 @@
 body {
   background-color: var(--_adult---adult-off-white);
   color: var(--_adult---adult-red);
-  text-transform: uppercase;
   font-family: Diatype, Arial, sans-serif;
   font-size: .7rem;
   line-height: 1.4;
 }
 
 h1 {
+  text-transform: uppercase;
   margin-top: 1em;
   margin-bottom: 1em;
   font-size: 1em;
@@ -134,6 +134,7 @@ h1 {
 }
 
 h2, h3, h4, h5, h6 {
+  text-transform: uppercase;
   margin-top: 1em;
   margin-bottom: 1em;
   font-size: 1em;
@@ -171,9 +172,10 @@ label {
 }
 
 blockquote {
-  border-left: .25rem solid #e2e2e2;
-  margin-bottom: 0;
-  padding: 1em 1.25rem;
+  border-left: 1px solid var(--_adult---adult-red);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 0 1.25rem;
   font-size: 1em;
   line-height: 1.5;
 }
@@ -402,30 +404,15 @@ figcaption {
 }
 
 .text-rich-text h1 {
-  margin-top: var(--_adult---default-height);
-  margin-bottom: var(--_adult---default-height);
   text-align: center;
   line-height: 1.2em;
 }
 
 .text-rich-text h2 {
-  margin-top: var(--_adult---default-height);
-  margin-bottom: var(--_adult---default-height);
   font-size: 1em;
 }
 
-.text-rich-text h3 {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  font-size: 1em;
-}
-
-.text-rich-text h4 {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.text-rich-text h5, .text-rich-text h6 {
+.text-rich-text h3, .text-rich-text h5, .text-rich-text h6 {
   margin-top: 1em;
   margin-bottom: 1em;
   font-size: 1em;
@@ -622,6 +609,7 @@ figcaption {
 }
 
 .form_input.is-text-area {
+  text-transform: none;
   min-height: 15rem;
 }
 
@@ -1700,6 +1688,7 @@ figcaption {
 .product-item_component {
   border-right: 1px solid var(--_adult---adult-red);
   border-bottom: 1px solid var(--_adult---adult-red);
+  text-transform: uppercase;
   flex-direction: column;
   position: relative;
 }
@@ -2012,6 +2001,7 @@ figcaption {
 }
 
 .product-header_layout {
+  text-transform: uppercase;
   background-color: #0000;
   grid-auto-columns: 1fr;
   justify-content: center;
@@ -2678,6 +2668,10 @@ figcaption {
   grid-template-columns: 1fr 1fr;
   grid-auto-columns: 1fr;
   display: flex;
+}
+
+.section_contact {
+  text-transform: uppercase;
 }
 
 .contact_component {
@@ -3795,7 +3789,8 @@ figcaption {
 .footer_sub-footer {
   grid-column-gap: 1rem;
   grid-row-gap: 1rem;
-  flex-flow: row;
+  text-transform: uppercase;
+  flex-flow: wrap;
   grid-template-rows: auto;
   grid-template-columns: auto 1fr auto;
   grid-auto-columns: 1fr;
@@ -3811,10 +3806,11 @@ figcaption {
 }
 
 .footer_legal-links {
-  grid-column-gap: 1.5rem;
-  grid-row-gap: 1rem;
-  flex-flow: wrap;
-  justify-content: flex-end;
+  grid-column-gap: 1rem;
+  grid-row-gap: 0rem;
+  white-space: nowrap;
+  flex-flow: row;
+  justify-content: center;
   align-items: center;
   display: flex;
 }
@@ -3924,6 +3920,7 @@ figcaption {
 .section_nav {
   z-index: 1000000;
   padding: var(--_adult---default-height);
+  text-transform: uppercase;
   position: fixed;
   inset: 0% 0% auto;
 }
