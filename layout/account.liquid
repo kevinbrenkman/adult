@@ -132,7 +132,7 @@ html.lenis {
   <style>
 /* Define a transition duration during page visits */
 html.is-changing .transition-fade {
-  transition: opacity 0.25s;
+  transition: opacity 1s;
   opacity: 1;
 }
 /* Define the styles for the unloaded pages */
@@ -266,10 +266,6 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
       }, 0); // Let Webflow finish layout shift
     }
   }
-  // Force scroll position reset BEFORE transition starts (important!)
-  swup.hooks.on('visit:start', () => {
-    window.scrollTo(0, 0);
-  });
   // After new page is rendered
   swup.hooks.on('page:view', () => {
     reinitWebflow();
