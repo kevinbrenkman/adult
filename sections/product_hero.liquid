@@ -16,8 +16,59 @@
           
                         </div>
 {% endfor %}
+          {% for media in product.media %}    <div li-for="media in product.media" class="product-img-vid">
+                                    
+            
+                            {% if media.media_type == 'image' %}    <div li-if="media.media_type == 'image'" class="product_image-wrapper">
+    <img li-object:src="media.src | product_img_url: 'master'" li-object:alt="media.alt" alt="{{ media.alt }}" src="{{ media.src | product_img_url: 'master' }}" loading="lazy" class="product_gallery-image">    </div>
+{% endif %}
+                            
+            
+                            {% if media.media_type == 'video' %}    <div li-if="media.media_type == 'video'" data-video="video-wrapper" class="product_video-wrapper">
+    
+              <video style="height:100%;width:100%" playsinline="" autoplay="" loop="" muted="" volume="0" alt="{{media.alt}}" id="product-video-{{forloop.index}}">{% for video_source in media.sources %}<source src="{{video_source.url}}" type="{{video_source.mime_type}}">{% endfor %}</video>
+                </div>
+{% endif %}
+                            
+          
+                        </div>
+{% endfor %}
+          {% for media in product.media %}    <div li-for="media in product.media" class="product-img-vid">
+                                    
+            
+                            {% if media.media_type == 'image' %}    <div li-if="media.media_type == 'image'" class="product_image-wrapper">
+    <img li-object:src="media.src | product_img_url: 'master'" li-object:alt="media.alt" alt="{{ media.alt }}" src="{{ media.src | product_img_url: 'master' }}" loading="lazy" class="product_gallery-image">    </div>
+{% endif %}
+                            
+            
+                            {% if media.media_type == 'video' %}    <div li-if="media.media_type == 'video'" data-video="video-wrapper" class="product_video-wrapper">
+    
+              <video style="height:100%;width:100%" playsinline="" autoplay="" loop="" muted="" volume="0" alt="{{media.alt}}" id="product-video-{{forloop.index}}">{% for video_source in media.sources %}<source src="{{video_source.url}}" type="{{video_source.mime_type}}">{% endfor %}</video>
+                </div>
+{% endif %}
+                            
+          
+                        </div>
+{% endfor %}
+          {% for media in product.media %}    <div li-for="media in product.media" class="product-img-vid">
+                                    
+            
+                            {% if media.media_type == 'image' %}    <div li-if="media.media_type == 'image'" class="product_image-wrapper">
+    <img li-object:src="media.src | product_img_url: 'master'" li-object:alt="media.alt" alt="{{ media.alt }}" src="{{ media.src | product_img_url: 'master' }}" loading="lazy" class="product_gallery-image">    </div>
+{% endif %}
+                            
+            
+                            {% if media.media_type == 'video' %}    <div li-if="media.media_type == 'video'" data-video="video-wrapper" class="product_video-wrapper">
+    
+              <video style="height:100%;width:100%" playsinline="" autoplay="" loop="" muted="" volume="0" alt="{{media.alt}}" id="product-video-{{forloop.index}}">{% for video_source in media.sources %}<source src="{{video_source.url}}" type="{{video_source.mime_type}}">{% endfor %}</video>
+                </div>
+{% endif %}
+                            
+          
+                        </div>
+{% endfor %}
         </div>
-        <div class="product-header_component sticky">
+        <div class="product-header_component">
           <script src="{{ 'li_custom.js' | asset_url }}" type="text/javascript"></script>
 <div li-element="product-variant-container" class="product-header_layout" x-data="handleVariant({{ product | json | escape }}, {{ product.options_by_name | json | escape }}, {{ product.selected_or_first_available_variant | json | escape }})" x-init="$nextTick(() => { activateVariants() })" @setbundleitem.window="updateBundleItem($event.detail.product, $event.detail.quantity)">
             <div li-content-for-theme-blocks="" id="w-node-_4b0e9b61-6f53-1185-9fdd-143753136879-5313685d" class="product-header_product-details">
