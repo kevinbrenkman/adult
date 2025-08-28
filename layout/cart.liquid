@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-wf-page="6888d108d478b2446d70ba70" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
+<html data-wf-page="6888d108d478b2446d70ba73" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8">
   <title>{{ page_title }}</title>
@@ -180,7 +180,7 @@ This will create a separate layout file for this page, allowing you to apply cus
 Learn more: https://www.liquify.pro/docu/getting-started#template-structure
  -->
 <script src="{{ 'li_helper.js' | asset_url }}" type="text/javascript"></script>{{ content_for_header }}</head>
-<body li-page="addresses" li-layout="account">
+<body li-page="cart">
   <div class="page-wrapper">
     {% render 'global_styles' %}
     {% sections 'header_group' %}
@@ -580,6 +580,46 @@ document.addEventListener('DOMContentLoaded', function () {
 window.addEventListener('beforeunload', function () {
   sessionStorage.setItem('scrollPosition', window.scrollY);
 });
+</script>
+  <script>
+(function () {
+  function getToggle() {
+    return document.querySelector('[li-element="mini-cart-toggle"]') 
+        || document.getElementById('w-dropdown-toggle-0');
+  }
+  function simulateClick(el) {
+    // Fire a full click sequence for stubborn handlers
+    try { el.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, view: window })); } catch (e) {}
+    el.dispatchEvent(new MouseEvent('mousedown',   { bubbles: true, cancelable: true, view: window }));
+    el.dispatchEvent(new MouseEvent('mouseup',     { bubbles: true, cancelable: true, view: window }));
+    el.dispatchEvent(new MouseEvent('click',       { bubbles: true, cancelable: true, view: window }));
+  }
+  function tryClickOnce() {
+    var el = getToggle();
+    if (!el) return false;
+    simulateClick(el);
+    return true;
+  }
+  function run() {
+    // Give Webflow a tick to bind its listeners, then click
+    requestAnimationFrame(function () {
+      if (tryClickOnce()) return;
+      // If the header/toggle mounts late, observe briefly
+      var mo = new MutationObserver(function () {
+        if (tryClickOnce()) { mo.disconnect(); }
+      });
+      mo.observe(document.documentElement, { childList: true, subtree: true });
+      setTimeout(function(){ try { mo.disconnect(); } catch(e){} }, 5000);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  // If you use Swup, also click after content swap:
+  document.addEventListener('swup:contentReplaced', function () { run(); });
+})();
 </script>
 </body>
 </html>

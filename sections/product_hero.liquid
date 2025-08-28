@@ -16,57 +16,6 @@
           
                         </div>
 {% endfor %}
-          {% for media in product.media %}    <div li-for="media in product.media" class="product-img-vid">
-                                    
-            
-                            {% if media.media_type == 'image' %}    <div li-if="media.media_type == 'image'" class="product_image-wrapper">
-    <img li-object:src="media.src | product_img_url: 'master'" li-object:alt="media.alt" alt="{{ media.alt }}" src="{{ media.src | product_img_url: 'master' }}" loading="lazy" class="product_gallery-image">    </div>
-{% endif %}
-                            
-            
-                            {% if media.media_type == 'video' %}    <div li-if="media.media_type == 'video'" data-video="video-wrapper" class="product_video-wrapper">
-    
-              <video style="height:100%;width:100%" playsinline="" autoplay="" loop="" muted="" volume="0" alt="{{media.alt}}" id="product-video-{{forloop.index}}">{% for video_source in media.sources %}<source src="{{video_source.url}}" type="{{video_source.mime_type}}">{% endfor %}</video>
-                </div>
-{% endif %}
-                            
-          
-                        </div>
-{% endfor %}
-          {% for media in product.media %}    <div li-for="media in product.media" class="product-img-vid">
-                                    
-            
-                            {% if media.media_type == 'image' %}    <div li-if="media.media_type == 'image'" class="product_image-wrapper">
-    <img li-object:src="media.src | product_img_url: 'master'" li-object:alt="media.alt" alt="{{ media.alt }}" src="{{ media.src | product_img_url: 'master' }}" loading="lazy" class="product_gallery-image">    </div>
-{% endif %}
-                            
-            
-                            {% if media.media_type == 'video' %}    <div li-if="media.media_type == 'video'" data-video="video-wrapper" class="product_video-wrapper">
-    
-              <video style="height:100%;width:100%" playsinline="" autoplay="" loop="" muted="" volume="0" alt="{{media.alt}}" id="product-video-{{forloop.index}}">{% for video_source in media.sources %}<source src="{{video_source.url}}" type="{{video_source.mime_type}}">{% endfor %}</video>
-                </div>
-{% endif %}
-                            
-          
-                        </div>
-{% endfor %}
-          {% for media in product.media %}    <div li-for="media in product.media" class="product-img-vid">
-                                    
-            
-                            {% if media.media_type == 'image' %}    <div li-if="media.media_type == 'image'" class="product_image-wrapper">
-    <img li-object:src="media.src | product_img_url: 'master'" li-object:alt="media.alt" alt="{{ media.alt }}" src="{{ media.src | product_img_url: 'master' }}" loading="lazy" class="product_gallery-image">    </div>
-{% endif %}
-                            
-            
-                            {% if media.media_type == 'video' %}    <div li-if="media.media_type == 'video'" data-video="video-wrapper" class="product_video-wrapper">
-    
-              <video style="height:100%;width:100%" playsinline="" autoplay="" loop="" muted="" volume="0" alt="{{media.alt}}" id="product-video-{{forloop.index}}">{% for video_source in media.sources %}<source src="{{video_source.url}}" type="{{video_source.mime_type}}">{% endfor %}</video>
-                </div>
-{% endif %}
-                            
-          
-                        </div>
-{% endfor %}
         </div>
         <div class="product-header_component">
           <script src="{{ 'li_custom.js' | asset_url }}" type="text/javascript"></script>
