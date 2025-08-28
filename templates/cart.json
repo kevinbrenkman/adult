@@ -1,12 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "cart": {
-            "type": "cart"
-        }
-    },
-    "layout": "theme",
-    "wrapper": "main.main-wrapper",
-    "order": [
-        "cart"
-    ]
+  "sections": {
+    "cart": {
+      "type": "cart",
+      "disabled": true,
+      "settings": {
+        "text_heading": "Cart",
+        "text_continue_shopping": "Continue shopping",
+        "text_product": "Product",
+        "text_quantity": "Quantity",
+        "text_price": "Price",
+        "text_remove": "Remove",
+        "text_summary": "Summary",
+        "text_sum_inkl_vat": "Sum (inkl. Vat.)",
+        "text_discount": "Discount",
+        "text_comment": "Comment",
+        "text_cart_empty": "No Products yet."
+      }
+    }
+  },
+  "layout": "theme",
+  "wrapper": "main.main-wrapper",
+  "order": [
+    "cart"
+  ]
 }
