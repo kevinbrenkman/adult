@@ -582,6 +582,65 @@ window.addEventListener('beforeunload', function () {
 });
 </script>
   <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const url = window.location.href;
+  // --- Utilities ---
+  function restoreScroll(anchor) {
+    if (url.includes(`?customer_posted=true#${anchor}`)) {
+      const savedScroll = sessionStorage.getItem('scrollPosition');
+      if (savedScroll) {
+        window.scrollTo(0, parseInt(savedScroll, 10));
+        sessionStorage.removeItem('scrollPosition');
+      }
+    }
+  }
+  function handleSuccess(anchor, selectors) {
+    if (url.includes(`?customer_posted=true#${anchor}`)) {
+      const initialEl = document.querySelector(selectors.initial);
+      const successEl = document.querySelector(selectors.success);
+      if (initialEl) initialEl.classList.add('succes');
+      if (successEl) successEl.classList.add('succes');
+    }
+  }
+  // --- Newsletter / footer form ---
+  restoreScroll('contact_form');
+  handleSuccess('contact_form', {
+    initial: '.footer-form-initial-state',
+    success: '.footer-form-succes-state'
+  });
+  // --- Contact form ---
+  restoreScroll('wf-form-Contact-Form');
+  handleSuccess('wf-form-Contact-Form', {
+    initial: '.contact-form-wrapper',
+    success: '.contact-form-succes-state'
+  });
+  // --- Input formatting (shared) ---
+  const generalIds = ['name', 'last_name'];
+  generalIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        let val = e.target.value.trim().replace(/\s+/g, '');
+        e.target.value = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+      });
+    }
+  });
+  const emailIds = ['email'];
+  emailIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        e.target.value = e.target.value.trim().replace(/\s+/g, '');
+      });
+    }
+  });
+});
+// Save scroll before leaving
+window.addEventListener('beforeunload', function () {
+  sessionStorage.setItem('scrollPosition', window.scrollY);
+});
+</script>
+  <script>
 (function () {
   function getToggle() {
     return document.querySelector('[li-element="mini-cart-toggle"]') 
