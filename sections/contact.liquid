@@ -25,6 +25,11 @@
                 <div class="error-message w-form-fail">
                   <div class="error-text">Oops! Something went wrong while submitting the form.</div>
                 </div>
+                <div class="contact-form-succes-state">
+                  <div>
+{{ section.settings.text_succes_message }}
+</div>
+                </div>
               </div>
               <div>
 {{ section.settings.text_small_title }}
@@ -46,6 +51,12 @@
             "type": "richtext",
             "label": "I accept the Terms",
             "default": "<p>I accept the Terms<\/p>"
+        },
+        {
+            "id": "text_succes_message",
+            "type": "text",
+            "label": "Succes Message",
+            "default": "All set. Consider your message delivered with a strut."
         },
         {
             "id": "text_small_title",
