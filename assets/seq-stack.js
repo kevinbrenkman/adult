@@ -27,12 +27,13 @@
     await loadScriptOnce('https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js');
     gsap.registerPlugin();
 
+    // collect original nodes in DOM order
     const all = Array.from(document.querySelectorAll('.section_seq_image, .section_seq_text'));
-    const imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
+    let imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
     const textSecs = all.filter(n => n.classList.contains('section_seq_text'));
     if (!imgSecs.length) return;
 
-    // Stage container + minimal styles
+    // Stage + minimal CSS
     const stage = document.createElement('div'); stage.id = 'seqStageStack';
     const style = document.createElement('style'); style.id = 'seqStageStack-style';
     style.textContent = `
@@ -47,27 +48,34 @@
     const pinContainer = document.querySelector(PIN_TO) || document.body;
     pinContainer.insertBefore(stage, pinContainer.firstChild);
 
-    // Move nodes into stage (with backups for cleanup)
+    // Move nodes into stage (backup for cleanup)
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
-    let imgs = imgSecs.map(s => s.querySelector('img, .seq-image, picture img')).filter(Boolean);
-
-    // 🔁 Duplicate first image at end for seamless loop
-    if (imgs.length > 1) {
-      const clone = imgs[0].cloneNode(true);
-      imgs.push(clone);
-      stage.appendChild(clone);
+    // 🔁 Deep-clone the FIRST .section_seq_image (entire section)
+    if (imgSecs.length > 1) {
+      const firstSectionClone = imgSecs[0].cloneNode(true);
+      firstSectionClone.setAttribute('aria-hidden', 'true');
+      firstSectionClone.setAttribute('data-seq-clone', 'true');
+      // ensure any image inside the clone loads
+      firstSectionClone.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
+      stage.appendChild(firstSectionClone);
+      // refresh image sections to include the clone at the end
+      imgSecs = Array.from(stage.querySelectorAll('.section_seq_image'));
     }
 
-    // Init
+    // images we animate are the inner <img> (or .seq-image) of each section
+    const imgs = imgSecs
+      .map(sec => sec.querySelector('img, .seq-image, picture img'))
+      .filter(Boolean);
+
+    // init states
     gsap.set(imgs, { opacity: 0 });
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
 
-    // Build the scrub timeline: 2 images visible at once
+    // build scrub timeline: keep MAX_VISIBLE on stack
     const tl = gsap.timeline({ paused: true });
-
     imgs.forEach((img, i) => {
       if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
       if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
@@ -75,10 +83,10 @@
       }
     });
 
-    // Text visibility (visible for 2 image steps)
+    // text visibility (for 2 image steps)
     let seen = 0;
     const startIndex = new Map();
-    all.forEach(node => {
+    Array.from(stage.querySelectorAll('.section_seq_image, .section_seq_text')).forEach(node => {
       if (node.classList.contains('section_seq_image')) seen++;
       if (node.classList.contains('section_seq_text')) startIndex.set(node, seen);
     });
@@ -88,12 +96,12 @@
       tl.to(txt, { opacity: 0, duration: 0.5 }, sIdx + 2);
     });
 
-    // Logo scrub-fade (one-way: won’t reappear if scrubbing back)
+    // logo scrub-fade (one-way)
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
     const LOGO_FADE_STEPS = 2;
     let logoMinOpacity = 1;
 
-    // Scrub driver
+    // scrub driver
     let pos = 0;
     const dur = tl.duration();
 
@@ -108,45 +116,30 @@
     };
 
     const setProgress = (p) => {
-      pos = (p % dur + dur) % dur; // wrap timeline
+      pos = (p % dur + dur) % dur; // wrap
       tl.time(pos, false);
       applyLogoOpacityFromTime(pos);
     };
 
-    // Wheel / touch input (can go both ways)
-    const onWheel = (e) => {
-      e.preventDefault();
-      setProgress(pos + e.deltaY * WHEEL_SPEED * dur);
-    };
+    // inputs
+    const onWheel = (e) => { e.preventDefault(); setProgress(pos + e.deltaY * WHEEL_SPEED * dur); };
     const activeTouches = { id: null, y: 0 };
-    const onTouchStart = (e) => {
-      if (e.touches.length){
-        activeTouches.id = e.touches[0].identifier;
-        activeTouches.y = e.touches[0].clientY;
-      }
-    };
+    const onTouchStart = (e) => { if (e.touches.length){ activeTouches.id = e.touches[0].identifier; activeTouches.y = e.touches[0].clientY; } };
     const onTouchMove = (e) => {
       const t = [...e.touches].find(t => t.identifier === activeTouches.id) || e.touches[0];
-      if (!t) return;
-      e.preventDefault();
+      if (!t) return; e.preventDefault();
       const dy = activeTouches.y - t.clientY;
       setProgress(pos + dy * TOUCH_SPEED * dur);
       activeTouches.y = t.clientY;
     };
-
-    // Cursor movement (all motion = forward only)
     let lastX = null, lastY = null;
     const onMouseMove = (e) => {
       if (lastX != null && lastY != null) {
-        const dx = e.clientX - lastX;
-        const dy = e.clientY - lastY;
+        const dx = e.clientX - lastX, dy = e.clientY - lastY;
         const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist >= CURSOR_THRESHOLD) {
-          setProgress(pos + dist * CURSOR_SPEED * dur);
-        }
+        if (dist >= CURSOR_THRESHOLD) setProgress(pos + dist * CURSOR_SPEED * dur);
       }
-      lastX = e.clientX;
-      lastY = e.clientY;
+      lastX = e.clientX; lastY = e.clientY;
     };
 
     const opts = { passive: false };
@@ -155,7 +148,7 @@
     stage.addEventListener('touchmove', onTouchMove, opts);
     window.addEventListener('mousemove', onMouseMove);
 
-    // Cleanup
+    // cleanup
     window.seqStackDestroy = () => {
       tl.kill();
       backups.forEach(({node, parent, next}) => {
