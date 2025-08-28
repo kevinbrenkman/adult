@@ -1,7 +1,7 @@
 (() => {
   const MAX_VISIBLE = 2;
   const WHEEL_SPEED = 0.00005;
-  const TOUCH_SPEED = 0.0001;
+  const TOUCH_SPEED = 0.0005;
   const CURSOR_SPEED = 0.000065;
   const CURSOR_THRESHOLD = 3;
   const PIN_TO = '.main-wrapper';
