@@ -661,6 +661,8 @@ figcaption {
 
 .page-wrapper {
   flex-flow: column;
+  justify-content: space-between;
+  align-items: stretch;
   min-height: 100svh;
   display: flex;
 }
@@ -3788,7 +3790,7 @@ figcaption {
 
 .footer_sub-footer {
   grid-column-gap: 1rem;
-  grid-row-gap: 1rem;
+  grid-row-gap: .25rem;
   text-transform: uppercase;
   flex-flow: wrap;
   grid-template-rows: auto;
@@ -4057,6 +4059,7 @@ figcaption {
   grid-column-gap: .5rem;
   grid-row-gap: .5rem;
   display: flex;
+  position: relative;
 }
 
 .product-media-list {
@@ -4254,6 +4257,7 @@ figcaption {
 }
 
 .body-text h1 {
+  text-transform: none;
   font-family: Academica, Arial, sans-serif;
   font-size: 2rem;
   font-weight: 300;
@@ -4463,6 +4467,17 @@ figcaption {
   justify-content: center;
   align-items: center;
   height: 100dvh;
+  display: flex;
+}
+
+.footer-form-succes-state {
+  border: 1px solid var(--_adult---adult-red);
+  display: none;
+  position: absolute;
+  inset: 0%;
+}
+
+.footer-form-succes-state.form_input.succes {
   display: flex;
 }
 
@@ -5161,6 +5176,10 @@ figcaption {
     width: calc(50% - var(--_adult---default-height)  - var(--_adult---default-height));
   }
 
+  .logo-wrapper {
+    opacity: 100;
+  }
+
   .logo-wrapper.coming-soon-page {
     width: 100%;
   }
@@ -5234,6 +5253,10 @@ figcaption {
 
   .heading-style-h3 {
     font-size: 1.5rem;
+  }
+
+  .text-rich-text h1 {
+    font-size: 1em;
   }
 
   .heading-style-h1 {
@@ -5904,8 +5927,27 @@ figcaption {
     font-size: 1.5rem;
   }
 
-  .seq-image-wrapper.small, .seq-image-wrapper.x-small {
+  .seq-image-flex {
+    justify-content: center !important;
+  }
+
+  .seq-image-wrapper.small {
     width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
+  }
+
+  .seq-image-wrapper.medium, .seq-image-wrapper.large {
+    width: 100%;
+    padding: 0 !important;
+  }
+
+  .seq-image-wrapper.x-small {
+    width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
+  }
+
+  .logo-wrapper {
+    margin-top: 0;
+    display: flex;
+    inset: 0%;
   }
 
   .mobile-menu-background {

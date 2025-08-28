@@ -512,60 +512,73 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
   <script>
-(function () {
-  function findMiniCartRoot() {
-    return document.querySelector('.w-dropdown[li-element="mini-cart"], [li-element="mini-cart"].w-dropdown');
-  }
-  function findMiniCartToggle(root) {
-    return root ? root.querySelector('.w-dropdown-toggle') : null;
-  }
-  function focusMiniCart(root) {
-    var panel = root && root.querySelector('[li-element="mini-cart-container"]');
-    if (panel) { panel.setAttribute('tabindex', '-1'); panel.focus(); }
-  }
-  // Opens your mini-cart:
-  // - Dispatches Alpine's "toggleminicart" (your component listens with @toggleminicart.window="toggleMiniCart()")
-  // - Ensures the Webflow dropdown is opened by clicking the .w-dropdown-toggle if needed
-  function openMiniCart() {
-    var root = findMiniCartRoot();
-    var toggle = findMiniCartToggle(root);
-    // Trigger your Alpine flow (fetches cart + LiquifyHelper.handleTriggerClick())
-    try {
-      window.dispatchEvent(new CustomEvent('toggleminicart'));
-    } catch (e) { /* safe no-op */ }
-    // Ensure the dropdown is visually opened
-    if (toggle && !toggle.classList.contains('w--open')) {
-      toggle.click();
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('&#9989; DOM fully loaded');
+  const url = window.location.href;
+  console.log('&#127760; Current URL:', url);
+  // Restore scroll position if returning to success page
+  if (url.includes('?customer_posted=true#contact_form')) {
+    const savedScroll = sessionStorage.getItem('scrollPosition');
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll, 10));
+      console.log('&#128205; Scroll position restored to', savedScroll);
+      sessionStorage.removeItem('scrollPosition'); // clean up
     }
-    focusMiniCart(root);
   }
-  function onReady(fn) {
-    if (document.readyState !== 'loading') fn();
-    else document.addEventListener('DOMContentLoaded', fn);
-  }
-  onReady(function () {
-    // 1) Auto-open when landing with ?open_cart=1
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('open_cart') === '1') {
-      openMiniCart();
-      // Clean the URL (no reload)
-      params.delete('open_cart');
-      var clean = window.location.pathname +
-        (params.toString() ? '?' + params.toString() : '') +
-        window.location.hash;
-      history.replaceState({}, '', clean);
+  // 1. Show success state if form submitted
+  if (url.includes('?customer_posted=true#contact_form')) {
+    console.log('&#127881; Success form submission detected via URL');
+    const footerFormInitialState = document.querySelector('.footer-form-initial-state');
+    const footerFormSuccessState = document.querySelector('.footer-form-succes-state');
+    if (footerFormInitialState) {
+      footerFormInitialState.classList.add('succes');
+      console.log('&#9989; .succes class added to .footer-form-initial-state');
     }
-    // 2) Intercept any clicks to /cart (works across the site, including nested elements)
-    document.addEventListener('click', function (e) {
-      var a = e.target.closest('a[href="/cart"], a[href$="/cart"]');
-      if (!a) return;
-      // Allow default inside Shopify Theme Editor to avoid confusion
-      if (window.Shopify && Shopify.designMode) return;
-      e.preventDefault();
-      openMiniCart();
-    }, true);
+    if (footerFormSuccessState) {
+      footerFormSuccessState.classList.add('succes');
+      console.log('&#9989; .succes class added to .footer-form-succes-state');
+    }
+    const newsletterElements = document.querySelectorAll('[hs-newsletter-show]');
+    if (newsletterElements.length > 0) {
+      newsletterElements.forEach(el => {
+        el.style.display = 'flex';
+      });
+      console.log(`&#128236; ${newsletterElements.length} newsletter element(s) shown`);
+    } else {
+      console.log('&#8505;&#65039; No [hs-newsletter-show] elements found');
+    }
+  }
+  // 2. Input formatting &mdash; name & last name (capitalize), email (remove spaces)
+  const generalIds = ['name', 'last_name'];
+  generalIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        let val = e.target.value.trim().replace(/\s+/g, '');
+        e.target.value = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+        console.log(`&#9997;&#65039; Formatting input: #${id} &rarr; "${e.target.value}"`);
+      });
+    } else {
+      console.warn(`&#9888;&#65039; Input field #${id} not found`);
+    }
   });
-})();
+  const emailIds = ['email'];
+  emailIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        e.target.value = e.target.value.trim().replace(/\s+/g, '');
+        console.log(`&#9997;&#65039; Formatting email input: #${id} &rarr; "${e.target.value}"`);
+      });
+    } else {
+      console.warn(`&#9888;&#65039; Email input field #${id} not found`);
+    }
+  });
+});
+// Save scroll position before navigating away
+window.addEventListener('beforeunload', function () {
+  sessionStorage.setItem('scrollPosition', window.scrollY);
+});
 </script>
 </body>
 </html>
