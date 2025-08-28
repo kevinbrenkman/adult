@@ -33,6 +33,8 @@
     const textSecs = all.filter(n => n.classList.contains('section_seq_text'));
     if (!imgSecs.length) return;
 
+    const IS_MOBILE = window.innerWidth <= 767;
+
     // Stage + minimal CSS
     const stage = document.createElement('div'); stage.id = 'seqStageStack';
     const style = document.createElement('style'); style.id = 'seqStageStack-style';
@@ -52,12 +54,11 @@
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
-    // 🔁 Deep-clone the FIRST .section_seq_image (entire section)
+    // 🔁 Deep-clone the FIRST .section_seq_image (entire section) for seamless loop
     if (imgSecs.length > 1) {
       const firstSectionClone = imgSecs[0].cloneNode(true);
       firstSectionClone.setAttribute('aria-hidden', 'true');
       firstSectionClone.setAttribute('data-seq-clone', 'true');
-      // ensure any image inside the clone loads
       firstSectionClone.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
       stage.appendChild(firstSectionClone);
       // refresh image sections to include the clone at the end
@@ -74,29 +75,63 @@
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
 
-    // build scrub timeline: keep MAX_VISIBLE on stack
-    const tl = gsap.timeline({ paused: true });
-    imgs.forEach((img, i) => {
-      if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
-      if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
-        tl.to(imgs[i - MAX_VISIBLE], { opacity: 0, duration: 1 }, i);
-      }
-    });
-
-    // text visibility (for 2 image steps)
+    // ---- Figure out which images should linger on mobile ----
+    // For each text block, find the index of the image *after* it.
     let seen = 0;
-    const startIndex = new Map();
+    const startIndex = new Map();     // text section -> image index after it
     Array.from(stage.querySelectorAll('.section_seq_image, .section_seq_text')).forEach(node => {
       if (node.classList.contains('section_seq_image')) seen++;
       if (node.classList.contains('section_seq_text')) startIndex.set(node, seen);
     });
+
+    const lingerIndices = new Set();
+    if (IS_MOBILE) {
+      textSecs.forEach(txt => {
+        const afterIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
+        if (afterIdx >= 0) lingerIndices.add(afterIdx);
+      });
+    }
+
+    // ---- Build the scrub timeline: keep MAX_VISIBLE on stack ----
+    const tl = gsap.timeline({ paused: true });
+
+    imgs.forEach((img, i) => {
+      // fade current in at its step
+      if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
+
+      // determine the image that would normally fade out at this step
+      if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
+        const outIndex = i - MAX_VISIBLE;
+
+        // If this image should linger on mobile, skip its normal fade-out here
+        if (!(IS_MOBILE && lingerIndices.has(outIndex))) {
+          tl.to(imgs[outIndex], { opacity: 0, duration: 1 }, i);
+        }
+      }
+    });
+
+    // ---- Schedule delayed fade-outs for linger images (mobile only) ----
+    if (IS_MOBILE && lingerIndices.size) {
+      const dur = tl.duration();
+      const wrap = (t) => ((t % dur) + dur) % dur; // normalize time within duration
+
+      lingerIndices.forEach(idx => {
+        const originalOutTime = idx + MAX_VISIBLE;     // when it would normally fade out
+        const delayedOutTime  = idx + MAX_VISIBLE + 3; // keep 3 extra steps visible
+
+        // finally fade it out later
+        tl.to(imgs[idx], { opacity: 0, duration: 1 }, wrap(delayedOutTime));
+      });
+    }
+
+    // ---- Text visibility (visible for 2 image steps) ----
     textSecs.forEach(txt => {
       const sIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
       tl.to(txt, { opacity: 1, duration: 0.5 }, sIdx + 0.001);
       tl.to(txt, { opacity: 0, duration: 0.5 }, sIdx + 2);
     });
 
-    // logo scrub-fade (one-way)
+    // ---- Logo scrub-fade (one-way: won’t reappear if scrubbing back) ----
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
     const LOGO_FADE_STEPS = 2;
     let logoMinOpacity = 1;
