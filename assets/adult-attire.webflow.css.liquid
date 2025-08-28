@@ -2691,6 +2691,7 @@ figcaption {
   align-items: stretch;
   min-width: 100%;
   margin-bottom: 0;
+  position: relative;
 }
 
 .contact_form {
@@ -4304,7 +4305,8 @@ figcaption {
 }
 
 .contact-form-wrapper.succes {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .product-item_image_hover {
@@ -4488,6 +4490,8 @@ figcaption {
 .contact-form-succes-state {
   padding: var(--_adult---default-height);
   display: none;
+  position: absolute;
+  inset: 0%;
 }
 
 .contact-form-succes-state.succes {
