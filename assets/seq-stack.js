@@ -60,19 +60,19 @@
 
     // Build the scrub timeline: 2 images visible at once
     const tl = gsap.timeline({ paused: true });
-
     imgs.forEach((img, i) => {
-      if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i); // fade current in at step i
+      if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
       if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
-        tl.to(imgs[i - MAX_VISIBLE], { opacity: 0, duration: 1 }, i); // fade oldest out
+        tl.to(imgs[i - MAX_VISIBLE], { opacity: 0, duration: 1 }, i);
       }
     });
 
-    // Smooth loop: last → first cross-fade (prevents hard cut)
+    // Smooth loop: last → first cross-fade right at the end of the timeline
     if (imgs.length > 1) {
       const lastIndex = imgs.length - 1;
-      tl.to(imgs[0], { opacity: 1, duration: 1 }, lastIndex + 1);  // bring first back
-      tl.to(imgs[lastIndex], { opacity: 0, duration: 1 }, lastIndex + 1); // fade last out
+      const loopPoint = lastIndex; // same as final step
+      tl.to(imgs[0], { opacity: 1, duration: 1 }, loopPoint);
+      tl.to(imgs[lastIndex], { opacity: 0, duration: 1 }, loopPoint);
     }
 
     // Text visibility (visible for 2 image steps)
