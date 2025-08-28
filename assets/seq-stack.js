@@ -51,7 +51,14 @@
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
-    const imgs = imgSecs.map(s => s.querySelector('img, .seq-image, picture img')).filter(Boolean);
+    let imgs = imgSecs.map(s => s.querySelector('img, .seq-image, picture img')).filter(Boolean);
+
+    // 🔁 Duplicate first image at end for seamless loop
+    if (imgs.length > 1) {
+      const clone = imgs[0].cloneNode(true);
+      imgs.push(clone);
+      stage.appendChild(clone);
+    }
 
     // Init
     gsap.set(imgs, { opacity: 0 });
@@ -60,20 +67,13 @@
 
     // Build the scrub timeline: 2 images visible at once
     const tl = gsap.timeline({ paused: true });
+
     imgs.forEach((img, i) => {
       if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
       if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
         tl.to(imgs[i - MAX_VISIBLE], { opacity: 0, duration: 1 }, i);
       }
     });
-
-    // Smooth loop: last → first cross-fade right at the end of the timeline
-    if (imgs.length > 1) {
-      const lastIndex = imgs.length - 1;
-      const loopPoint = lastIndex; // same as final step
-      tl.to(imgs[0], { opacity: 1, duration: 1 }, loopPoint);
-      tl.to(imgs[lastIndex], { opacity: 0, duration: 1 }, loopPoint);
-    }
 
     // Text visibility (visible for 2 image steps)
     let seen = 0;
