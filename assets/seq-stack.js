@@ -1,4 +1,5 @@
 (() => {
+  // === your tuned values ===
   const MAX_VISIBLE = 2;
   const WHEEL_SPEED = 0.00005;
   const TOUCH_SPEED = 0.00025;
@@ -52,18 +53,27 @@
 
     const imgs = imgSecs.map(s => s.querySelector('img, .seq-image, picture img')).filter(Boolean);
 
+    // Init
     gsap.set(imgs, { opacity: 0 });
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
 
     // Build the scrub timeline: 2 images visible at once
     const tl = gsap.timeline({ paused: true });
+
     imgs.forEach((img, i) => {
-      if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
+      if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i); // fade current in at step i
       if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
-        tl.to(imgs[i - MAX_VISIBLE], { opacity: 0, duration: 1 }, i);
+        tl.to(imgs[i - MAX_VISIBLE], { opacity: 0, duration: 1 }, i); // fade oldest out
       }
     });
+
+    // Smooth loop: last → first cross-fade (prevents hard cut)
+    if (imgs.length > 1) {
+      const lastIndex = imgs.length - 1;
+      tl.to(imgs[0], { opacity: 1, duration: 1 }, lastIndex + 1);  // bring first back
+      tl.to(imgs[lastIndex], { opacity: 0, duration: 1 }, lastIndex + 1); // fade last out
+    }
 
     // Text visibility (visible for 2 image steps)
     let seen = 0;
@@ -78,10 +88,10 @@
       tl.to(txt, { opacity: 0, duration: 0.5 }, sIdx + 2);
     });
 
-    // Logo scrub-fade: fade out over the first N "image steps"
+    // Logo scrub-fade (one-way: won’t reappear if scrubbing back)
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
-    const LOGO_FADE_STEPS = 2;                   // fade across first 2 image steps
-    let logoMinOpacity = 1;                      // one-way fade: never increase opacity
+    const LOGO_FADE_STEPS = 2;
+    let logoMinOpacity = 1;
 
     // Scrub driver
     let pos = 0;
@@ -91,7 +101,6 @@
       if (!logoEl) return;
       const fadeEnd = Math.min(LOGO_FADE_STEPS, dur || 1);
       const calc = 1 - Math.max(0, Math.min(1, t / fadeEnd));
-      // enforce one-way: only reduce opacity
       if (calc < logoMinOpacity) {
         logoMinOpacity = calc;
         gsap.set(logoEl, { opacity: logoMinOpacity });
@@ -99,8 +108,7 @@
     };
 
     const setProgress = (p) => {
-      // wrap timeline
-      pos = (p % dur + dur) % dur;
+      pos = (p % dur + dur) % dur; // wrap timeline
       tl.time(pos, false);
       applyLogoOpacityFromTime(pos);
     };
