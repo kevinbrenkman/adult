@@ -130,22 +130,24 @@ html.lenis {
 }  
 </style>
   <style>
-/* Fade OUT (old view) + Fade IN (new view) */
-html.is-changing .main-wrapper {
-  transition: opacity 1s;
-  opacity: 1;
-}
-/* Old view fades out */
-html.is-animating .main-wrapper {
-  opacity: 0;
-}
-/* New view starts hidden so it can fade in */
-html.is-rendering .main-wrapper {
-  opacity: 0;
-}
-/* (Optional) your existing pointer/cursor rules can stay */
-html.is-leaving { cursor: wait; pointer-events: none; }
-html.is-rendering { cursor: auto; pointer-events: auto; }
+  html.is-changing .main-wrapper,
+  html.is-changing footer.section_footer,
+  html.is-changing footer[li-section="footer"] {
+    transition: opacity 1s;
+    opacity: 1;
+  }
+  html.is-animating .main-wrapper,
+  html.is-animating footer.section_footer,
+  html.is-animating footer[li-section="footer"] {
+    opacity: 0;
+  }
+  html.is-rendering .main-wrapper,
+  html.is-rendering footer.section_footer,
+  html.is-rendering footer[li-section="footer"] {
+    opacity: 0;
+  }
+  html.is-leaving { cursor: wait; pointer-events: none; }
+  html.is-rendering { cursor: auto; pointer-events: auto; }
 </style>
   <style>
 .form_input:-webkit-autofill {
@@ -223,58 +225,66 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
   })();
 </script>
   {% render 'search_javascript' %}
+  <!--  Swup libraries (safe to include here)  -->
   <script src="https://unpkg.com/swup@4"></script>
   <script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
   <script src="https://unpkg.com/@swup/scroll-plugin@3"></script>
+  <!--  Robust Swup boot: waits for .main-wrapper, works in Webflow and after Liquify  -->
   <script data-swup-ignore-script="">
-  // Make sure .main-wrapper exists ON EVERY PAGE (wrap {{ content_for_layout }} with it)
-  const swup = new Swup({
-    containers: ['.main-wrapper'], // &#128072; key change
-    plugins: [
-      new SwupScriptsPlugin({ head: true, body: true }),
-      new SwupScrollPlugin({
-        doScrollingRightAway: false,
-        animateScroll: { betweenPages: false, samePageWithHash: false, samePage: true },
-        scrollFriction: 0.3,
-        scrollAcceleration: 0.04,
-        scrollContainers: `[data-swup-scroll-container]`,
-        offset: 0,
-        markScrollTarget: false,
-        getAnchorElement: null,
-        shouldResetScrollPosition: () => true
-      })
-    ]
-  });
-  function reinitWebflow() {
-    if (window.Webflow && typeof window.Webflow.destroy === "function") {
-      window.Webflow.destroy();
-    }
-    setTimeout(() => {
-      if (window.Webflow && typeof window.Webflow.require === "function") {
-        window.Webflow.require("ix2").init();
-      }
-    }, 100);
-  }
-  function scrollToAnchor() {
-    const hash = window.location.hash;
-    if (hash && document.querySelector(hash)) {
+(function () {
+  const CONTAINER = '.main-wrapper';
+  function boot() {
+    const el = document.querySelector(CONTAINER);
+    if (!el || !window.Swup) return false;
+    if (window.swup?.destroy) return true; // already booted
+    window.swup = new Swup({
+      containers: [CONTAINER], // fade only main content (not the nav)
+      plugins: [
+        new SwupScriptsPlugin({ head: true, body: true }),
+        new SwupScrollPlugin({
+          doScrollingRightAway: false,
+          animateScroll: { betweenPages: false, samePageWithHash: false, samePage: true },
+          scrollFriction: 0.3,
+          scrollAcceleration: 0.04,
+          scrollContainers: `[data-swup-scroll-container]`,
+          offset: 0,
+          markScrollTarget: false,
+          getAnchorElement: null,
+          shouldResetScrollPosition: () => true
+        })
+      ]
+    });
+    // Re-init Webflow IX and handle anchors on every view
+    const reinitWebflow = () => {
+      try { window.Webflow?.destroy?.(); setTimeout(() => window.Webflow?.require?.('ix2')?.init?.(), 100); } catch(e){}
+    };
+    const scrollToAnchor = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
       const target = document.querySelector(hash);
+      if (!target) return;
       setTimeout(() => {
-        if (window.lenis) {
-          window.lenis.scrollTo(target, { offset: 0 });
-        } else {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (window.lenis) window.lenis.scrollTo(target, { offset: 0 });
+        else target.scrollIntoView({ behavior: 'smooth' });
       }, 0);
-    }
+    };
+    swup.hooks.on('page:view', () => {
+      reinitWebflow();
+      scrollToAnchor();
+      // If you ever switch to attribute-based CSS, this keeps the hook present:
+      el.setAttribute('data-swup-container', '');
+    });
+    // Run on initial load too
+    scrollToAnchor();
+    return true;
   }
-  swup.hooks.on('page:view', () => {
-    reinitWebflow();
-    scrollToAnchor();
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-    scrollToAnchor();
-  });
+  // Try now, then on DOM ready, then observe late injections (Shopify apps, etc.)
+  if (!boot()) {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+    const mo = new MutationObserver(() => { if (boot()) mo.disconnect(); });
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+  }
+})();
 </script>
   <script src="https://unpkg.com/@studio-freight/lenis@1.0.36/dist/lenis.min.js"></script>
   <script>
