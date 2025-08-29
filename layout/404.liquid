@@ -130,23 +130,22 @@ html.lenis {
 }  
 </style>
   <style>
-/* Define a transition duration during page visits */
-html.is-changing .transition-fade {
+/* Fade OUT (old view) + Fade IN (new view) */
+html.is-changing .main-wrapper {
   transition: opacity 1s;
   opacity: 1;
 }
-/* Define the styles for the unloaded pages */
-html.is-animating .transition-fade {
+/* Old view fades out */
+html.is-animating .main-wrapper {
   opacity: 0;
 }
-  html.is-leaving {
- cursor: wait;
- pointer-events: none;
+/* New view starts hidden so it can fade in */
+html.is-rendering .main-wrapper {
+  opacity: 0;
 }
-html.is-rendering {
- cursor: auto;
- pointer-events: auto;
-}
+/* (Optional) your existing pointer/cursor rules can stay */
+html.is-leaving { cursor: wait; pointer-events: none; }
+html.is-rendering { cursor: auto; pointer-events: auto; }
 </style>
   <style>
 .form_input:-webkit-autofill {
@@ -228,16 +227,14 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
   <script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
   <script src="https://unpkg.com/@swup/scroll-plugin@3"></script>
   <script data-swup-ignore-script="">
+  // Make sure .main-wrapper exists ON EVERY PAGE (wrap {{ content_for_layout }} with it)
   const swup = new Swup({
+    containers: ['.main-wrapper'], // &#128072; key change
     plugins: [
       new SwupScriptsPlugin({ head: true, body: true }),
       new SwupScrollPlugin({
         doScrollingRightAway: false,
-        animateScroll: {
-          betweenPages: false,
-          samePageWithHash: false,
-          samePage: true
-        },
+        animateScroll: { betweenPages: false, samePageWithHash: false, samePage: true },
         scrollFriction: 0.3,
         scrollAcceleration: 0.04,
         scrollContainers: `[data-swup-scroll-container]`,
@@ -268,15 +265,13 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
         } else {
           target.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 0); // Let Webflow finish layout shift
+      }, 0);
     }
   }
-  // After new page is rendered
   swup.hooks.on('page:view', () => {
     reinitWebflow();
     scrollToAnchor();
   });
-  // On initial page load too
   document.addEventListener('DOMContentLoaded', () => {
     scrollToAnchor();
   });
