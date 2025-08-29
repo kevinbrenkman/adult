@@ -3812,7 +3812,7 @@ figcaption {
   grid-column-gap: 1rem;
   grid-row-gap: 0rem;
   white-space: nowrap;
-  flex-flow: row;
+  flex-flow: wrap;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -5519,6 +5519,11 @@ figcaption {
     height: 100%;
   }
 
+  .product-item_text-link {
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
   .nav_component {
     height: auto;
     min-height: 5.3rem;
@@ -5583,7 +5588,7 @@ figcaption {
     padding-right: var(--_adult---default-height);
     padding-left: var(--_adult---default-height);
     padding-bottom: calc(var(--_adult---default-height) * 3);
-    margin-top: 0;
+    margin-top: 20dvh;
   }
 
   .footer_link-grid {
@@ -6371,6 +6376,10 @@ figcaption {
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-start;
+  }
+
+  .footer_legal-links {
+    display: inline-flex;
   }
 
   .menu_link.no-pointer-events {
