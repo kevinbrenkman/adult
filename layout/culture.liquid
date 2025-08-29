@@ -29,7 +29,30 @@
             {% else %}
               <link rel="apple-touch-icon" type="image/png" href="{{ settings.apple_touch_icon | img_url: '32x32' }}">
             {% endif %}
-        <!--  Alpine Focus Plugin  -->
+        
+  <style>
+  /* Base transition so the incoming view already has it */
+  .main-wrapper,
+  footer.section_footer,
+  footer[li-section="footer"] {
+    transition: opacity 1s;
+  }
+  /* Swup states */
+  html.is-leaving .main-wrapper,
+  html.is-leaving footer.section_footer,
+  html.is-leaving footer[li-section="footer"],
+  html.is-rendering .main-wrapper,
+  html.is-rendering footer.section_footer,
+  html.is-rendering footer[li-section="footer"] {
+    opacity: 0;
+  }
+  /* Keep pointer/cursor rules minimal */
+  html.is-leaving { cursor: wait; pointer-events: none; }
+  html.is-rendering { cursor: auto; pointer-events: auto; }
+  /* &ldquo;Shop&rdquo; underline when on product pages */
+  .menu_link.is-current-shop { text-decoration: underline !important; }
+</style>
+  <!--  Alpine Focus Plugin  -->
   <script defer="" src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
   <!--  Alpine JS  -->
   <script defer="" src="{{ 'alpinejs3.js' | asset_url }}"></script>
@@ -130,26 +153,6 @@ html.lenis {
 }  
 </style>
   <style>
-  html.is-changing .main-wrapper,
-  html.is-changing footer.section_footer,
-  html.is-changing footer[li-section="footer"] {
-    transition: opacity 1s;
-    opacity: 1;
-  }
-  html.is-animating .main-wrapper,
-  html.is-animating footer.section_footer,
-  html.is-animating footer[li-section="footer"] {
-    opacity: 0;
-  }
-  html.is-rendering .main-wrapper,
-  html.is-rendering footer.section_footer,
-  html.is-rendering footer[li-section="footer"] {
-    opacity: 0;
-  }
-  html.is-leaving { cursor: wait; pointer-events: none; }
-  html.is-rendering { cursor: auto; pointer-events: auto; }
-</style>
-  <style>
 .form_input:-webkit-autofill {
     background-color: transparent !important;
     border-radius: 0rem;
@@ -174,7 +177,8 @@ html.shopify-design-mode .shopify-section.logo-wrapper {
     outline: none;
     outline-offset: 0.125rem;
 }
-</style><!--  
+</style>
+  <!--  
 IMPORTANT: If you want to make changes to the head or body code on this page, 
 please remove the `li-layout` tag from the body element. 
 This will create a separate layout file for this page, allowing you to apply custom modifications.
@@ -225,20 +229,63 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
   })();
 </script>
   {% render 'search_javascript' %}
-  <!--  Swup libraries (safe to include here)  -->
+  <!--  Swup libraries  -->
   <script src="https://unpkg.com/swup@4"></script>
   <script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
   <script src="https://unpkg.com/@swup/scroll-plugin@3"></script>
-  <!--  Robust Swup boot: waits for .main-wrapper, works in Webflow and after Liquify  -->
+  <!--  Swup boot + fixes + product-page Shop underline  -->
   <script data-swup-ignore-script="">
 (function () {
-  const CONTAINER = '.main-wrapper';
+  var CONTAINER = '.main-wrapper';
+  var FOOTER_SEL = 'footer.section_footer, footer[li-section="footer"]';
+  function reinitWebflow() {
+    try {
+      if (window.Webflow && typeof window.Webflow.destroy === 'function') window.Webflow.destroy();
+      setTimeout(function () {
+        if (window.Webflow && window.Webflow.require) {
+          var ix = window.Webflow.require('ix2');
+          if (ix && ix.init) ix.init();
+        }
+      }, 100);
+    } catch (e) {}
+  }
+  function scrollToAnchor() {
+    var hash = window.location.hash;
+    if (!hash) return;
+    var target = document.querySelector(hash);
+    if (!target) return;
+    setTimeout(function () {
+      if (window.lenis) window.lenis.scrollTo(target, { offset: 0 });
+      else target.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
+  }
+  /* Ensure the browser registers the initial opacity:0 on incoming view */
+  function nudgeReflow() {
+    var el = document.querySelector(CONTAINER);
+    var ft = document.querySelector(FOOTER_SEL);
+    if (el) void el.offsetWidth;
+    if (ft) void ft.offsetWidth;
+  }
+  /* Underline &ldquo;Shop&rdquo; when on /products/... */
+  function underlineShopIfProduct() {
+    var onProduct = /\/products\//.test(window.location.pathname);
+    var links = Array.prototype.slice.call(document.querySelectorAll('.main-nav_link-list .menu_link'));
+    links.forEach(function (a) { a.classList.remove('is-current-shop'); });
+    if (!onProduct || !links.length) return;
+    // Prefer text match &ldquo;Shop&rdquo;, fallback to link to /collections...
+    var shopLink = links.find(function (a) {
+      return /shop/i.test((a.textContent || '').trim());
+    }) || links.find(function (a) {
+      try { return a.pathname && a.pathname.indexOf('/collections') > -1; } catch(e) { return false; }
+    });
+    if (shopLink) shopLink.classList.add('is-current-shop');
+  }
   function boot() {
-    const el = document.querySelector(CONTAINER);
+    var el = document.querySelector(CONTAINER);
     if (!el || !window.Swup) return false;
-    if (window.swup?.destroy) return true; // already booted
+    if (window.swup && typeof window.swup.destroy === 'function') return true; // already booted
     window.swup = new Swup({
-      containers: [CONTAINER], // fade only main content (not the nav)
+      containers: [CONTAINER],
       plugins: [
         new SwupScriptsPlugin({ head: true, body: true }),
         new SwupScrollPlugin({
@@ -246,42 +293,33 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
           animateScroll: { betweenPages: false, samePageWithHash: false, samePage: true },
           scrollFriction: 0.3,
           scrollAcceleration: 0.04,
-          scrollContainers: `[data-swup-scroll-container]`,
+          scrollContainers: "[data-swup-scroll-container]",
           offset: 0,
           markScrollTarget: false,
           getAnchorElement: null,
-          shouldResetScrollPosition: () => true
+          shouldResetScrollPosition: function () { return true; }
         })
       ]
     });
-    // Re-init Webflow IX and handle anchors on every view
-    const reinitWebflow = () => {
-      try { window.Webflow?.destroy?.(); setTimeout(() => window.Webflow?.require?.('ix2')?.init?.(), 100); } catch(e){}
-    };
-    const scrollToAnchor = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const target = document.querySelector(hash);
-      if (!target) return;
-      setTimeout(() => {
-        if (window.lenis) window.lenis.scrollTo(target, { offset: 0 });
-        else target.scrollIntoView({ behavior: 'smooth' });
-      }, 0);
-    };
-    swup.hooks.on('page:view', () => {
+    /* Reflow nudge before fade-in, then per-view hooks */
+    swup.hooks.on('content:replace', nudgeReflow);
+    swup.hooks.on('page:view', function () {
       reinitWebflow();
       scrollToAnchor();
-      // If you ever switch to attribute-based CSS, this keeps the hook present:
-      el.setAttribute('data-swup-container', '');
+      underlineShopIfProduct();
+      // Keep attribute present if you ever switch CSS to [data-swup-container]
+      try { el.setAttribute('data-swup-container', ''); } catch (e) {}
     });
-    // Run on initial load too
+    // Initial run
     scrollToAnchor();
+    underlineShopIfProduct();
     return true;
   }
-  // Try now, then on DOM ready, then observe late injections (Shopify apps, etc.)
   if (!boot()) {
     document.addEventListener('DOMContentLoaded', boot, { once: true });
-    const mo = new MutationObserver(() => { if (boot()) mo.disconnect(); });
+    var mo = new MutationObserver(function () {
+      if (boot()) mo.disconnect();
+    });
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 })();
