@@ -3738,7 +3738,7 @@ figcaption {
 }
 
 .mini-cart_empty {
-  height: 100%;
+  height: calc(100% - (1 * var(--_adult---default-height)));
 }
 
 .nav_dropdown-close-button {
@@ -5803,6 +5803,10 @@ figcaption {
 
   .blog_featured-image-wrapper {
     padding-top: 66%;
+  }
+
+  .mini-cart_empty {
+    height: calc(100% - (0 * var(--_adult---default-height)));
   }
 
   .footer_sub-footer {
