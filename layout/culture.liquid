@@ -740,6 +740,54 @@ window.addEventListener('beforeunload', function () {
   sessionStorage.setItem('scrollPosition', window.scrollY);
 });
 </script>
+  <script data-swup-ignore-script="">
+(function () {
+  // --- single-instance guard across Swup page swaps
+  if (window.__firstPaddingOnInit) return;
+  window.__firstPaddingOnInit = true;
+  // --- core
+  function applyFirstPaddingOn() {
+    const el = document.querySelector(".padding-on");
+    if (!el) return;
+    if (window.innerWidth < 767) {
+      el.style.setProperty("padding", "0rem", "important");
+    } else {
+      el.style.removeProperty("padding");
+    }
+  }
+  // --- rAF-throttled resize handler to avoid spam
+  let _resizeRaf = null;
+  function onResize() {
+    if (_resizeRaf) return;
+    _resizeRaf = requestAnimationFrame(() => {
+      _resizeRaf = null;
+      applyFirstPaddingOn();
+    });
+  }
+  // --- (re)initialize after load & Swup navigations
+  function init() {
+    applyFirstPaddingOn();
+  }
+  // initial bind
+  window.addEventListener("resize", onResize, { passive: true });
+  // run on first load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+  // Swup v2 & v3 event coverage
+  const swupEvents = [
+    "swup:contentReplaced", // v2 plugin-style
+    "contentReplaced",      // v2 core
+    "page:view",            // v3
+    "swup:pageView"         // some setups
+  ];
+  swupEvents.forEach(evt => {
+    document.addEventListener(evt, init);
+  });
+})();
+</script>
   <script src="{{ 'seq-stack.js' | asset_url }}" defer=""></script>
 </body>
 </html>
