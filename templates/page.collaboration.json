@@ -19,7 +19,7 @@
         "image_text_color": "{{ shop.brand.colors.primary[0].background }}",
         "image_text_background": "{{ shop.brand.colors.primary[0].foreground }}",
         "flex-direction": "row",
-        "padding": "on"
+        "padding": "only-desktop"
       }
     },
     "contact_WAAzHf": {
@@ -27,8 +27,8 @@
       "name": "Contact",
       "settings": {
         "image_image": "shopify://shop_images/3ad285bfe36c90479f7f9ee11714eb7afdcb4fc0_2.jpg",
-        "text_first_name": "First Name",
         "richtext_i_accept_the_terms": "<p>I accept the Terms</p>",
+        "text_succes_message": "All set. Consider your message delivered with a strut.",
         "text_small_title": "contact form",
         "image_text_color": "{{ shop.brand.colors.primary[0].foreground }}",
         "image_text_background": "{{ shop.brand.colors.primary[0].background }}",
