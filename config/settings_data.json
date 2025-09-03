@@ -14,8 +14,6 @@
     "content_for_index": []
   },
   "platform_customizations": {
-    "custom_css": [
-      "@media (max-width: 767px) {.padding-on:first-child {padding: 0rem !important;}}"
-    ]
+    "custom_css": []
   }
 }
