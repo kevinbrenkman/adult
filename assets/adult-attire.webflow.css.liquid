@@ -821,11 +821,14 @@ figcaption {
 }
 
 .button.is-submit {
-  border-color: var(--_adult---adult-off-white);
-  width: 100%;
-  margin: .5rem 1px 1px;
-  padding-top: .2rem;
-  padding-bottom: .2rem;
+  border-top-color: var(--_adult---adult-off-white);
+  border-right-color: var(--_adult---adult-off-white);
+  border-bottom-color: var(--_adult---adult-off-white);
+  border-left-color: var(--_adult---adult-off-white);
+  width: calc(100% - 2px);
+  margin-top: .5rem;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 .li-styleguide_classes {
@@ -5171,13 +5174,26 @@ figcaption {
     display: grid;
   }
 
-  ._2c-image-wrapper-padding, ._2c-content {
+  ._2c-image-wrapper-padding {
+    width: 100%;
+  }
+
+  .image.force-ratio-on-mobile {
+    aspect-ratio: 4 / 5;
+  }
+
+  ._2c-content {
     width: 100%;
   }
 
   ._2c-content.contact {
     padding-right: var(--_adult---default-height);
     padding-left: var(--_adult---default-height);
+  }
+
+  .body-text {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .body-text h1 {
@@ -5200,6 +5216,10 @@ figcaption {
 
   .button-float {
     inset: 0% 0% auto auto;
+  }
+
+  .seq-text-wrapper {
+    width: 100%;
   }
 
   .seq-image-wrapper.small {
@@ -5947,6 +5967,10 @@ figcaption {
     padding: var(--_adult---default-height);
   }
 
+  ._2c-grid-wrapper {
+    height: auto;
+  }
+
   ._2c-image-wrapper-padding, ._2c-content {
     width: 100%;
   }
@@ -5971,7 +5995,8 @@ figcaption {
   }
 
   .seq-text-wrapper {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    line-height: 1;
   }
 
   .seq-image-flex {
@@ -5980,6 +6005,7 @@ figcaption {
 
   .seq-image-wrapper.small {
     width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
+    padding: 0 !important;
   }
 
   .seq-image-wrapper.medium, .seq-image-wrapper.large {
@@ -5989,6 +6015,7 @@ figcaption {
 
   .seq-image-wrapper.x-small {
     width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
+    padding: 0 !important;
   }
 
   .logo-wrapper {
@@ -6419,7 +6446,7 @@ figcaption {
     padding-right: 1rem;
   }
 
-  .seq-image-wrapper.small {
+  .seq-image-wrapper.small, .seq-image-wrapper.x-small {
     width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
   }
 }
