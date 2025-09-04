@@ -207,16 +207,6 @@
       "settings": {
         "text_text": "Adult speaks with intention. We make things with purpose and without haste, looking for long-lasting impact. Our pieces aren’t meant to be liked by everyone but rather loved by someone. Adult is a community of like-minded adventurers."
       }
-    },
-    "sequence_image_V6HEtj": {
-      "type": "sequence_image",
-      "name": "Sequence Image",
-      "settings": {
-        "image_image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
-        "width": "full",
-        "align": "center",
-        "padding": 0
-      }
     }
   },
   "layout": "culture",
@@ -243,7 +233,6 @@
     "sequence_image_YeM7Eb",
     "sequence_image_bC4tiM",
     "sequence_image_T78wRn",
-    "sequence_text_cC74py",
-    "sequence_image_V6HEtj"
+    "sequence_text_cC74py"
   ]
 }
