@@ -836,6 +836,7 @@ figcaption {
   background-color: var(--_adult---adult-off-white);
   color: var(--_adult---adult-red);
   border-top-style: none;
+  border-right-style: none;
 }
 
 .li-styleguide_classes {
@@ -4450,8 +4451,8 @@ figcaption {
 }
 
 .seq-image-wrapper.medium {
-  width: 55%;
-  height: 100%;
+  width: 50%;
+  height: 85%;
 }
 
 .seq-image-wrapper.large {
@@ -4555,6 +4556,35 @@ figcaption {
   align-items: flex-start;
   width: 100%;
   display: flex;
+}
+
+.section_progress-bar {
+  padding-right: var(--_adult---default-height);
+  padding-left: var(--_adult---default-height);
+  pointer-events: none;
+  padding-top: calc(var(--_adult---default-height) / 2);
+  padding-bottom: calc(var(--_adult---default-height) / 2);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inset: auto 0% 0%;
+}
+
+.section_progress-bar.coming-soon-page {
+  margin-top: 0;
+  padding: 0;
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  height: 1px;
+}
+
+.progress-bar {
+  background-color: var(--_adult---adult-red);
+  width: 0%;
+  height: 1px;
 }
 
 @media screen and (max-width: 991px) {
@@ -5290,6 +5320,14 @@ figcaption {
   }
 
   .logo-wrapper.coming-soon-page {
+    width: 100%;
+  }
+
+  .section_progress-bar {
+    opacity: 100;
+  }
+
+  .section_progress-bar.coming-soon-page {
     width: 100%;
   }
 }
@@ -6107,6 +6145,7 @@ figcaption {
     margin-top: 0;
     display: flex;
     inset: 0%;
+    opacity: 1 !important;
   }
 
   .mobile-menu-background {
