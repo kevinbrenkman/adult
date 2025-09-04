@@ -54,13 +54,23 @@
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
-    // 🔁 Deep-clone the FIRST .section_seq_image (entire section) for seamless loop
-    if (imgSecs.length > 1) {
+    // === Auto loop clone handling ===
+    // If the last image section is already a duplicate of the first (manual),
+    // we won't add another. Otherwise we clone the *entire* first section.
+    const firstImgInFirstSec = imgSecs[0].querySelector('img, .seq-image, picture img');
+    const lastImgInLastSec  = imgSecs[imgSecs.length - 1].querySelector('img, .seq-image, picture img');
+    const sameEnds = !!(firstImgInFirstSec && lastImgInLastSec &&
+                        firstImgInFirstSec.currentSrc === lastImgInLastSec.currentSrc ||
+                        firstImgInFirstSec?.src === lastImgInLastSec?.src);
+
+    let hasLoopClone = false;
+    if (!sameEnds && imgSecs.length > 1) {
       const firstSectionClone = imgSecs[0].cloneNode(true);
       firstSectionClone.setAttribute('aria-hidden', 'true');
       firstSectionClone.setAttribute('data-seq-clone', 'true');
       firstSectionClone.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
       stage.appendChild(firstSectionClone);
+      hasLoopClone = true;
       // refresh image sections to include the clone at the end
       imgSecs = Array.from(stage.querySelectorAll('.section_seq_image'));
     }
@@ -76,7 +86,6 @@
     gsap.set(textSecs, { opacity: 0 });
 
     // ---- Figure out which images should linger on mobile ----
-    // For each text block, find the index of the image *after* it.
     let seen = 0;
     const startIndex = new Map();     // text section -> image index after it
     Array.from(stage.querySelectorAll('.section_seq_image, .section_seq_text')).forEach(node => {
@@ -112,14 +121,12 @@
 
     // ---- Schedule delayed fade-outs for linger images (mobile only) ----
     if (IS_MOBILE && lingerIndices.size) {
-      const dur = tl.duration();
-      const wrap = (t) => ((t % dur) + dur) % dur; // normalize time within duration
+      const durTemp = tl.duration();
+      const wrap = (t) => ((t % durTemp) + durTemp) % durTemp; // normalize time within duration
 
       lingerIndices.forEach(idx => {
         const originalOutTime = idx + MAX_VISIBLE;     // when it would normally fade out
         const delayedOutTime  = idx + MAX_VISIBLE + 3; // keep 3 extra steps visible
-
-        // finally fade it out later
         tl.to(imgs[idx], { opacity: 0, duration: 1 }, wrap(delayedOutTime));
       });
     }
@@ -136,7 +143,18 @@
     const LOGO_FADE_STEPS = 2;
     let logoMinOpacity = 1;
 
-    // scrub driver
+    // ---- Progress bar (exclude loop clone from progress) ----
+    const bar = document.querySelector('.section_progress-bar .progress-bar');
+    const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0)); // exclude clone if we added one
+
+    const setBar = (t) => {
+      if (!bar) return;
+      // t is timeline time; progress should be 0..1 over the "main" portion only
+      const p = Math.min(t / mainSteps, 1);
+      bar.style.width = (p * 100).toFixed(3) + '%';
+    };
+
+    // ---- Scrub driver ----
     let pos = 0;
     const dur = tl.duration();
 
@@ -154,6 +172,7 @@
       pos = (p % dur + dur) % dur; // wrap
       tl.time(pos, false);
       applyLogoOpacityFromTime(pos);
+      setBar(pos);                 // update progress bar
     };
 
     // inputs
@@ -182,6 +201,9 @@
     stage.addEventListener('touchstart', onTouchStart, opts);
     stage.addEventListener('touchmove', onTouchMove, opts);
     window.addEventListener('mousemove', onMouseMove);
+
+    // initialize bar at 0
+    setBar(0);
 
     // cleanup
     window.seqStackDestroy = () => {
