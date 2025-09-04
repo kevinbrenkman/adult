@@ -204,39 +204,52 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
       var p = window.location.pathname;
       return p === "/" || p === "/index.html";
     }
-    function runIntroOncePerSession() {
-      // &#128683; Never run anything on the password page
-      if (isPasswordPage()) return;
-      // &#9989; Only run on homepage
-      if (!isHomepage()) return;
-      var ix = (window.Webflow && Webflow.require) ? Webflow.require("ix3") : null;
-      var isDesktop = window.innerWidth > 768;
-      if (isDesktop) {
-        if (ix) {
-          if (!sessionStorage.getItem("introPlayed")) {
-            ix.emit("introAnimation");        // play once on desktop
-            sessionStorage.setItem("introPlayed", "true");
-          } else {
-            ix.emit("introAnimation_skip");   // jump to end after first time
-          }
-        }
-      } else {
-        // &#128073; On mobile: fade in .logo-wrapper manually
-        var logo = document.querySelector(".logo-wrapper");
-        if (logo) {
-          logo.style.opacity = "0";
-          logo.style.transition = "opacity 0.6s ease";
-          // force reflow before applying transition
-          requestAnimationFrame(() => {
-            logo.style.opacity = "1";
+    function applyMobileNativeEndState() {
+      // Fade in the logo
+      var logo = document.querySelector(".logo-wrapper");
+      if (logo) {
+        logo.style.opacity = "0";
+        logo.style.transition = "opacity 0.6s ease";
+        requestAnimationFrame(function () {
+          logo.style.opacity = "1";
+        });
+      }
+      // Ensure nav is instantly visible (no fade)
+      var nav = document.querySelector(".nav_section");
+      if (nav) {
+        // prevent any existing transitions from fading it
+        var prevTransition = nav.style.transition;
+        nav.style.transition = "none";
+        nav.style.opacity = "1";
+        // (optional) restore inline transition if there was one
+        if (prevTransition) {
+          // Use a RAF to avoid applying during the same frame
+          requestAnimationFrame(function () {
+            nav.style.transition = prevTransition;
           });
         }
-        if (ix) ix.emit("introAnimation_skip"); // ensure IX is skipped
       }
     }
-    // Initial load
+    function runIntroOncePerSession() {
+      if (isPasswordPage()) return;
+      if (!isHomepage()) return;
+      var ix = (window.Webflow && Webflow.require) ? Webflow.require("ix3") : null;
+      var isMobile = window.innerWidth <= 767;
+      if (isMobile) {
+        // Native end state on mobile (no IX)
+        applyMobileNativeEndState();
+        return;
+      }
+      // Desktop: keep IX once-per-session logic
+      if (!ix) return; // IX not ready yet
+      if (!sessionStorage.getItem("introPlayed")) {
+        ix.emit("introAnimation");
+        sessionStorage.setItem("introPlayed", "true");
+      } else {
+        ix.emit("introAnimation_skip");
+      }
+    }
     document.addEventListener("DOMContentLoaded", runIntroOncePerSession);
-    // If using Swup, also run after page swaps
     document.addEventListener("swup:contentReplaced", runIntroOncePerSession);
   })();
 </script>
