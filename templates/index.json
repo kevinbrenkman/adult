@@ -50,9 +50,9 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/Fresco1_1_Large_b8c376c8-5954-4f9e-9732-ea578304aba4.jpg",
-        "width": "medium",
+        "width": "large",
         "align": "flex-start",
-        "padding": 2
+        "padding": 5
       }
     },
     "sequence_image_8ccAwL": {
