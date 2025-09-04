@@ -207,12 +207,18 @@
       "settings": {
         "text_text": "Adult speaks with intention. We make things with purpose and without haste, looking for long-lasting impact. Our pieces aren’t meant to be liked by everyone but rather loved by someone. Adult is a community of like-minded adventurers."
       }
+    },
+    "sequence_progress_ba_YCnpi3": {
+      "type": "sequence_progress_ba",
+      "name": "Sequence Progress Ba",
+      "settings": {}
     }
   },
   "layout": "culture",
   "wrapper": "main.main-wrapper",
   "order": [
     "custom_liquid",
+    "sequence_progress_ba_YCnpi3",
     "sequence_logo_EeV3ic",
     "sequence_image_qEhyNP",
     "sequence_image_4Hct4B",
