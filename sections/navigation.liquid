@@ -427,10 +427,13 @@
                           <div class="mini-cart_header slot">
                             <div>CART</div>
                           </div>
-                          <div class="mini-cart_header slot">
+                          <div class="mini-cart_header slot no-line fill-width">
                             <div li-element="mini-cart-item-count" x-data="{ items: 0 }" x-text="items" @carttotalitems.window="items = event.detail">1</div>
                             <div>item<span class="cart-plural">s</span></div>
                           </div>
+                          <div class="cart-close-wrap"><button li-element="dropdown-toggle" aria-label="Close Cart" class="button is-close" data-dropdowntoggle="" @click="LiquifyHelper.triggerClick($event.target.closest('.w-dropdown').querySelector('.w-dropdown-toggle.w--open'))">
+                              <div>close</div>
+                            </button></div>
                         </div>
                         <div data-lenis-prevent="" class="mini-cart_line-item">
                           <ul role="list" class="mini-cart_line-item_list w-list-unstyled">
