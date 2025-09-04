@@ -41,7 +41,7 @@
     style.textContent = `
       #seqStageStack{position:relative;width:100%;height:100vh;overflow:hidden;touch-action:none;}
       #seqStageStack > .section_seq_image,
-      #seqStageStack > .section_seq_text{position:absolute;inset:0;pointer-events:none;}
+      #seqStageStack > .section_seq_text{position:absolute;inset:0;pointer-events:auto;}
       #seqStageStack .section_seq_image img,
       #seqStageStack .section_seq_image .seq-image{mix-blend-mode:darken;opacity:0;transition:none;}
       #seqStageStack > .section_seq_text{opacity:0;z-index:999999;}
@@ -83,7 +83,7 @@
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
 
-    // ---- Figure out which images should linger on mobile ----
+    // ---- Map text -> the image index right after it ----
     let seen = 0;
     const startIndex = new Map();     // text section -> image index after it
     Array.from(stage.querySelectorAll('.section_seq_image, .section_seq_text')).forEach(node => {
@@ -91,6 +91,7 @@
       if (node.classList.contains('section_seq_text')) startIndex.set(node, seen);
     });
 
+    // ---- Mobile linger bookkeeping (images to hold longer) ----
     const lingerIndices = new Set();
     if (IS_MOBILE) {
       textSecs.forEach(txt => {
@@ -243,6 +244,32 @@
       lastX = e.clientX; lastY = e.clientY;
     };
 
+    // ---- Tap / Click to advance ----
+    // - Any tap: go to next step (pos + 1)
+    // - If tapped on a text block: on mobile, bypass the linger of the image-after-text
+    const advanceOneStep = () => setProgress(pos + 1);
+
+    const onTap = (e) => {
+      // If click originated inside a text section:
+      const txt = e.target.closest && e.target.closest('.section_seq_text');
+      if (txt && IS_MOBILE) {
+        const afterIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
+        if (afterIdx >= 0) {
+          const originalOutTime = afterIdx + MAX_VISIBLE; // where it would have faded w/o linger
+          if (pos < originalOutTime) {
+            // jump straight past the linger window
+            setProgress(originalOutTime + 0.001);
+            return;
+          }
+        }
+      }
+      // default: next step
+      advanceOneStep();
+    };
+
+    // Use pointerup to catch mouse/touch taps reliably without 300ms delay
+    stage.addEventListener('pointerup', onTap, { passive: true });
+
     const opts = { passive: false };
     stage.addEventListener('wheel', onWheel, opts);
     stage.addEventListener('touchstart', onTouchStart, opts);
@@ -261,6 +288,7 @@
         else parent.appendChild(node);
       });
       stage.remove(); style.remove();
+      stage.removeEventListener('pointerup', onTap);
       stage.removeEventListener('wheel', onWheel);
       stage.removeEventListener('touchstart', onTouchStart);
       stage.removeEventListener('touchmove', onTouchMove);
