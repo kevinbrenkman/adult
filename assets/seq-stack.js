@@ -55,8 +55,6 @@
     all.forEach(node => stage.appendChild(node));
 
     // === Auto loop clone handling ===
-    // If the last image section is already a duplicate of the first (manual),
-    // we won't add another. Otherwise we clone the *entire* first section.
     const firstImgInFirstSec = imgSecs[0].querySelector('img, .seq-image, picture img');
     const lastImgInLastSec  = imgSecs[imgSecs.length - 1].querySelector('img, .seq-image, picture img');
     const sameEnds = !!(firstImgInFirstSec && lastImgInLastSec &&
@@ -125,7 +123,6 @@
       const wrap = (t) => ((t % durTemp) + durTemp) % durTemp; // normalize time within duration
 
       lingerIndices.forEach(idx => {
-        const originalOutTime = idx + MAX_VISIBLE;     // when it would normally fade out
         const delayedOutTime  = idx + MAX_VISIBLE + 3; // keep 3 extra steps visible
         tl.to(imgs[idx], { opacity: 0, duration: 1 }, wrap(delayedOutTime));
       });
@@ -138,7 +135,17 @@
       tl.to(txt, { opacity: 0, duration: 0.5 }, sIdx + 2);
     });
 
-    // ---- Logo scrub-fade (one-way: won’t reappear if scrubbing back) ----
+    // ---- End-cap crossfade ----
+    if (imgs.length > 1) {
+      const cloneIdx   = imgs.length - 1; // auto-cloned first
+      const loopPoint  = cloneIdx - 1;    // last real step
+      tl.to(imgs[cloneIdx], { opacity: 1, duration: 1 }, loopPoint);
+      imgs.forEach((img, idx) => {
+        if (idx !== cloneIdx) tl.to(img, { opacity: 0, duration: 1 }, loopPoint);
+      });
+    }
+
+    // ---- Logo scrub-fade (one-way) ----
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
     const LOGO_FADE_STEPS = 2;
     let logoMinOpacity = 1;
@@ -147,11 +154,38 @@
     const bar = document.querySelector('.section_progress-bar .progress-bar');
     const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0)); // exclude clone if we added one
 
+    let barWrapping = false; // guard while animating wrap
+
     const setBar = (t) => {
-      if (!bar) return;
-      // t is timeline time; progress should be 0..1 over the "main" portion only
+      if (!bar || barWrapping) return;
       const p = Math.min(t / mainSteps, 1);
       bar.style.width = (p * 100).toFixed(3) + '%';
+    };
+
+    const animateBarWrap = (dir /* 'forward' | 'backward' */) => {
+      if (!bar) return;
+      barWrapping = true;
+      gsap.killTweensOf(bar);
+
+      if (dir === 'forward') {
+        // End -> Start: 100% -> 0%
+        bar.style.width = '100%';
+        gsap.to(bar, {
+          width: '0%',
+          duration: 0.35,
+          ease: 'none',
+          onComplete: () => { barWrapping = false; setBar(pos); }
+        });
+      } else {
+        // Start -> End: 0% -> 100%
+        bar.style.width = '0%';
+        gsap.to(bar, {
+          width: '100%',
+          duration: 0.35,
+          ease: 'none',
+          onComplete: () => { barWrapping = false; setBar(pos); }
+        });
+      }
     };
 
     // ---- Scrub driver ----
@@ -169,10 +203,23 @@
     };
 
     const setProgress = (p) => {
-      pos = (p % dur + dur) % dur; // wrap
+      const prevPos = pos;
+      const proposed = p;
+      const newPos = (proposed % dur + dur) % dur;
+
+      // detect forward wrap (end -> start)
+      if (proposed > prevPos && newPos < prevPos) {
+        animateBarWrap('forward');
+      }
+      // detect backward wrap (start -> end)
+      if (proposed < prevPos && newPos > prevPos) {
+        animateBarWrap('backward');
+      }
+
+      pos = newPos;
       tl.time(pos, false);
       applyLogoOpacityFromTime(pos);
-      setBar(pos);                 // update progress bar
+      setBar(pos);
     };
 
     // inputs
