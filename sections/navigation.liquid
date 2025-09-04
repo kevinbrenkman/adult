@@ -508,9 +508,12 @@
                           <div class="mini-cart_header slot">
                             <div>CART</div>
                           </div>
-                          <div class="mini-cart_header slot">
+                          <div class="mini-cart_header slot no-line fill-width">
                             <div>0 items</div>
                           </div>
+                          <div class="cart-close-wrap"><button li-element="dropdown-toggle" aria-label="Close Cart" class="button is-close" data-dropdowntoggle="" @click="LiquifyHelper.triggerClick($event.target.closest('.w-dropdown').querySelector('.w-dropdown-toggle.w--open'))">
+                              <div>close</div>
+                            </button></div>
                         </div>
                         <div class="mini-cart_empty-content">
                           <div class="cart-empty-msg">
@@ -560,7 +563,8 @@
             </div>
           </div>
         </div>
-        <div class="mobile-menu-background"></div> {% schema %} {
+        <div class="mobile-menu-background"></div>
+        <div class="mobile-about-background"></div> {% schema %} {
     "tag": "div",
     "name": "Navigation",
     "class": "section_nav",
