@@ -69,7 +69,6 @@
       firstSectionClone.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
       stage.appendChild(firstSectionClone);
       hasLoopClone = true;
-      // refresh image sections to include the clone at the end
       imgSecs = Array.from(stage.querySelectorAll('.section_seq_image'));
     }
 
@@ -104,14 +103,9 @@
     const tl = gsap.timeline({ paused: true });
 
     imgs.forEach((img, i) => {
-      // fade current in at its step
       if (i > 0) tl.to(img, { opacity: 1, duration: 1 }, i);
-
-      // determine the image that would normally fade out at this step
       if (i >= MAX_VISIBLE && imgs[i - MAX_VISIBLE]) {
         const outIndex = i - MAX_VISIBLE;
-
-        // If this image should linger on mobile, skip its normal fade-out here
         if (!(IS_MOBILE && lingerIndices.has(outIndex))) {
           tl.to(imgs[outIndex], { opacity: 0, duration: 1 }, i);
         }
@@ -121,10 +115,9 @@
     // ---- Schedule delayed fade-outs for linger images (mobile only) ----
     if (IS_MOBILE && lingerIndices.size) {
       const durTemp = tl.duration();
-      const wrap = (t) => ((t % durTemp) + durTemp) % durTemp; // normalize time within duration
-
+      const wrap = (t) => ((t % durTemp) + durTemp) % durTemp;
       lingerIndices.forEach(idx => {
-        const delayedOutTime  = idx + MAX_VISIBLE + 3; // keep 3 extra steps visible
+        const delayedOutTime  = idx + MAX_VISIBLE + 3;
         tl.to(imgs[idx], { opacity: 0, duration: 1 }, wrap(delayedOutTime));
       });
     }
@@ -153,9 +146,9 @@
 
     // ---- Progress bar (exclude loop clone from progress) ----
     const bar = document.querySelector('.section_progress-bar .progress-bar');
-    const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0)); // exclude clone if we added one
+    const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0)); // exclude clone
 
-    let barWrapping = false; // guard while animating wrap
+    let barWrapping = false;
 
     const setBar = (t) => {
       if (!bar || barWrapping) return;
@@ -167,25 +160,14 @@
       if (!bar) return;
       barWrapping = true;
       gsap.killTweensOf(bar);
-
       if (dir === 'forward') {
-        // End -> Start: 100% -> 0%
         bar.style.width = '100%';
-        gsap.to(bar, {
-          width: '0%',
-          duration: 0.35,
-          ease: 'none',
-          onComplete: () => { barWrapping = false; setBar(pos); }
-        });
+        gsap.to(bar, { width: '0%', duration: 0.35, ease: 'none',
+          onComplete: () => { barWrapping = false; setBar(pos); } });
       } else {
-        // Start -> End: 0% -> 100%
         bar.style.width = '0%';
-        gsap.to(bar, {
-          width: '100%',
-          duration: 0.35,
-          ease: 'none',
-          onComplete: () => { barWrapping = false; setBar(pos); }
-        });
+        gsap.to(bar, { width: '100%', duration: 0.35, ease: 'none',
+          onComplete: () => { barWrapping = false; setBar(pos); } });
       }
     };
 
@@ -208,14 +190,10 @@
       const proposed = p;
       const newPos = (proposed % dur + dur) % dur;
 
-      // detect forward wrap (end -> start)
-      if (proposed > prevPos && newPos < prevPos) {
-        animateBarWrap('forward');
-      }
-      // detect backward wrap (start -> end)
-      if (proposed < prevPos && newPos > prevPos) {
-        animateBarWrap('backward');
-      }
+      // forward wrap
+      if (proposed > prevPos && newPos < prevPos) animateBarWrap('forward');
+      // backward wrap
+      if (proposed < prevPos && newPos > prevPos) animateBarWrap('backward');
 
       pos = newPos;
       tl.time(pos, false);
@@ -244,30 +222,36 @@
       lastX = e.clientX; lastY = e.clientY;
     };
 
-    // ---- Tap / Click to advance ----
-    // - Any tap: go to next step (pos + 1)
-    // - If tapped on a text block: on mobile, bypass the linger of the image-after-text
-    const advanceOneStep = () => setProgress(pos + 1);
+    // ---- Tap / Click to advance (step-accurate) ----
+    // helper: jump forward to a specific image step (0..mainSteps-1)
+    const EPS = 0.001;
+    const jumpToStep = (step) => {
+      let targetTime = step + EPS;
+      let delta = targetTime - pos;
+      if (delta <= 0) delta += dur;        // force forward motion so wrap animates
+      setProgress(pos + delta);
+    };
 
     const onTap = (e) => {
-      // If click originated inside a text section:
+      const currentStep = Math.floor(pos + EPS);     // current integer step
+      let nextStep = currentStep + 1;
+
+      // mobile text tap: bypass linger of the image after text
       const txt = e.target.closest && e.target.closest('.section_seq_text');
       if (txt && IS_MOBILE) {
         const afterIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
         if (afterIdx >= 0) {
-          const originalOutTime = afterIdx + MAX_VISIBLE; // where it would have faded w/o linger
-          if (pos < originalOutTime) {
-            // jump straight past the linger window
-            setProgress(originalOutTime + 0.001);
-            return;
-          }
+          const originalOutStep = afterIdx + MAX_VISIBLE;
+          nextStep = Math.max(nextStep, originalOutStep); // ensure we skip the linger window
         }
       }
-      // default: next step
-      advanceOneStep();
+
+      // exclude the clone from stepping range
+      if (nextStep >= mainSteps) nextStep = 0;
+
+      jumpToStep(nextStep);
     };
 
-    // Use pointerup to catch mouse/touch taps reliably without 300ms delay
     stage.addEventListener('pointerup', onTap, { passive: true });
 
     const opts = { passive: false };
