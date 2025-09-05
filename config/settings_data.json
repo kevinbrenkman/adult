@@ -15,14 +15,15 @@
   },
   "platform_customizations": {
     "custom_css": [
-      ".shopify-pc__banner__dialog{left:0;width:100%;padding:0;background:var(--_adult---adult-off-white)}",
-      ".shopify-pc__banner__dialog h2{font-size:100%;margin:0;color:var(--_adult---adult-red)}",
-      ".shopify-pc__banner__dialog p{color:var(--_adult---adult-red)}",
-      ".shopify-pc__banner__btns{gap:0;flex-direction:row-reverse}",
-      ".shopify-pc__banner__dialog button{border:none;text-decoration:none;font:inherit;padding:0;margin:0;font-size:100%;flex-basis:50%;border-radius:0;line-height:100%;text-align:center;height:var(--_adult---default-height)}",
-      ".shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs,.shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline,.shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{border:1px solid var(--_adult---adult-red);background:var(--_adult---adult-off-white);color:var(--_adult---adult-red);border-bottom:0;border-right:0;text-transform:uppercase}",
-      ".shopify-pc__banner__wrapper{align-items:end;flex-direction:row}",
-      ".shopify-pc__banner__body{margin-bottom:0;display:flex}"
+      ".shopify-pc__banner__dialog {left: 0; width: 100%; padding: 0; background: var(--_adult---adult-off-white);}",
+      ".shopify-pc__banner__dialog h2 {font-size: 100%; margin: 0; color: var(--_adult---adult-red);}",
+      ".shopify-pc__banner__dialog p {color: var(--_adult---adult-red);}",
+      ".shopify-pc__banner__btns {gap: 0; flex-direction: row-reverse;}",
+      ".shopify-pc__banner__dialog button {border: none; text-decoration: none; font: inherit; padding: 0; margin: 0; font-size: 100%; flex-basis: 50%; border-radius: 0; line-height: 100%; text-align: center; height: var(--_adult---default-height);}",
+      ".shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs,.shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline,.shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept {border: 1px solid var(--_adult---adult-red); background: var(--_adult---adult-off-white); color: var(--_adult---adult-red); border-bottom: 0; border-right: 0; text-transform: uppercase;}",
+      ".shopify-pc__banner__wrapper {align-items: end; flex-direction: row;}",
+      ".shopify-pc__banner__body {margin-bottom: 0; display: flex;}",
+      ".shopify-pc__banner__dialog a{color:var(--_adult---adult-red);text-decoration:underline}"
     ]
   }
 }
