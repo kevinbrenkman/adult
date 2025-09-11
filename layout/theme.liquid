@@ -571,23 +571,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
   <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const links = document.querySelectorAll('.menu_link');
-  if (!links.length) return;
-  // Check if current page is a product
-  if (window.location.pathname.startsWith("/products/")) {
-    links.forEach(link => {
-      // Match by text content ("Shop") or by href containing "/collections"
-      const text = (link.textContent || "").trim().toLowerCase();
-      const href = link.getAttribute("href") || "";
-      if (text === "shop" || href.includes("/collections")) {
-        link.classList.add("w--current");
-      }
-    });
-  }
-});
-</script>
-  <script>
 document.addEventListener('DOMContentLoaded', function () {
   // Only run on product pages
   if (!/\/products\//.test(location.pathname)) return;
