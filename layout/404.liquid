@@ -29,29 +29,13 @@
             {% else %}
               <link rel="apple-touch-icon" type="image/png" href="{{ settings.apple_touch_icon | img_url: '32x32' }}">
             {% endif %}
-        <!--  Fade CSS (minimal, functional)  -->
-  <style>
-  .transition-fade { transition: opacity .4s; }
-  html.is-animating .transition-fade { opacity: 0; }
-  /* Alpine/Liquify cloaks */
-  [x-cloak],[li-cloak_disabled]{display:none!important}
-  /* Lenis base */
-  html.lenis{height:auto}
-  .lenis.lenis-smooth{scroll-behavior:auto}
-  .lenis.lenis-stopped{overflow:hidden}
-  /* Selection + minimal focus */
-  ::selection{color:#fff;background:#000}
-  ::-moz-selection{color:#fff;background:#000}
-  *[tabindex]:focus-visible,input[type="file"]:focus-visible{outline:none;outline-offset:.125rem}
-  /* WebKit autofill fixes */
-  .form_input:-webkit-autofill, input:-webkit-autofill { background-color:transparent!important; border-radius:0 }
-  input:-webkit-autofill {
-    -webkit-box-shadow: inset 0 0 0px 9999px var(--_adult---adult-off-white);
-    -webkit-text-fill-color: var(--_adult---adult-red)!important;
-  }
-  /* Webflow design-mode tweak (leave if you need it) */
-  html.shopify-design-mode .shopify-section.logo-wrapper { display:none!important }
-</style>
+        
+  <!--  Alpine Focus Plugin  -->
+  <script defer="" src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+  <!--  Alpine JS  -->
+  <script defer="" src="{{ 'alpinejs3.js' | asset_url }}"></script>
+  <!--  Liquify Pro Debugger  -->
+  <script defer="" auto="" min="" src="https://cdn.jsdelivr.net/gh/liquify-pro/core@latest/script.js"></script>
   <link href="{{ canonical_url }}" rel="canonical">
   {% if page_image %}
   <meta property="og:image" content="http:{{ page_image | image_url }}">
@@ -70,16 +54,15 @@
 </script>
 {% when collection %}
 <script type="application/ld+json">
-{
-  "@context":"http://schema.org",
-  "@type":"WebPage",
-  "url":"{{ shop.url }}",
-  "mainEntity":{"@type":"offerCatalog",
-    "name":"{{ collection.title }}",
-    "url":"{{ collection.url }}",
-    "numberOfItems":{{ collection.products.size }}
-  }
-}
+                  {
+                     "@context":"http:\/\/schema.org",
+                     "@type":"WebPage",
+                     "url":"{{ shop.url }}",
+                     "mainEntity":{"@type":"offerCatalog",
+                     "name": "{{ collection.title }}",
+                     "url": "{{ collection.url }}",
+                     "numberOfItems":{{ collection.products.size }}}
+              }
 </script>
 {% endcase %}
 {% assign min_price = null %}
@@ -87,36 +70,92 @@
 {% for product in collections.all-products.products %}
   {% for variant in product.variants %}
     {% assign price = variant.price | money_without_currency | replace: ',', '.' | plus: 0 %}
-    {% if min_price == null or price < min_price %}{% assign min_price = price %}{% endif %}
-    {% if price > max_price %}{% assign max_price = price %}{% endif %}
+    {% if min_price == null or price < min_price %}
+      {% assign min_price = price %}
+    {% endif %}
+    {% if price > max_price %}
+      {% assign max_price = price %}
+    {% endif %}
   {% endfor %}
 {% endfor %}
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"LocalBusiness",
-  "mainEntityOfPage":{"@type":"WebPage","@id":"{{ shop.url }}"},
-  "name":"{{ shop.name }}",
-  "telephone":"{{ shop.phone }}",
-  "email":"{{ shop.email }}",
-  "priceRange":"{{ min_price | money }} - {{ max_price | money }}",
-  "address":{
-    "@type":"PostalAddress",
-    "streetAddress":"{{ shop.address.address1 }}",
-    "addressLocality":"{{ shop.address.city }}",
-    "addressRegion":"{{ shop.address.province }}",
-    "addressCountry":"{{ shop.address.country_code }}",
-    "postalCode":"{{ shop.address.zip }}"
-  },
-  "url":"{{ shop.url }}"
+    <script type="application/ld+json">
+      {
+        "@context" : "https://schema.org",
+        "@type" : "LocalBusiness",
+        "mainEntityOfPage" : {
+          "@type" : "WebPage",
+          "@id" : "{{ shop.url }}"
+        },
+        "name" : "{{ shop.name }}",
+        "telephone" : "{{ shop.phone }}",
+        "email" : "{{ shop.email }}",
+        "priceRange" : "{{ min_price | money }} - {{ max_price | money }}",
+        "address" : {
+          "@type" : "PostalAddress",
+          "streetAddress" : "{{ shop.address.address1 }}",
+          "addressLocality" : "{{ shop.address.city }}",
+          "addressRegion" : "{{ shop.address.province }}",
+          "addressCountry" : "{{ shop.address.country_code }}",
+          "postalCode" : "{{ shop.address.zip }}"
+        },
+        "url" : "{{ shop.url }}"
+      }
+    </script>
+  <style>
+  /* AlpineJS can cause a brief &ldquo;blip&rdquo; where uninitialized templates flash before it loads. x-cloak prevents this by hiding elements until Alpine is ready. Learn more: https://alpinejs.dev/directives/cloak */
+  [x-cloak] { display: none !important; }
+  /* The li-cloak tag is removed during conversion. It&rsquo;s useful for hiding elements in the Webflow Designer to make editing easier. Learn more: https://www.liquify.pro/docu/getting-started#li-cloak */  
+  [li-cloak_disabled] { display: none !important; }
+  /* Setup Font and Background Color if Text is selected */
+  ::selection {
+    color: #FFFFFF;
+    background: #000000;
+  }
+  ::-moz-selection {
+    color: #FFFFFF;
+    background: #000000;
+  }
+</style>
+  <style>
+html.lenis {
+  height: auto;
 }
-</script>
-  <!--  Global libs (load once; prevent Swup re-eval)  -->
-  <script defer="" data-swup-ignore-script="" src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
-  <script defer="" data-swup-ignore-script="" src="{{ 'alpinejs3.js' | asset_url }}"></script>
-  <script defer="" data-swup-ignore-script="" src="https://cdn.jsdelivr.net/gh/liquify-pro/core@latest/script.js"></script>
-  <script defer="" data-swup-ignore-script="" src="https://unpkg.com/@studio-freight/lenis@1.0.36/dist/lenis.min.js"></script>
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}  
+</style>
+  <style>
+.form_input:-webkit-autofill {
+    background-color: transparent !important;
+    border-radius: 0rem;
+}
+input:-webkit-autofill {
+    background-color: transparent !important;
+	border-radius: 0rem;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: inset 0 0 0px 9999px var(--_adult---adult-off-white);
+-webkit-text-fill-color: var(--_adult---adult-red) !important;
+}
+</style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+html.shopify-design-mode .shopify-section.logo-wrapper { 
+    display: none !important;
+  }
+</style>
+  <style>
+  *[tabindex]:focus-visible, input[type="file"]:focus-visible {
+    outline: none;
+    outline-offset: 0.125rem;
+}
+</style>
   <!--  
 IMPORTANT: If you want to make changes to the <head> or <body> code on this page, 
 please remove the `li-layout` tag from the <body> element. 
@@ -132,304 +171,429 @@ Learn more: https://www.liquify.pro/docu/getting-started#template-structure
   </div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6888d102d478b2446d70b62e" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="{{ 'webflow.js' | asset_url }}" type="text/javascript"></script>
-  <script src="https://cdn.prod.website-files.com/gsap/3.13.0/gsap.min.js" type="text/javascript"></script><!--  Predictive Search (guarded custom element)  -->
+  <script src="https://cdn.prod.website-files.com/gsap/3.13.0/gsap.min.js" type="text/javascript"></script>
+  {% render 'search_javascript' %}
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.36/dist/lenis.min.js"></script>
   <script>
-class PredictiveSearch extends HTMLElement {
-  constructor(){
-    super();
-    this.input = this.querySelector('input[type="search"]');
-    this.predictiveSearchResults = this.querySelector('#predictive-search');
-    if (!this.input) return;
-    this.input.addEventListener('input', this.debounce((e)=>this.onChange(e), 300).bind(this));
+// LENIS SMOOTH SCROLL
+let lenis;
+if (Webflow.env("editor") === undefined) {
+  lenis = new Lenis({
+    lerp: 0.8,
+    wheelMultiplier: 1,
+    gestureOrientation: "vertical",
+    normalizeWheel: false,
+    smoothTouch: false
+  });
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
   }
-  onChange(){
-    const q = (this.input.value || '').trim();
-    if(!q.length){ this.close(); return; }
-    this.getSearchResults(q);
-  }
-  getSearchResults(q){
-    fetch(`{% unless request.locale.root_url == '/' %}{{ request.locale.root_url }}{% endunless %}/search/suggest?q=${encodeURIComponent(q)}&section_id=predictive_search`)
-      .then(r=> r.ok ? r.text() : Promise.reject(new Error(r.status)))
-      .then(html=>{
-        const doc = new DOMParser().parseFromString(html,'text/html');
-        const inner = doc.querySelector('#shopify-section-predictive_search')?.innerHTML || '';
-        this.predictiveSearchResults.innerHTML = inner;
-        this.open();
-      })
-      .catch(()=> this.close());
-  }
-  open(){ if(this.predictiveSearchResults) this.predictiveSearchResults.style.display='block'; }
-  close(){ if(this.predictiveSearchResults) this.predictiveSearchResults.style.display='none'; }
-  debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a),wait); }; }
+  requestAnimationFrame(raf);
 }
-if (!customElements.get('predictive-search')) customElements.define('predictive-search', PredictiveSearch);
+$("[data-lenis-start]").on("click", function () {
+  lenis.start();
+});
+$("[data-lenis-stop]").on("click", function () {
+  lenis.stop();
+});
+$("[data-lenis-toggle]").on("click", function () {
+  $(this).toggleClass("stop-scroll");
+  if ($(this).hasClass("stop-scroll")) {
+    lenis.stop();
+  } else {
+    lenis.start();
+  }
+});
 </script>
-  <!--  Swup libs (one set)  -->
-  <script src="https://unpkg.com/swup@4"></script>
-  <script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
-  <script src="https://unpkg.com/@swup/scroll-plugin@3"></script>
-  <!--  Swup boot + lifecycle (load once)  -->
-  <script data-swup-ignore-script="">
-(function () {
-  var CONTAINER = '.main-wrapper';
-  var FOOTER_SEL = 'footer.section_footer, footer[li-section="footer"]';
-  var ioSticky = null;
-  var lenis = window.lenis || null;
-  // Start Lenis once (global) if not already
-  if (!lenis && window.Lenis && (window.Webflow?.env("editor") === undefined)) {
-    lenis = new Lenis({ lerp: 0.8, wheelMultiplier: 1, gestureOrientation: "vertical", normalizeWheel: false, smoothTouch: false });
-    window.lenis = lenis;
-    requestAnimationFrame(function raf(t){ lenis.raf(t); requestAnimationFrame(raf); });
-  }
-  function reinitWebflowIX(){
-    try {
-      if (window.Webflow?.destroy) window.Webflow.destroy();
-      setTimeout(function(){
-        var ix = (window.Webflow && (Webflow.require('ix2') || Webflow.require('ix3'))) || null;
-        if (ix?.init) ix.init();
-      }, 60);
-    } catch(e){}
-  }
-  function underlineShopIfProduct(){
-    var onProduct = /\/products\//.test(location.pathname);
-    var links = Array.from(document.querySelectorAll('.main-nav_link-list .menu_link'));
-    links.forEach(a=>a.classList.remove('is-current-shop'));
-    if (!onProduct) return;
-    var shopLink = links.find(a => /shop/i.test((a.textContent||'').trim()))
-                 || links.find(a => (a.pathname||'').indexOf('/collections')>-1);
-    if (shopLink) shopLink.classList.add('is-current-shop');
-  }
-  function scrollToAnchor(){
-    var hash = location.hash;
-    if (!hash) return;
-    var target = document.querySelector(hash);
-    if (!target) return;
-    setTimeout(function(){
-      if (window.lenis) window.lenis.scrollTo(target, { offset: 0 });
-      else target.scrollIntoView({ behavior:'smooth' });
-    }, 0);
-  }
-  function nudgeReflow(){
-    var el = document.querySelector(CONTAINER);
-    var ft = document.querySelector(FOOTER_SEL);
-    if (el) el.getBoundingClientRect();
-    if (ft) ft.getBoundingClientRect();
-  }
-  // --- Sticky product header (mount/unmount) ---
-  function mountStickyHeader(){
-    if (!/\/products\//.test(location.pathname)) return;
-    var trigger = document.querySelector('.viewport-trigger');
-    var stickyTarget = document.querySelector('.product-header_component');
-    var mediaList = document.querySelector('.product-media-list');
-    if (!trigger || !stickyTarget || !mediaList) return;
-    if (stickyTarget.dataset.stickyInit === '1') return;
-    stickyTarget.dataset.stickyInit = '1';
-    ioSticky = new IntersectionObserver(function (entries) {
-      var entry = entries[0];
-      if (!entry) return;
-      if (entry.isIntersecting) {
-        stickyTarget.classList.add('sticky');
-        mediaList.classList.add('remove-margin');
-      } else if (entry.boundingClientRect.top > 0) {
-        stickyTarget.classList.remove('sticky');
-        mediaList.classList.remove('remove-margin');
-      }
-    }, { threshold: 0 });
-    ioSticky.observe(trigger);
-  }
-  function unmountStickyHeader(){
-    if (ioSticky) { try{ ioSticky.disconnect(); }catch(e){} ioSticky = null; }
-    var el = document.querySelector('.product-header_component');
-    if (el){ el.classList.remove('sticky'); delete el.dataset.stickyInit; }
-    var ml = document.querySelector('.product-media-list');
-    if (ml) ml.classList.remove('remove-margin');
-  }
-  // Misc small utilities that must reattach
-  function initDynamicCurrentYear(){
-    document.querySelectorAll('[data-current-year]').forEach(function(el){
-      el.textContent = String(new Date().getFullYear());
-    });
-  }
-  function initLoginModal(){
-    const openTrigger = document.querySelector("#openLogin");
-    const closeTrigger = document.querySelector("#closeLogin");
-    const target = document.querySelector(".section_under-construction");
-    if (!target) return;
-    if (openTrigger) openTrigger.addEventListener("click", (e)=>{ e.preventDefault(); target.classList.add("open"); }, { once:true });
-    if (closeTrigger) closeTrigger.addEventListener("click", (e)=>{ e.preventDefault(); target.classList.remove("open"); });
-  }
-  function initAboutCart(){
-    const body = document.body;
-    const mobileBg = document.querySelector('.mobile-menu-background');
-    const mobileAboutBg = document.querySelector('.mobile-about-background');
-    const cartList = document.querySelector('.nav_mini-cart-holder.w-dropdown-list');
-    const aboutWrapper = document.querySelector('.about_component-wrapper');
-    const aboutBtn = document.getElementById('aboutBtn');
-    const closeBtn = document.getElementById('closeAbout');
-    const modalBg = document.getElementById('bgcloseAbout');
-    if (!cartList || !aboutWrapper) return;
-    const cartRoot = cartList.closest('.w-dropdown') || cartList.parentElement;
-    const cartToggle = cartRoot ? cartRoot.querySelector('.w-dropdown-toggle') : null;
-    let y0 = 0;
-    function lock(){ if(body.classList.contains('_lock')) return; y0 = window.scrollY||0; body.style.top= `-${y0}px`; body.classList.add('_lock'); }
-    function unlock(){ if(!body.classList.contains('_lock')) return; body.classList.remove('_lock'); body.style.top=''; window.scrollTo(0, y0||0); }
-    function isCartOpen(){ return cartList.classList.contains('w--open'); }
-    function closeCart(){ cartList.classList.remove('w--open'); cartToggle?.classList.remove('w--open'); cartToggle?.setAttribute('aria-expanded','false'); }
-    function openAbout(){ if (isCartOpen()) closeCart(); aboutWrapper.classList.add('open'); aboutBtn?.setAttribute('aria-expanded','true'); updateState(); }
-    function closeAbout(){ aboutWrapper.classList.remove('open'); aboutBtn?.setAttribute('aria-expanded','false'); updateState(); }
-    function toggleAbout(){ aboutWrapper.classList.contains('open') ? closeAbout() : openAbout(); }
-    aboutBtn?.addEventListener('click', (e)=>{ e.preventDefault(); toggleAbout(); });
-    closeBtn?.addEventListener('click',(e)=>{ e.preventDefault(); closeAbout(); });
-    modalBg?.addEventListener('click', ()=> closeAbout());
-    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && aboutWrapper.classList.contains('open')) closeAbout(); });
-    const mo = new MutationObserver(updateState);
-    mo.observe(cartList, { attributes: true, attributeFilter: ['class'] });
-    function updateMobileBg(){
-      if (!mobileBg) return;
-      if (window.innerWidth < 767 && isCartOpen()) mobileBg.classList.add('open');
-      else mobileBg.classList.remove('open');
-    }
-    function updateMobileAboutBg(){
-      if (!mobileAboutBg) return;
-      if (aboutWrapper.classList.contains('open')) mobileAboutBg.classList.add('open');
-      else mobileAboutBg.classList.remove('open');
-    }
-    function updateState(){
-      if (isCartOpen()) { aboutWrapper.classList.remove('open'); aboutBtn?.setAttribute('aria-expanded','false'); mobileAboutBg?.classList.remove('open'); }
-      if (aboutWrapper.classList.contains('open') || isCartOpen()) lock(); else unlock();
-      updateMobileBg(); updateMobileAboutBg();
-    }
-    window.addEventListener('resize', updateState, { passive:true });
-    updateState();
-  }
-  function mount(){
-    reinitWebflowIX();
-    underlineShopIfProduct();
-    initDynamicCurrentYear();
-    initLoginModal();
-    initAboutCart();
-    scrollToAnchor();
-  }
-  // Boot swup (once)
-  if (!window.swup) {
-    window.swup = new Swup({
-      containers: [CONTAINER],
-      plugins: [
-        new SwupScriptsPlugin({ head: false, body: true }),
-        new SwupScrollPlugin({
-          doScrollingRightAway: false,
-          animateScroll: { betweenPages: false, samePageWithHash: false, samePage: true },
-          offset: 0
-        })
-      ]
-    });
-    // Lifecycle
-    swup.hooks.on('visit:start', function(){ unmountStickyHeader(); });
-    swup.hooks.on('content:replace', nudgeReflow);
-    swup.hooks.on('page:view', function(){
-      mountStickyHeader();
-      mount();
-    });
-  }
-  // First paint
-  document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', function(){ mountStickyHeader(); mount(); }, { once:true })
-    : (mountStickyHeader(), mount());
-})();
+  <script>
+function initDynamicCurrentYear() {  
+  const currentYear = new Date().getFullYear();
+  const currentYearElements = document.querySelectorAll('[data-current-year]');
+  currentYearElements.forEach(currentYearElement => {
+    currentYearElement.textContent = currentYear;
+  });
+}
+// Initialize Dynamic Current Year
+document.addEventListener('DOMContentLoaded', () => {
+  initDynamicCurrentYear();
+});
 </script>
-  <!--  Mini-cart plural fixer (Swup + Alpine safe)  -->
+  <script>
+document.querySelectorAll('.modal-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const plus = button.querySelector('.plus');
+    const modal = button.nextElementSibling;
+    if (!plus || !modal || !modal.classList.contains('modal')) return;
+    const isOpen = modal.classList.contains('open');
+    // Toggle +/-
+    plus.textContent = isOpen ? '+' : '-';
+    // Toggle .open class
+    modal.classList.toggle('open');
+    // Remove leftover inline styles if closing
+    if (isOpen) {
+      modal.removeAttribute('style');
+    }
+  });
+});
+</script>
   <script>
 /**
  * Mini-cart plural fixer
- * - Works with Alpine `@carttotalitems.window`
- * - Re-inits on Swup v4 navigations
- * - Cleans observers on re-injection
+ * - Handles multiple instances under the same parent
+ * - Updates on Alpine's `carttotalitems` window event
+ * - Re-inits on Swup navigations (v2 + v3)
+ * - Cleans up observers to avoid leaks/duplicates
  */
+// If re-injected (e.g., via Swup), tear down previous run
+if (window.__pluralFix && window.__pluralFix.teardown) window.__pluralFix.teardown();
 (function () {
-  if (window.__pluralFix && window.__pluralFix.teardown) window.__pluralFix.teardown();
   const state = { observers: [], pairs: [], handler: null, swup2: null, swup3: null };
-  function getCount(el){ const m=(el.textContent||'').match(/\d+/); return m?parseInt(m[0],10):0; }
-  function setPluralDisplay(pluralEl, hide){ if(!pluralEl) return; hide ? (pluralEl.style.display='none') : pluralEl.style.removeProperty('display'); }
-  function updatePair(countEl, pluralEl){ setPluralDisplay(pluralEl, getCount(countEl) === 1); }
-  function makePairs(root){
+  function getCount(el) {
+    const m = (el.textContent || '').match(/\d+/);
+    return m ? parseInt(m[0], 10) : 0;
+  }
+  function setPluralDisplay(pluralEl, hide) {
+    if (!pluralEl) return;
+    if (hide) {
+      pluralEl.style.display = 'none';
+    } else {
+      // Let CSS decide when not singular
+      pluralEl.style.removeProperty('display');
+    }
+  }
+  function updatePair(countEl, pluralEl) {
+    const n = getCount(countEl);
+    setPluralDisplay(pluralEl, n === 1);
+  }
+  // Pair each count with the nearest following sibling that contains .cart-plural
+  function makePairs(root) {
     const pairs = [];
-    root.querySelectorAll('[li-element="mini-cart-item-count"]').forEach((countEl)=>{
-      let pluralEl=null, sib=countEl.nextElementSibling;
-      while(sib && !pluralEl){ pluralEl = sib.querySelector?.('.cart-plural')||null; sib = pluralEl?null:sib.nextElementSibling; }
-      if(!pluralEl && countEl.parentElement){
-        const plurals=[...countEl.parentElement.querySelectorAll('.cart-plural')];
-        pluralEl = plurals.find(pl => (pl.compareDocumentPosition(countEl) & Node.DOCUMENT_POSITION_PRECEDING)!==0) || null;
+    const counts = root.querySelectorAll('[li-element="mini-cart-item-count"]');
+    counts.forEach((countEl) => {
+      let pluralEl = null;
+      // Walk forward through siblings until we find a .cart-plural
+      let sib = countEl.nextElementSibling;
+      while (sib && !pluralEl) {
+        const found = sib.querySelector && sib.querySelector('.cart-plural');
+        if (found) pluralEl = found;
+        sib = found ? null : sib.nextElementSibling;
       }
-      if(pluralEl) pairs.push({countEl, pluralEl});
+      // Fallback: any .cart-plural after the count within the same parent
+      if (!pluralEl && countEl.parentElement) {
+        const plurals = Array.from(countEl.parentElement.querySelectorAll('.cart-plural'));
+        pluralEl = plurals.find(pl => (pl.compareDocumentPosition(countEl) & Node.DOCUMENT_POSITION_PRECEDING) !== 0) || null;
+      }
+      if (pluralEl) pairs.push({ countEl, pluralEl });
     });
     return pairs;
   }
-  function observePair(countEl, pluralEl){
-    const mo = new MutationObserver(()=>updatePair(countEl,pluralEl));
-    mo.observe(countEl,{childList:true,characterData:true,subtree:true});
+  function observePair(countEl, pluralEl) {
+    const mo = new MutationObserver(() => updatePair(countEl, pluralEl));
+    mo.observe(countEl, { childList: true, characterData: true, subtree: true });
     state.observers.push(mo);
   }
-  function disconnectAll(){ state.observers.forEach(o=>o.disconnect()); state.observers = []; }
-  function init(root=document){
+  function disconnectAll() {
+    state.observers.forEach(o => o.disconnect());
+    state.observers = [];
+  }
+  function init(root = document) {
     disconnectAll();
     state.pairs = makePairs(root);
-    state.pairs.forEach(({countEl,pluralEl})=>{ updatePair(countEl,pluralEl); observePair(countEl,pluralEl); });
+    if (!state.pairs.length) return;
+    state.pairs.forEach(({ countEl, pluralEl }) => {
+      updatePair(countEl, pluralEl);
+      observePair(countEl, pluralEl);
+    });
+    // Recalculate after Alpine dispatches carttotalitems (x-text update happens first)
     if (!state.handler) {
-      state.handler = () => setTimeout(()=> state.pairs.forEach(({countEl,pluralEl})=>updatePair(countEl,pluralEl)), 0);
-      window.addEventListener('carttotalitems', state.handler, { passive:true });
+      state.handler = () => setTimeout(() => {
+        state.pairs.forEach(({ countEl, pluralEl }) => updatePair(countEl, pluralEl));
+      }, 0);
+      window.addEventListener('carttotalitems', state.handler, { passive: true });
     }
   }
-  function teardown(){
+  function refresh() {
+    disconnectAll();
+    state.pairs = makePairs(document);
+    state.pairs.forEach(({ countEl, pluralEl }) => {
+      updatePair(countEl, pluralEl);
+      observePair(countEl, pluralEl);
+    });
+  }
+  function teardown() {
     disconnectAll();
     if (state.handler) window.removeEventListener('carttotalitems', state.handler);
     state.handler = null;
+    // Remove Swup hooks
     if (state.swup2) document.removeEventListener('swup:contentReplaced', state.swup2);
-    if (state.swup3?.off) state.swup3.off('page:view', init);
+    if (state.swup3) document.removeEventListener('swup:page:view', state.swup3);
     state.swup2 = state.swup3 = null;
     state.pairs = [];
   }
-  // expose for debugging
-  window.__pluralFix = { refresh: ()=>init(document), teardown };
-  // first run
-  document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', ()=>init(document), { once:true })
-    : init(document);
-  // Swup v2/v4 support
-  document.addEventListener('swup:contentReplaced', ()=>init(document)); // legacy
-  if (window.swup?.hooks) {
-    swup.hooks.on('page:view', ()=>init(document)); // v4
+  // Expose debug helpers if you need them
+  window.__pluralFix = { refresh, teardown };
+  // Init now
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => init(document));
+  } else {
+    init(document);
   }
+  // Swup (v2 + v3): re-init after page changes
+  state.swup2 = () => init(document);
+  state.swup3 = () => init(document);
+  document.addEventListener('swup:contentReplaced', state.swup2); // v2
+  document.addEventListener('swup:page:view',       state.swup3); // v3
 })();
 </script>
-  <!--  Form success + scroll restore (optional, deduped)  -->
   <script>
-(function(){
-  function restoreScroll(anchor){
-    const url = location.href;
-    if (!url.includes(`?customer_posted=true#${anchor}`)) return;
-    const y = sessionStorage.getItem('scrollPosition');
-    if (y){ window.scrollTo(0, parseInt(y,10)); sessionStorage.removeItem('scrollPosition'); }
+  document.addEventListener("DOMContentLoaded", () => {
+    const openTrigger = document.querySelector("#openLogin");
+    const closeTrigger = document.querySelector("#closeLogin");
+    const target = document.querySelector(".section_under-construction");
+    if (openTrigger && target) {
+      openTrigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        target.classList.add("open");
+      });
+    }
+    if (closeTrigger && target) {
+      closeTrigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        target.classList.remove("open");
+      });
+    }
+  });
+</script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Elements
+  const body = document.body;
+  const mobileBg = document.querySelector('.mobile-menu-background');
+  const mobileAboutBg = document.querySelector('.mobile-about-background');
+  const cartDropdown = document.querySelector('.nav_mini-cart-holder.w-dropdown-list'); // list
+  const aboutWrapper = document.querySelector('.about_component-wrapper');
+  const aboutBtn = document.getElementById('aboutBtn');
+  const closeBtn = document.getElementById('closeAbout');
+  const modalBg = document.getElementById('bgcloseAbout');
+  // Early exit if core pieces are missing
+  if (!cartDropdown || !aboutWrapper) return;
+  // Cart root/toggle (for reliably closing Webflow dropdown)
+  const cartRoot = cartDropdown.closest('.w-dropdown') || cartDropdown.parentElement;
+  const cartToggle = cartRoot ? cartRoot.querySelector('.w-dropdown-toggle') : null;
+  // --- Cart helpers ---
+  function isCartOpen() {
+    return cartDropdown.classList.contains('w--open');
   }
-  function handleSuccess(anchor, selectors){
-    const url = location.href;
-    if (!url.includes(`?customer_posted=true#${anchor}`)) return;
-    const init = document.querySelector(selectors.initial);
-    const ok   = document.querySelector(selectors.success);
-    if (init) init.classList.add('succes');
-    if (ok)   ok.classList.add('succes');
-    // optional: show elements gated by [hs-newsletter-show]
-    document.querySelectorAll('[hs-newsletter-show]').forEach(el=>{ el.style.display='flex'; });
+  function closeCart() {
+    cartDropdown.classList.remove('w--open');
+    cartToggle?.classList.remove('w--open');
+    cartToggle?.setAttribute('aria-expanded', 'false');
   }
-  function run(){
-    restoreScroll('contact_form');
-    handleSuccess('contact_form', { initial: '.footer-form-initial-state', success: '.footer-form-succes-state' });
-    restoreScroll('wf-form-Contact-Form');
-    handleSuccess('wf-form-Contact-Form', { initial: '.contact-form-wrapper', success: '.contact-form-succes-state' });
+  // --- About controls (toggle + close helpers) ---
+  function openAbout() {
+    // Mutual exclusivity: close cart if it's open
+    if (isCartOpen()) closeCart();
+    aboutWrapper.classList.add('open');
+    aboutBtn?.setAttribute('aria-expanded', 'true');
+    updateState();
   }
-  window.addEventListener('beforeunload', ()=> sessionStorage.setItem('scrollPosition', window.scrollY));
-  document.readyState==='loading' ? document.addEventListener('DOMContentLoaded', run, { once:true }) : run();
-  if (window.swup?.hooks) swup.hooks.on('page:view', run);
-})();
+  function closeAbout() {
+    aboutWrapper.classList.remove('open');
+    aboutBtn?.setAttribute('aria-expanded', 'false');
+    updateState();
+  }
+  function toggleAbout() {
+    if (aboutWrapper.classList.contains('open')) closeAbout(); else openAbout();
+  }
+  // Events for About
+  aboutBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleAbout();
+  });
+  closeBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeAbout();
+  });
+  modalBg?.addEventListener('click', () => {
+    closeAbout();
+  });
+  // --- ESC key support for About modal ---
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      if (aboutWrapper.classList.contains('open')) {
+        closeAbout();
+      }
+    }
+  });
+  // --- Mobile background updaters ---
+  function updateMobileBg() {
+    if (!mobileBg) return;
+    if (window.innerWidth < 767 && isCartOpen()) {
+      mobileBg.classList.add('open');
+    } else {
+      mobileBg.classList.remove('open');
+    }
+  }
+  function updateMobileAboutBg() {
+    if (!mobileAboutBg) return;
+    if (aboutWrapper.classList.contains('open')) {
+      mobileAboutBg.classList.add('open');
+    } else {
+      mobileAboutBg.classList.remove('open');
+    }
+  }
+  // --- Central state updater (no body lock) ---
+  function updateState() {
+    // If cart opens, ensure About closes
+    if (isCartOpen()) {
+      aboutWrapper.classList.remove('open');
+      aboutBtn?.setAttribute('aria-expanded', 'false');
+      mobileAboutBg?.classList.remove('open');
+    }
+    // Maintain backgrounds (scroll remains enabled)
+    updateMobileBg();
+    updateMobileAboutBg();
+    // Clean up any legacy lock remnants if present
+    body.classList.remove('_lock');
+    body.style.top = '';
+  }
+  // Observe cart open/close (class changes from Webflow)
+  const observer = new MutationObserver(updateState);
+  observer.observe(cartDropdown, { attributes: true, attributeFilter: ['class'] });
+  // Keep things consistent on resize
+  window.addEventListener('resize', updateState);
+  // Initial sync
+  updateState();
+});
+</script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('&#9989; DOM fully loaded');
+  const url = window.location.href;
+  console.log('&#127760; Current URL:', url);
+  // Restore scroll position if returning to success page
+  if (url.includes('?customer_posted=true#contact_form')) {
+    const savedScroll = sessionStorage.getItem('scrollPosition');
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll, 10));
+      console.log('&#128205; Scroll position restored to', savedScroll);
+      sessionStorage.removeItem('scrollPosition'); // clean up
+    }
+  }
+  // 1. Show success state if form submitted
+  if (url.includes('?customer_posted=true#contact_form')) {
+    console.log('&#127881; Success form submission detected via URL');
+    const footerFormInitialState = document.querySelector('.footer-form-initial-state');
+    const footerFormSuccessState = document.querySelector('.footer-form-succes-state');
+    if (footerFormInitialState) {
+      footerFormInitialState.classList.add('succes');
+      console.log('&#9989; .succes class added to .footer-form-initial-state');
+    }
+    if (footerFormSuccessState) {
+      footerFormSuccessState.classList.add('succes');
+      console.log('&#9989; .succes class added to .footer-form-succes-state');
+    }
+    const newsletterElements = document.querySelectorAll('[hs-newsletter-show]');
+    if (newsletterElements.length > 0) {
+      newsletterElements.forEach(el => {
+        el.style.display = 'flex';
+      });
+      console.log(`&#128236; ${newsletterElements.length} newsletter element(s) shown`);
+    } else {
+      console.log('&#8505;&#65039; No [hs-newsletter-show] elements found');
+    }
+  }
+  // 2. Input formatting &mdash; name & last name (capitalize), email (remove spaces)
+  const generalIds = ['name', 'last_name'];
+  generalIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        let val = e.target.value.trim().replace(/\s+/g, '');
+        e.target.value = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+        console.log(`&#9997;&#65039; Formatting input: #${id} &rarr; "${e.target.value}"`);
+      });
+    } else {
+      console.warn(`&#9888;&#65039; Input field #${id} not found`);
+    }
+  });
+  const emailIds = ['email'];
+  emailIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        e.target.value = e.target.value.trim().replace(/\s+/g, '');
+        console.log(`&#9997;&#65039; Formatting email input: #${id} &rarr; "${e.target.value}"`);
+      });
+    } else {
+      console.warn(`&#9888;&#65039; Email input field #${id} not found`);
+    }
+  });
+});
+// Save scroll position before navigating away
+window.addEventListener('beforeunload', function () {
+  sessionStorage.setItem('scrollPosition', window.scrollY);
+});
+</script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const url = window.location.href;
+  // --- Utilities ---
+  function restoreScroll(anchor) {
+    if (url.includes(`?customer_posted=true#${anchor}`)) {
+      const savedScroll = sessionStorage.getItem('scrollPosition');
+      if (savedScroll) {
+        window.scrollTo(0, parseInt(savedScroll, 10));
+        sessionStorage.removeItem('scrollPosition');
+      }
+    }
+  }
+  function handleSuccess(anchor, selectors) {
+    if (url.includes(`?customer_posted=true#${anchor}`)) {
+      const initialEl = document.querySelector(selectors.initial);
+      const successEl = document.querySelector(selectors.success);
+      if (initialEl) initialEl.classList.add('succes');
+      if (successEl) successEl.classList.add('succes');
+    }
+  }
+  // --- Newsletter / footer form ---
+  restoreScroll('contact_form');
+  handleSuccess('contact_form', {
+    initial: '.footer-form-initial-state',
+    success: '.footer-form-succes-state'
+  });
+  // --- Contact form ---
+  restoreScroll('wf-form-Contact-Form');
+  handleSuccess('wf-form-Contact-Form', {
+    initial: '.contact-form-wrapper',
+    success: '.contact-form-succes-state'
+  });
+  // --- Input formatting (shared) ---
+  const generalIds = ['name', 'last_name'];
+  generalIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        let val = e.target.value.trim().replace(/\s+/g, '');
+        e.target.value = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+      });
+    }
+  });
+  const emailIds = ['email'];
+  emailIds.forEach(function (id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function (e) {
+        e.target.value = e.target.value.trim().replace(/\s+/g, '');
+      });
+    }
+  });
+});
+// Save scroll before leaving
+window.addEventListener('beforeunload', function () {
+  sessionStorage.setItem('scrollPosition', window.scrollY);
+});
 </script>
 </body>
 </html>
