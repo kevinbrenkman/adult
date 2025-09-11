@@ -1,8 +1,8 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex">
           <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '100vw', loading: 'lazy' }}
+{{ section.settings.image_image | image_url: width: 1000 | image_tag: class: 'seq-image', sizes: '(max-width: 789px) 100vw, 789px', loading: 'lazy' }}
 {% else %}
-<img class="seq-image" src="{{ 'Fresco1-1-Large.jpeg' | asset_url }}" alt="" sizes="100vw" loading="lazy" srcset="{{ 'Fresco1-1-Large-p-500.jpeg' | asset_url }} 500w, {{ 'Fresco1-1-Large.jpeg' | asset_url }} 789w">
+<img class="seq-image" src="{{ 'Fresco1-1-Large.jpeg' | asset_url }}" alt="" sizes="(max-width: 789px) 100vw, 789px" loading="lazy" srcset="{{ 'Fresco1-1-Large-p-500.jpeg' | asset_url }} 500w, {{ 'Fresco1-1-Large.jpeg' | asset_url }} 789w">
 {% endif %}</div>
         </div> {% schema %} {
     "tag": "div",
