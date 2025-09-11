@@ -835,6 +835,7 @@ figcaption {
 .button.is-close {
   background-color: var(--_adult---adult-off-white);
   color: var(--_adult---adult-red);
+  height: calc(var(--_adult---default-height)  - 1px);
   border-top-style: none;
   border-right-style: none;
 }
@@ -1565,7 +1566,12 @@ figcaption {
 }
 
 .mini-cart_header.space-between {
+  min-height: var(--_adult---default-height);
+  grid-column-gap: .25em;
+  grid-row-gap: .25em;
+  flex-flow: wrap;
   justify-content: space-between;
+  height: auto;
 }
 
 .mini-cart_header.product-slot {
