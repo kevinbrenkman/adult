@@ -563,6 +563,14 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
   <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const first2c = document.querySelector('._2c');
+  if (first2c) {
+    first2c.classList.add('first-2c');
+  }
+});
+</script>
+  <script>
 (function () {
   function getToggle() {
     return document.querySelector('[li-element="mini-cart-toggle"]') 

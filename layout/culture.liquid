@@ -561,6 +561,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 </script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const first2c = document.querySelector('._2c');
+  if (first2c) {
+    first2c.classList.add('first-2c');
+  }
+});
+</script>
   <script src="{{ 'seq-stack.js' | asset_url }}" defer=""></script>
 </body>
 </html>
