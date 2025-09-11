@@ -239,7 +239,7 @@ figcaption {
 }
 
 .global-styles {
-  display: block;
+  display: none;
   position: fixed;
   inset: 0% auto auto 0%;
 }
@@ -5259,6 +5259,11 @@ figcaption {
     grid-auto-columns: 1fr;
     height: auto;
     display: flex;
+    flex-flow: column-reverse !important;
+  }
+
+  ._2c.first-2c-mobile {
+    flex-flow: column !important;
   }
 
   ._2c-image-wrapper-padding {
