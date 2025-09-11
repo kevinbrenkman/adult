@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "default": {
             "type": "default"
         }
@@ -7,6 +10,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "default"
     ]
 }

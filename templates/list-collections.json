@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "list_collection_hero": {
             "type": "list_collection_hero"
         },
@@ -10,6 +13,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "list_collection_hero",
         "list_collection"
     ]

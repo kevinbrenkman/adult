@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "blog_hero": {
             "type": "blog_hero"
         },
@@ -10,6 +13,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "blog_hero",
         "blog_articles"
     ]

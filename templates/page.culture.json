@@ -3,6 +3,12 @@
         "navigation": {
             "type": "navigation"
         },
+        "sequence_logo": {
+            "type": "sequence_logo"
+        },
+        "sequence_progress_ba": {
+            "type": "sequence_progress_ba"
+        },
         "sequence_image": {
             "type": "sequence_image"
         },
@@ -10,10 +16,12 @@
             "type": "sequence_text"
         }
     },
-    "layout": "page.culture",
+    "layout": "culture",
     "wrapper": "main.main-wrapper",
     "order": [
         "navigation",
+        "sequence_logo",
+        "sequence_progress_ba",
         "sequence_image",
         "sequence_text"
     ]
