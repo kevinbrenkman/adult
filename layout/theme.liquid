@@ -570,5 +570,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Adjust selectors to match your nav structure
+    const shopLink = document.querySelector('a[href*="/collections"]') || 
+                     document.querySelector('a[href*="/shop"]');
+    const path = window.location.pathname;
+    if (!shopLink) return;
+    // Check if current page is a product
+    if (path.startsWith("/products/")) {
+      shopLink.classList.add("w--current"); // Webflow's active class
+    }
+  });
+</script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Only run on product pages
+  if (!/\/products\//.test(location.pathname)) return;
+  const trigger = document.querySelector('.viewport-trigger');
+  const stickyTarget = document.querySelector('.product-header_component');
+  const mediaList = document.querySelector('.product-media-list');
+  if (!trigger || !stickyTarget || !mediaList) return;
+  const io = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    if (entry && entry.isIntersecting) {
+      stickyTarget.classList.add('sticky');
+      mediaList.classList.add('remove-margin');
+    } else if (entry && entry.boundingClientRect.top > 0) {
+      stickyTarget.classList.remove('sticky');
+      mediaList.classList.remove('remove-margin');
+    }
+  }, { threshold: 0 });
+  io.observe(trigger);
+});
+</script>
 </body>
 </html>

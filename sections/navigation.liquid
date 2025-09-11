@@ -501,9 +501,11 @@
                               <div li-js-object="cartApiResponse?.result?.message" class="text-size-regular text-weight-bold" x-text="cartApiResponse?.result?.message">14,99 $</div>
                             </div>
                           </div>
-                          <a x-bind:href="'/checkout'" href="#" class="button w-button">PROCEED TO CHECKOUT</a><button li-element="dropdown-toggle" aria-label="Close Cart" class="button is-cart" data-dropdowntoggle="" @click="LiquifyHelper.triggerClick($event.target.closest('.w-dropdown').querySelector('.w-dropdown-toggle.w--open'))">
-                            <div>continue shopping</div>
-                          </button>
+                          <div class="checkout-wrap">
+                            <a x-bind:href="'/checkout'" href="#" class="button w-button">PROCEED TO CHECKOUT</a><button li-element="dropdown-toggle" aria-label="Close Cart" class="button is-cart" data-dropdowntoggle="" @click="LiquifyHelper.triggerClick($event.target.closest('.w-dropdown').querySelector('.w-dropdown-toggle.w--open'))">
+                              <div>continue shopping</div>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <div li-cloak="hide" li-element="mini-cart-empty" class="mini-cart_empty" :style="total.items && { display: 'none' }">
