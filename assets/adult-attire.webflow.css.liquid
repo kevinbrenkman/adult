@@ -1499,6 +1499,19 @@ figcaption {
 
 .mini-cart_component.about-modal {
   z-index: 999;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: var(--_adult---adult-red);
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: var(--_adult---adult-red);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--_adult---adult-red);
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: var(--_adult---adult-red);
+  background-color: var(--_adult---adult-off-white);
   height: calc(100svh - 3rem);
   position: fixed;
   inset: 0% 0% 0% auto;
@@ -4222,11 +4235,11 @@ figcaption {
 
 .about-links {
   min-height: var(--_adult---default-height);
+  padding: var(--_adult---default-height);
   background-color: var(--_adult---adult-off-white);
   flex-flow: wrap;
   justify-content: space-between;
   align-items: stretch;
-  padding: 1rem;
   display: flex;
 }
 
@@ -5609,8 +5622,7 @@ figcaption {
     margin-bottom: 0;
     margin-right: 0;
     margin-top: calc(var(--_adult---default-height) * 2);
-    border-top-style: none;
-    border-bottom-style: solid;
+    border-style: none none solid;
     width: 100%;
   }
 
