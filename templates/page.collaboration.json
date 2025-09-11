@@ -87,15 +87,6 @@
         "padding": "on"
       }
     },
-    "full_image_47GkAm": {
-      "type": "full_image",
-      "name": "Full Image",
-      "settings": {
-        "image_image": "shopify://shop_images/89a545e16983ab026f2a66c616e732be4b27715e_2.jpg",
-        "background": "{{ shop.brand.colors.primary[0].background }}",
-        "padding": "on"
-      }
-    },
     "image_and_text_KNHRtk": {
       "type": "image_and_text",
       "name": "Image and text",
@@ -107,6 +98,15 @@
         "image_text_background": "{{ shop.brand.colors.primary[0].background }}",
         "flex-direction": "row",
         "padding": "off"
+      }
+    },
+    "full_image_47GkAm": {
+      "type": "full_image",
+      "name": "Full Image",
+      "settings": {
+        "image_image": "shopify://shop_images/89a545e16983ab026f2a66c616e732be4b27715e_2.jpg",
+        "background": "{{ shop.brand.colors.primary[0].background }}",
+        "padding": "on"
       }
     }
   },
