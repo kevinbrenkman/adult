@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "article_hero": {
             "type": "article_hero"
         },
@@ -13,6 +16,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "article_hero",
         "article_content",
         "related_articles"

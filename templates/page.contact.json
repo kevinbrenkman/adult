@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "contact": {
             "type": "contact"
         }
@@ -7,6 +10,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "contact"
     ]
 }

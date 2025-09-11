@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "collection_products": {
             "type": "collection_products"
         }
@@ -7,6 +10,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "collection_products"
     ]
 }

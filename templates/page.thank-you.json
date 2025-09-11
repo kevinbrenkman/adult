@@ -1,5 +1,8 @@
 {
     "sections": {
+        "navigation": {
+            "type": "navigation"
+        },
         "text_cta": {
             "type": "text_cta"
         }
@@ -7,6 +10,7 @@
     "layout": "theme",
     "wrapper": "main.main-wrapper",
     "order": [
+        "navigation",
         "text_cta"
     ]
 }
