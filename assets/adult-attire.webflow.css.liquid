@@ -4283,6 +4283,20 @@ figcaption {
   position: relative;
 }
 
+._2c-image-wrapper-padding.padding-on-row {
+  padding-top: calc(var(--_adult---default-height) / 2);
+  padding-right: calc(var(--_adult---default-height) / 4);
+  padding-left: calc(var(--_adult---default-height) / 2);
+  padding-bottom: calc(var(--_adult---default-height) / 2);
+}
+
+._2c-image-wrapper-padding.padding-on-row-reverse {
+  padding-left: calc(var(--_adult---default-height) / 4);
+  padding-top: calc(var(--_adult---default-height) / 2);
+  padding-right: calc(var(--_adult---default-height) / 2);
+  padding-bottom: calc(var(--_adult---default-height) / 2);
+}
+
 .image {
   object-fit: cover;
   width: 100%;
@@ -4468,8 +4482,8 @@ figcaption {
   align-items: center;
   width: 100%;
   height: 100%;
-  padding-left: 10vw;
-  padding-right: 10vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
   display: flex;
 }
 
@@ -4528,11 +4542,6 @@ figcaption {
 
 .seq-image-wrapper.xxxl {
   width: 65%;
-  height: 100%;
-}
-
-.seq-image-wrapper.xxxxl {
-  width: 100%;
   height: 100%;
 }
 
@@ -5337,6 +5346,14 @@ figcaption {
     width: 100%;
   }
 
+  ._2c-image-wrapper-padding.padding-on-row {
+    padding-right: calc(var(--_adult---default-height) / 2);
+  }
+
+  ._2c-image-wrapper-padding.padding-on-row-reverse {
+    padding-left: calc(var(--_adult---default-height) / 2);
+  }
+
   .image.force-ratio-on-mobile {
     aspect-ratio: 4 / 5;
   }
@@ -5381,6 +5398,11 @@ figcaption {
     width: 100%;
   }
 
+  .seq-image-flex {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .seq-image-wrapper.s {
     width: calc(75% - var(--_adult---default-height)  - var(--_adult---default-height));
   }
@@ -5405,7 +5427,7 @@ figcaption {
     width: calc(50% - var(--_adult---default-height)  - var(--_adult---default-height));
   }
 
-  .seq-image-wrapper.xxl, .seq-image-wrapper.xxxl, .seq-image-wrapper.xxxxl {
+  .seq-image-wrapper.xxl, .seq-image-wrapper.xxxl {
     width: calc(100% - var(--_adult---default-height)  - var(--_adult---default-height));
   }
 
@@ -6063,14 +6085,14 @@ figcaption {
 
   .footer_sub-footer {
     padding: var(--_adult---default-height);
+    grid-row-gap: 1em;
     text-align: center;
     grid-template-columns: 1fr;
     justify-content: center;
-    display: block;
   }
 
   .footer_legal-links {
-    display: inline-block;
+    display: inline-flex;
   }
 
   .gift_card-logo {
@@ -6262,7 +6284,7 @@ figcaption {
     padding: 0 !important;
   }
 
-  .seq-image-wrapper.xxl, .seq-image-wrapper.xxxl, .seq-image-wrapper.xxxxl {
+  .seq-image-wrapper.xxl, .seq-image-wrapper.xxxl {
     width: 100%;
     padding: 0 !important;
   }
@@ -6679,10 +6701,6 @@ figcaption {
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-start;
-  }
-
-  .footer_legal-links {
-    display: inline-flex;
   }
 
   .menu_link.no-pointer-events {
