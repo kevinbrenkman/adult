@@ -144,7 +144,7 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/IMG_5194_1_Large_d0382676-9233-43ef-99e7-09eac0bd0943.jpg",
-        "width": "xxxxl",
+        "width": "xxxl",
         "align": "center",
         "padding": 0
       }
