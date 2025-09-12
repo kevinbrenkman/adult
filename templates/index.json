@@ -65,13 +65,6 @@
         "padding": 0
       }
     },
-    "sequence_text_NTB8D8": {
-      "type": "sequence_text",
-      "name": "Sequence Text",
-      "settings": {
-        "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one - but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
-      }
-    },
     "sequence_image_MjrFBp": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -90,6 +83,13 @@
         "width": "m",
         "align": "flex-start",
         "padding": 0
+      }
+    },
+    "sequence_text_NTB8D8": {
+      "type": "sequence_text",
+      "name": "Sequence Text",
+      "settings": {
+        "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one - but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
       }
     },
     "sequence_image_xpemPj": {
@@ -176,16 +176,6 @@
         "padding": 2
       }
     },
-    "sequence_image_YeM7Eb": {
-      "type": "sequence_image",
-      "name": "Sequence Image",
-      "settings": {
-        "image_image": "shopify://shop_images/ADULT_s03_0243_-_copie_1_Large_df8757f1-70fb-4605-bb59-590d30724537.jpg",
-        "width": "m",
-        "align": "flex-end",
-        "padding": 1
-      }
-    },
     "sequence_image_bC4tiM": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -194,6 +184,16 @@
         "width": "xxxl",
         "align": "center",
         "padding": 0
+      }
+    },
+    "sequence_image_YeM7Eb": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_s03_0243_-_copie_1_Large_df8757f1-70fb-4605-bb59-590d30724537.jpg",
+        "width": "m",
+        "align": "flex-end",
+        "padding": 1
       }
     },
     "sequence_text_cC74py": {
@@ -224,9 +224,9 @@
     "sequence_image_4Hct4B",
     "sequence_image_TwhqxM",
     "sequence_image_8ccAwL",
-    "sequence_text_NTB8D8",
     "sequence_image_MjrFBp",
     "sequence_image_Fx4LCP",
+    "sequence_text_NTB8D8",
     "sequence_image_xpemPj",
     "sequence_image_QKzNTP",
     "sequence_text_QKbRmT",
