@@ -172,7 +172,7 @@
       "settings": {
         "image_image": "shopify://shop_images/ADULT_SS_1816_1_Large_ebff3a3c-8670-4b7c-9fe5-b8c883e00e09.jpg",
         "width": "m",
-        "align": "flex-end",
+        "align": "flex-start",
         "padding": 2
       }
     },
@@ -182,7 +182,7 @@
       "settings": {
         "image_image": "shopify://shop_images/ADULT_s03_0243_-_copie_1_Large_df8757f1-70fb-4605-bb59-590d30724537.jpg",
         "width": "l",
-        "align": "flex-start",
+        "align": "flex-end",
         "padding": 1
       }
     },
