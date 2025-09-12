@@ -87,7 +87,7 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/ADULT_SS_185_1_Large_22e10cef-6a4a-4dd0-992a-b4f3e1cc727d.jpg",
-        "width": "l",
+        "width": "m",
         "align": "flex-start",
         "padding": 2
       }
@@ -97,7 +97,7 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/Quarantine_1_Large_a7559a73-3e58-431c-a019-947edb8431ab.jpg",
-        "width": "m",
+        "width": "s",
         "align": "flex-end",
         "padding": 2
       }
