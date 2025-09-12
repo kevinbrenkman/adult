@@ -29,7 +29,7 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image_image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
+        "image_image": "shopify://shop_images/ADULT_SS_1811-homepage.jpg",
         "width": "full",
         "align": "center",
         "padding": 0
