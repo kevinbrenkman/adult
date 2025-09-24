@@ -222,6 +222,16 @@
         "align": "center",
         "padding": 0
       }
+    },
+    "sequence_image_tQhEfF": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/adult_tigru341.jpg",
+        "width": "xxl",
+        "align": "center",
+        "padding": 0
+      }
     }
   },
   "layout": "culture",
@@ -250,6 +260,7 @@
     "sequence_image_YeM7Eb",
     "sequence_text_cC74py",
     "sequence_image_T78wRn",
-    "sequence_image_4PXR6D"
+    "sequence_image_4PXR6D",
+    "sequence_image_tQhEfF"
   ]
 }
