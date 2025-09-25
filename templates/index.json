@@ -125,6 +125,16 @@
         "padding": 2
       }
     },
+    "sequence_image_N8EDqg": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_1812_1_Large_0650c90b-530d-4ec8-9d81-8ef81f6599e3.jpg",
+        "width": "xxxl",
+        "align": "center",
+        "padding": 0
+      }
+    },
     "sequence_image_kJDkLK": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -142,16 +152,6 @@
         "image_image": "shopify://shop_images/Quarantine_1_Large_a7559a73-3e58-431c-a019-947edb8431ab.jpg",
         "width": "s",
         "align": "flex-end",
-        "padding": 0
-      }
-    },
-    "sequence_image_N8EDqg": {
-      "type": "sequence_image",
-      "name": "Sequence Image",
-      "settings": {
-        "image_image": "shopify://shop_images/ADULT_SS_1812_1_Large_0650c90b-530d-4ec8-9d81-8ef81f6599e3.jpg",
-        "width": "xxxl",
-        "align": "center",
         "padding": 0
       }
     },
@@ -230,12 +230,12 @@
     "sequence_image_4PXR6D",
     "sequence_image_wphQc3",
     "sequence_image_Rh6KCW",
-    "sequence_image_kJDkLK",
-    "sequence_image_QKzNTP",
     "sequence_image_N8EDqg",
+    "sequence_image_QKzNTP",
+    "sequence_image_kJDkLK",
     "sequence_image_pLrGmF",
-    "sequence_image_VPnF6P",
     "sequence_image_tQhEfF",
+    "sequence_image_VPnF6P",
     "sequence_text_NTB8D8",
     "sequence_text_QKbRmT",
     "sequence_text_yDkfB3",
