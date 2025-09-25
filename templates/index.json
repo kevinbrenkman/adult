@@ -29,7 +29,7 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image_image": "shopify://shop_images/ADULT_SS_1811_2_Large_128203bc-5294-496d-807a-b838d74c1659.jpg",
+        "image_image": "shopify://shop_images/ADULT_SS_1811-homepage_ff159067-aa81-4479-9d8b-d5cf0ed16846.jpg",
         "width": "full",
         "align": "center",
         "padding": 0
@@ -92,12 +92,32 @@
         "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one, but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
       }
     },
-    "sequence_image_xpemPj": {
+    "sequence_image_T78wRn": {
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image_image": "shopify://shop_images/IMG_4602_1_Large_3cb19ba3-e14e-4aa4-a8ac-735f3e7d4773.jpg",
+        "image_image": "shopify://shop_images/ADULT_s07_0570_1_Large_e3693f84-6af9-4ea1-8f8f-6b4d75f91e31.jpg",
         "width": "full",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_4PXR6D": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT1_s01_0023.jpg",
+        "width": "xxxl",
+        "align": "center",
+        "padding": 0
+      }
+    },
+    "sequence_image_wphQc3": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/adult_tigru341.jpg",
+        "width": "xxxl",
         "align": "center",
         "padding": 0
       }
@@ -117,16 +137,6 @@
       "name": "Sequence Text",
       "settings": {
         "text_text": "Adult plays dress-up. More men in heels, more people in whatever they please. We design for individuals, not categories. We offer the world’s widest size-range: your piece is made-to-order to fit you. Whatever your size."
-      }
-    },
-    "sequence_image_wphQc3": {
-      "type": "sequence_image",
-      "name": "Sequence Image",
-      "settings": {
-        "image_image": "shopify://shop_images/WHITE_1_Large_2c811833-19ac-480f-b48a-55b5f13fa900.jpg",
-        "width": "xxxl",
-        "align": "center",
-        "padding": 0
       }
     },
     "sequence_image_N8EDqg": {
@@ -203,26 +213,6 @@
         "text_text": "Adult speaks with intention. We make things with purpose and without haste, looking for long-lasting impact. Our pieces aren’t meant to be liked by everyone but rather loved by someone. Adult is a community of like-minded adventurers."
       }
     },
-    "sequence_image_T78wRn": {
-      "type": "sequence_image",
-      "name": "Sequence Image",
-      "settings": {
-        "image_image": "shopify://shop_images/ADULT_s07_0570_1_Large_e3693f84-6af9-4ea1-8f8f-6b4d75f91e31.jpg",
-        "width": "full",
-        "align": "center",
-        "padding": 0
-      }
-    },
-    "sequence_image_4PXR6D": {
-      "type": "sequence_image",
-      "name": "Sequence Image",
-      "settings": {
-        "image_image": "shopify://shop_images/ADULT1_s01_0023.jpg",
-        "width": "xxxl",
-        "align": "center",
-        "padding": 0
-      }
-    },
     "sequence_image_tQhEfF": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -247,10 +237,11 @@
     "sequence_image_MjrFBp",
     "sequence_image_Fx4LCP",
     "sequence_text_NTB8D8",
-    "sequence_image_xpemPj",
+    "sequence_image_T78wRn",
+    "sequence_image_4PXR6D",
+    "sequence_image_wphQc3",
     "sequence_image_QKzNTP",
     "sequence_text_QKbRmT",
-    "sequence_image_wphQc3",
     "sequence_image_N8EDqg",
     "sequence_image_Ew8d3U",
     "sequence_image_NTH4DQ",
@@ -259,8 +250,6 @@
     "sequence_image_bC4tiM",
     "sequence_image_YeM7Eb",
     "sequence_text_cC74py",
-    "sequence_image_T78wRn",
-    "sequence_image_4PXR6D",
     "sequence_image_tQhEfF"
   ]
 }
