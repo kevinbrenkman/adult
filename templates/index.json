@@ -85,6 +85,13 @@
         "padding": 0
       }
     },
+    "sequence_text_NTB8D8": {
+      "type": "sequence_text",
+      "name": "Sequence Text",
+      "settings": {
+        "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one, but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
+      }
+    },
     "sequence_image_T78wRn": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -195,13 +202,6 @@
         "padding": 0
       }
     },
-    "sequence_text_NTB8D8": {
-      "type": "sequence_text",
-      "name": "Sequence Text",
-      "settings": {
-        "text_text": "Adult doesn’t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one, but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
-      }
-    },
     "sequence_text_QKbRmT": {
       "type": "sequence_text",
       "name": "Sequence Text",
@@ -236,6 +236,7 @@
     "sequence_image_8ccAwL",
     "sequence_image_MjrFBp",
     "sequence_image_Fx4LCP",
+    "sequence_text_NTB8D8",
     "sequence_image_T78wRn",
     "sequence_image_4PXR6D",
     "sequence_image_wphQc3",
@@ -247,7 +248,6 @@
     "sequence_image_cfiayp",
     "sequence_image_VPnF6P",
     "sequence_image_tQhEfF",
-    "sequence_text_NTB8D8",
     "sequence_text_QKbRmT",
     "sequence_text_yDkfB3",
     "sequence_text_cC74py"
