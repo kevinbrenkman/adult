@@ -160,7 +160,7 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/ADULT_SS_1816_1_Large_ebff3a3c-8670-4b7c-9fe5-b8c883e00e09.jpg",
-        "width": "l",
+        "width": "m",
         "align": "flex-start",
         "padding": 0
       }
