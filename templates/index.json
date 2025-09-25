@@ -35,6 +35,16 @@
         "padding": 0
       }
     },
+    "sequence_image_HbdwG9": {
+      "type": "sequence_image",
+      "name": "Sequence Image",
+      "settings": {
+        "image_image": "shopify://shop_images/ADULT_SS_1811-homepage_ff159067-aa81-4479-9d8b-d5cf0ed16846.jpg",
+        "width": "full",
+        "align": "center",
+        "padding": 0
+      }
+    },
     "sequence_image_4Hct4B": {
       "type": "sequence_image",
       "name": "Sequence Image",
@@ -250,6 +260,7 @@
     "sequence_image_cfiayp",
     "sequence_text_cC74py",
     "sequence_image_VPnF6P",
-    "sequence_image_tQhEfF"
+    "sequence_image_tQhEfF",
+    "sequence_image_HbdwG9"
   ]
 }
