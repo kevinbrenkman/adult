@@ -1,6 +1,6 @@
 <div style="justify-content: {{ section.settings.align }}" class="seq-image-flex {{ section.settings.width }}">
           <div style="padding: {{ section.settings.padding }}rem" class="seq-image-wrapper {{ section.settings.width }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'seq-image' }}
+{{ section.settings.image_image | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'seq-image' }}
 {% else %}
 <img src="{{ 'Fresco1-1-Large.jpeg' | asset_url }}" loading="lazy" alt="" class="seq-image">
 {% endif %}</div>
