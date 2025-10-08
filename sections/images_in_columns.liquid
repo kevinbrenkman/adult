@@ -1,11 +1,11 @@
 <div class="section_images-inside wh-padding-{{ section.settings.padding }}" style="background-color: {{ section.settings.background }}">
           <div class="image-block">{% if section.settings.image_image_1 %}
-{{ section.settings.image_image_1 | image_url: width: 1000 | image_tag: loading: 'eager', class: 'image force-ratio-on-mobile' }}
+{{ section.settings.image_image_1 | image_url: width: 2000 | image_tag: loading: 'eager', class: 'image force-ratio-on-mobile' }}
 {% else %}
 <img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="image force-ratio-on-mobile">
 {% endif %}</div>
           <div class="image-block">{% if section.settings.image_image_2 %}
-{{ section.settings.image_image_2 | image_url: width: 1000 | image_tag: loading: 'eager', class: 'image force-ratio-on-mobile' }}
+{{ section.settings.image_image_2 | image_url: width: 2000 | image_tag: loading: 'eager', class: 'image force-ratio-on-mobile' }}
 {% else %}
 <img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="image force-ratio-on-mobile">
 {% endif %}</div>

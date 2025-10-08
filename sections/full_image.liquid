@@ -1,5 +1,5 @@
 <div class="header_background-image-wrapper wh-padding-{{ section.settings.padding }}" style="background-color: {{ section.settings.background }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: loading: 'eager', class: 'header_background-image' }}
+{{ section.settings.image_image | image_url: width: 2000 | image_tag: loading: 'eager', class: 'header_background-image' }}
 {% else %}
 <img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="header_background-image">
 {% endif %}</div> {% schema %} {
