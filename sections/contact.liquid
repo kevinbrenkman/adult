@@ -1,7 +1,7 @@
 <div style="color: {{ section.settings.image_text_color }}; background-color: {{ section.settings.image_text_background }}" class="_2c-grid-wrapper">
           <div style="flex-direction: {{ section.settings.flex-direction }}" class="_2c">
             <div class="_2c-image-wrapper-padding image-wrapper padding-{{ section.settings.padding }}-{{ section.settings.flex-direction }}">{% if section.settings.image_image %}
-{{ section.settings.image_image | image_url: width: 1000 | image_tag: loading: 'eager', class: 'image force-ratio-on-mobile' }}
+{{ section.settings.image_image | image_url: width: 2000 | image_tag: loading: 'eager', class: 'image force-ratio-on-mobile' }}
 {% else %}
 <img loading="eager" alt="" src="{{ 'placholder-8.svg' | asset_url }}" class="image force-ratio-on-mobile">
 {% endif %}</div>
