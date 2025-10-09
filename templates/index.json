@@ -103,7 +103,7 @@
       "type": "sequence_image",
       "name": "Sequence Image",
       "settings": {
-        "image_image": "shopify://shop_images/ADULT_s07_0570_1_Large_e3693f84-6af9-4ea1-8f8f-6b4d75f91e31.jpg",
+        "image_image": "shopify://shop_images/ADULT_s07_0570.jpg",
         "width": "full",
         "align": "center",
         "padding": 0
