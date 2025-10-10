@@ -597,23 +597,21 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
   <script>
 (() => {
-  // ===== Config (tweak if needed) =====
+  // ===== Config =====
   const CONTAINER_SEL = '.menu-spacer.center .main-nav_link-list';
   const LINK_SEL      = 'a.menu_link.w-inline-block';
   const LINE_SEL      = '.menu-underline';
-  const TRANS_MS      = 380; // duration
-  const EASE          = 'cubic-bezier(0.25, 0.1, 0.25, 1)'; // easy-ease style
-  // ===== Helpers =====
-  const qAll = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const DURATION_MS   = 380;
+  const EASE          = 'cubic-bezier(0.25, 0.1, 0.25, 1)'; // easy-ease
+  // ===== Utils =====
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const relBox = (el, container) => {
     const a = el.getBoundingClientRect(), b = container.getBoundingClientRect();
     return { left: a.left - b.left, top: a.top - b.top, width: a.width };
   };
   const pickActiveLink = (links) => {
-    // 1) Webflow's current class
     const viaCurrent = links.find(a => a.classList.contains('w--current'));
     if (viaCurrent) return viaCurrent;
-    // 2) On /products/* force &ldquo;Shop&rdquo;
     const path = (location.pathname || '').toLowerCase();
     if (path.startsWith('/products/')) {
       const byText = links.find(a => (a.textContent || '').trim().toLowerCase() === 'shop');
@@ -621,21 +619,18 @@ document.addEventListener('DOMContentLoaded', function () {
       const byHref = links.find(a => (a.getAttribute('href') || '').toLowerCase().includes('/collections'));
       if (byHref) return byHref;
     }
-    // 3) Fallback
     return links[0] || null;
   };
   function initOne(container){
-    // Ensure positioning context for absolute underline
-    if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
-    const links = qAll(LINK_SEL, container);
+    // Ensure positioning context
+    const cs = getComputedStyle(container);
+    if (cs.position === 'static') container.style.position = 'relative';
+    const links = $$(LINK_SEL, container);
     const items = links.map(a => ({ a, line: a.querySelector(LINE_SEL) })).filter(x => x.line);
     if (!items.length) return;
-    const activeA   = pickActiveLink(links) || items[0].a;
-    const active    = items.find(x => x.a === activeA) || items[0];
-    // Pre-measure every link's (hidden) line position relative to container
-    const targets = new Map();
-    items.forEach(({ a, line }) => targets.set(a, relBox(line, container)));
-    // Keep ONLY the active line visible; hard-hide the others
+    const activeA = pickActiveLink(links) || items[0].a;
+    const active  = items.find(x => x.a === activeA) || items[0];
+    // Hide all built-in lines except the active one
     items.forEach(({ a, line }) => {
       if (a === active.a) {
         line.style.removeProperty('display');
@@ -645,30 +640,32 @@ document.addEventListener('DOMContentLoaded', function () {
         line.setAttribute('aria-hidden', 'true');
       }
     });
-    // Reuse the active line as the single moving underline
+    // Use the active line as the ONLY moving line
     const mover = active.line;
-    const cs    = getComputedStyle(mover);
-    // Lock visuals and make it a direct child of the container
-    mover.style.position     = 'absolute';
-    mover.style.margin       = '0';
-    mover.style.left         = '0';
-    mover.style.top          = '0';
-    mover.style.height       = cs.height || '2px';
-    mover.style.borderRadius = cs.borderRadius || '';
-    mover.style.background   = cs.background || cs.backgroundColor || 'currentColor';
-    mover.style.willChange   = 'transform,width';
-    mover.style.transition   = `transform ${TRANS_MS}ms ${EASE}, width ${TRANS_MS}ms ${EASE}`;
-    mover.style.pointerEvents= 'none';
-    mover.style.zIndex       = '10';
+    const mcs   = getComputedStyle(mover);
+    // Absolute, fully controlled visuals
+    mover.style.position          = 'absolute';
+    mover.style.margin            = '0';
+    mover.style.left              = '0';
+    mover.style.top               = '0';
+    mover.style.height            = mcs.height || '2px';
+    mover.style.borderRadius      = mcs.borderRadius || '';
+    mover.style.background        = mcs.background || mcs.backgroundColor || 'currentColor';
+    mover.style.willChange        = 'transform,width';
+    mover.style.transition        = `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`;
+    mover.style.transformOrigin   = '0 0';
+    mover.style.pointerEvents     = 'none';
+    mover.style.zIndex            = '10';
+    // Reparent to container so transforms are relative to it
     if (mover.parentElement !== container) container.appendChild(mover);
-    // Helpers to place/animate
+    // Helpers to move/position
     const placeInstant = (x, y, w) => {
       const prev = mover.style.transition;
       mover.style.transition = 'none';
       mover.style.transform  = `translate3d(${Math.round(x)}px,${Math.round(y)}px,0)`;
       mover.style.width      = `${Math.round(Math.max(0, w))}px`;
       void mover.offsetWidth; // reflow
-      mover.style.transition  = prev || `transform ${TRANS_MS}ms ${EASE}, width ${TRANS_MS}ms ${EASE}`;
+      mover.style.transition  = prev || `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`;
     };
     const animateTo = (x, y, w) => {
       requestAnimationFrame(() => {
@@ -676,39 +673,50 @@ document.addEventListener('DOMContentLoaded', function () {
         mover.style.width     = `${Math.round(Math.max(0, w))}px`;
       });
     };
-    // Initial position at active
-    const actBox = targets.get(active.a);
-    if (actBox) placeInstant(actBox.left, actBox.top, actBox.width);
-    // Hover/focus &rarr; move active line to hovered position; leave container &rarr; return
-    const toItem        = (a) => { const b = targets.get(a); if (b) animateTo(b.left, b.top, b.width); };
-    const backToActive  = ()  => { const b = targets.get(active.a); if (b) animateTo(b.left, b.top, b.width); };
+    // Measure current active line (in its original spot) and snap there
+    const snapToActive = () => {
+      const box = relBox(active.line, container);
+      placeInstant(box.left, box.top, box.width);
+    };
+    snapToActive();
+    // On hover/focus, recompute the hidden line's box FRESH each time (no stale cache)
+    const toAnchor = (a) => {
+      const item = items.find(i => i.a === a);
+      if (!item) return;
+      const box = relBox(item.line, container);
+      animateTo(box.left, box.top, box.width);
+    };
+    const backToActive = () => {
+      const box = relBox(active.line, container);
+      animateTo(box.left, box.top, box.width);
+    };
+    // Delegated hover on the container
     const onOver = (e) => {
       const a = e.target.closest && e.target.closest(LINK_SEL);
-      if (!a || !container.contains(a) || !targets.has(a)) return;
-      toItem(a);
+      if (!a || !container.contains(a)) return;
+      toAnchor(a);
     };
     const onOut = (e) => {
       if (!container.contains(e.relatedTarget)) backToActive();
     };
     container.addEventListener('mouseover', onOver);
     container.addEventListener('mouseout',  onOut);
-    // Keyboard accessibility
+    // Keyboard a11y
     items.forEach(({ a }) => {
-      a.addEventListener('focus', () => toItem(a));
+      a.addEventListener('focus', () => toAnchor(a));
       a.addEventListener('blur',  backToActive);
     });
-    // Recalculate on resize & when fonts finish loading (layout shifts)
+    // Robust re-measure on resize, load, and fonts ready
     const recalc = () => {
-      items.forEach(({ a, line }) => targets.set(a, relBox(line, container)));
-      const b = targets.get(active.a);
-      if (b) placeInstant(b.left, b.top, b.width);
+      // Re-snap to active (boxes may have changed)
+      snapToActive();
     };
     window.addEventListener('resize', recalc);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(recalc);
     window.addEventListener('load', recalc);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(recalc);
   }
   function init(){
-    qAll(CONTAINER_SEL).forEach(initOne);
+    $$(CONTAINER_SEL).forEach(initOne);
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init, { once:true });
