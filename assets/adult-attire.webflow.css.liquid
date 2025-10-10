@@ -4470,26 +4470,16 @@ figcaption {
 }
 
 .seq-text-wrapper {
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: var(--_adult---adult-red);
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-right-color: var(--_adult---adult-red);
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-bottom-color: var(--_adult---adult-red);
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-left-color: var(--_adult---adult-red);
-  background-color: var(--_adult---adult-off-white);
+  text-align: center;
   text-transform: none;
+  text-wrap: balance;
   width: clamp(80%, 50ch, 90%);
   padding: .65rem 1.5rem .75rem;
   font-family: Academica, Arial, sans-serif;
   font-size: 2.2rem;
   font-weight: 300;
   line-height: 1.1;
+  transform: rotate(.75deg);
 }
 
 .seq-image {
@@ -4703,6 +4693,18 @@ figcaption {
 .menu-item-text {
   height: 1.1em;
   margin-bottom: 1px;
+}
+
+.seq-text {
+  text-underline-offset: -.75em;
+  text-decoration: underline;
+  -webkit-text-decoration-color: var(--_adult---adult-off-white);
+  text-decoration-color: var(--_adult---adult-off-white);
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+  text-decoration-style: solid;
+  text-decoration-thickness: 1em;
+  display: inline;
 }
 
 @media screen and (max-width: 991px) {
