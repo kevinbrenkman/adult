@@ -279,6 +279,14 @@ margin-bottom:calc(3 * var(--_adult---default-height));
   resize: none !important;   /* disables the resize corner */
   overflow: auto;            /* still scrolls if content is long */
 }
+.shopify-policy__container {
+    max-width: 105ch!important;
+}
+@media screen and (max-width: 767px) {
+    h1 {
+        font-size: 1em!important;
+    }
+}
 /* Hide the WebKit resize affordance just in case */
 .form_input.is-text-area::-webkit-resizer { 
   display: none; 

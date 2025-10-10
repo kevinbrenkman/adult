@@ -4028,6 +4028,15 @@ figcaption {
   text-decoration: none;
 }
 
+.menu_link.underline-animation {
+  flex-flow: column;
+  padding-top: .15rem;
+}
+
+.menu_link.underline-animation:hover, .menu_link.underline-animation.w--current {
+  text-decoration: none;
+}
+
 .cart_menu_link_wrapper {
   pointer-events: auto;
   display: flex;
@@ -4683,6 +4692,17 @@ figcaption {
 
 .checkout-wrap {
   border: 1px solid var(--_adult---adult-red);
+}
+
+.menu-underline {
+  background-color: var(--_adult---adult-red);
+  width: 100%;
+  height: 1px;
+}
+
+.menu-item-text {
+  height: 1.1em;
+  margin-bottom: 1px;
 }
 
 @media screen and (max-width: 991px) {
