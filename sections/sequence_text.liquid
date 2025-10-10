@@ -1,5 +1,5 @@
-<div class="seq-text-wrapper">
-          <div>
+<div style="transform: rotate({{ section.settings.tilt }}deg);" id="" class="seq-text-wrapper">
+          <div class="seq-text">
 {{ section.settings.text_text }}
 </div>
         </div> {% schema %} {
@@ -12,6 +12,20 @@
             "type": "text",
             "label": "Text",
             "default": "Adult doesn\u2019t ask for permission. We design heels for those who know the rules and choose whether to ignore them. Not one - but an embodiment of evolving characters. Your identity is yours to define. Over and over again if you so choose."
+        },
+        {
+            "type": "header",
+            "content": "Padding"
+        },
+        {
+            "type": "range",
+            "id": "tilt",
+            "label": "Tilt",
+            "default": 0,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "unit": "deg"
         }
     ],
     "presets": [
