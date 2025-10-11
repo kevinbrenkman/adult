@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
   io.observe(trigger);
 });
 </script>
-  <script defer="">
+  <script>
 (() => {
   const CONTAINER_SEL = '.menu-spacer.center .main-nav_link-list';
   const LINK_SEL      = 'a.menu_link.w-inline-block';
@@ -616,86 +616,89 @@ document.addEventListener('DOMContentLoaded', function () {
     const a = el.getBoundingClientRect(), b = container.getBoundingClientRect();
     return { left: a.left - b.left, top: a.top - b.top, width: a.width };
   };
-  function setupContainer(container){
-    if (container.dataset.kbUnderlineInit === '1') return;
+  const pickActive = (links) => {
+    const viaCurrent = links.find(a => a.classList.contains('w--current'));
+    if (viaCurrent) return viaCurrent;
+    const p = (location.pathname || '').toLowerCase();
+    if (p.startsWith('/products/')) {
+      return links.find(a => (a.textContent || '').trim().toLowerCase() === 'shop')
+          || links.find(a => ((a.getAttribute('href') || '').toLowerCase()).includes('/collections'))
+          || links[0];
+    }
+    return links[0] || null;
+  };
+  function initOne(container){
+    if (!container || container.dataset.kbUnderlineInit === '1') return;
     container.dataset.kbUnderlineInit = '1';
+    if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
     const links = $$(LINK_SEL, container);
     if (!links.length) return;
-    // Use any existing (hidden) line as a style reference + baseline
+    // Find any built-in line to copy style and baseline
     const refLine = container.querySelector(LINE_SEL);
     if (!refLine) return;
-    // Single moving underline
+    // Create the mover line once
     let mover = container.querySelector(':scope > .kb-nav-underline');
     if (!mover) {
       mover = document.createElement('div');
       mover.className = 'kb-nav-underline';
       container.appendChild(mover);
     }
-    const s = getComputedStyle(refLine);
+    const rs = getComputedStyle(refLine);
     Object.assign(mover.style, {
       position: 'absolute',
       left: '0',
-      top: '0',
-      height: s.height || '2px',
-      borderRadius: s.borderRadius || '',
-      background: s.background || s.backgroundColor || 'currentColor',
+      // top will be set after baseline is computed
+      height: rs.height || '2px',
+      borderRadius: rs.borderRadius || '',
+      background: rs.background || rs.backgroundColor || 'currentColor',
       willChange: 'transform,width',
       transition: `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`,
       transformOrigin: '0 0',
       pointerEvents: 'none',
       zIndex: '10'
     });
-    const baselineTop = Math.round(relBox(refLine, container).top);
+    // Only X should change, so compute and set a fixed baseline Y
+    let baselineTop = 0;
+    const computeBaseline = () => {
+      baselineTop = Math.round(relBox(refLine, container).top);
+      mover.style.top = baselineTop + 'px';
+    };
+    computeBaseline();
+    // Helper: where to place the mover for a given anchor (LEFT + WIDTH only)
     const targetFor = (a) => {
       const line = a.querySelector(LINE_SEL);
       if (line) {
         const b = relBox(line, container);
-        return { left: b.left, width: b.width, top: baselineTop };
+        return { left: b.left, width: b.width };
       }
-      const t = a.querySelector('.menu-item-text');
-      const b = relBox(t || a, container);
-      return { left: b.left, width: b.width, top: baselineTop };
+      const t = a.querySelector('.menu-item-text') || a;
+      const b = relBox(t, container);
+      return { left: b.left, width: b.width };
     };
-    const placeInstant = (x, y, w) => {
+    const placeInstant = (x, w) => {
       const prev = mover.style.transition;
       mover.style.transition = 'none';
-      mover.style.transform  = `translate3d(${Math.round(x)}px,${Math.round(y)}px,0)`;
+      mover.style.transform  = `translate3d(${Math.round(x)}px,0,0)`; // Y locked to 0 (top is fixed)
       mover.style.width      = `${Math.round(Math.max(0, w))}px`;
       void mover.offsetWidth;
-      mover.style.transition = prev || `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`;
+      mover.style.transition  = prev || `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`;
     };
-    const animateTo = (x, y, w) => {
+    const animateTo = (x, w) => {
       requestAnimationFrame(() => {
-        mover.style.transform = `translate3d(${Math.round(x)}px,${Math.round(y)}px,0)`;
+        mover.style.transform = `translate3d(${Math.round(x)}px,0,0)`; // X only
         mover.style.width     = `${Math.round(Math.max(0, w))}px`;
       });
     };
-    const pickActive = () => {
-      const viaCurrent = links.find(a => a.classList.contains('w--current'));
-      if (viaCurrent) return viaCurrent;
-      const path = (location.pathname || '').toLowerCase();
-      if (path.startsWith('/products/')) {
-        const byText = links.find(a => (a.textContent || '').trim().toLowerCase() === 'shop');
-        if (byText) return byText;
-        const byHref = links.find(a => ((a.getAttribute('href') || '').toLowerCase()).includes('/collections'));
-        if (byHref) return byHref;
-      }
-      return links[0];
-    };
-    // Initial snap (no flicker because CSS already hides built-ins)
     const snapToActive = () => {
-      const a = pickActive();
+      const a = pickActive(links);
       const t = targetFor(a);
-      placeInstant(t.left, t.top, t.width);
+      placeInstant(t.left, t.width);
     };
+    // Initial snap
     snapToActive();
-    // Hover/focus
-    const toAnchor = (a) => animateTo(...Object.values(targetFor(a)));
-    const backToActive = () => {
-      const a = pickActive();
-      const t = targetFor(a);
-      animateTo(t.left, t.top, t.width);
-    };
+    // Hover/focus &rarr; move horizontally only
+    const toAnchor = (a) => { const t = targetFor(a); animateTo(t.left, t.width); };
+    const backToActive = () => { const a = pickActive(links); const t = targetFor(a); animateTo(t.left, t.width); };
     container.addEventListener('mouseover', (e) => {
       const a = e.target.closest && e.target.closest(LINK_SEL);
       if (a && container.contains(a)) toAnchor(a);
@@ -707,16 +710,16 @@ document.addEventListener('DOMContentLoaded', function () {
       a.addEventListener('focus', () => toAnchor(a));
       a.addEventListener('blur',  backToActive);
     });
-    const recalc = () => snapToActive();
+    // Recompute baseline and resnap on layout changes
+    const recalc = () => { computeBaseline(); snapToActive(); };
     window.addEventListener('resize', recalc);
     window.addEventListener('load', recalc);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(recalc);
   }
   function boot(){
-    const initAll = () => $$(CONTAINER_SEL).forEach(setupContainer);
-    initAll();
-    // In case Shopify/Alpine re-renders the menu:
-    const mo = new MutationObserver(initAll);
+    $$(CONTAINER_SEL).forEach(initOne);
+    // In case markup re-renders (Shopify/Alpine), re-init containers
+    const mo = new MutationObserver(() => $$(CONTAINER_SEL).forEach(initOne));
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
   if (document.readyState === 'loading') {
