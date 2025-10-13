@@ -4,7 +4,7 @@
             <div li-for:inside="link in linklists['logo'].links" class="main-nav_link-list">
         {% for link in linklists['logo'].links %}                            
               
-                            <a li-object="link.title" li-object:href="link.url" href="{{ link.url }}" class="menu_link no-current">{{ link.title }}</a>
+                            <a li-object="link.title" li-object:href="link.url" href="{{ link.url }}" class="menu_link no-current page-transition">{{ link.title }}</a>
                             
             
                     {% endfor %}    </div>
@@ -13,7 +13,7 @@
             <div li-for:inside="link in linklists['main-menu'].links" class="main-nav_link-list">
         {% for link in linklists['main-menu'].links %}                            
               
-                            <a li-object:href="link.url" href="{{ link.url }}" class="menu_link underline-animation w-inline-block">
+                            <a li-object:href="link.url" href="{{ link.url }}" class="menu_link underline-animation page-transition w-inline-block">
                 <div li-object="link.title" class="menu-item-text">{{ link.title }}</div>
                 <div class="menu-underline"></div>
               </a>
