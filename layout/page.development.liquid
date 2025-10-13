@@ -1,15 +1,10 @@
 <!doctype html>
-<html data-wf-page="6888d108d478b2446d70ba73" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
+<html data-wf-page="68ecefab0650b134624da573" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8">
-  <title>{{ page_title }}</title>
-  <meta content="{{ page_description }}" name="description">
-  <meta content="{{ page_title }}" property="og:title">
-  <meta content="{{ page_description }}" property="og:description">
-  <meta content="{{ page_title }}" property="twitter:title">
-  <meta content="{{ page_description }}" property="twitter:description">
-  <meta property="og:type" content="website">
-  <meta content="summary_large_image" name="twitter:card">
+  <title>Development</title>
+  <meta content="Development" property="og:title">
+  <meta content="Development" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <link href="{{ 'normalize.css' | asset_url }}" rel="stylesheet" type="text/css">
@@ -163,20 +158,9 @@ html.shopify-design-mode .shopify-section.logo-wrapper {
     outline-offset: 0.125rem;
 }
 </style>
-  <!--  
-IMPORTANT: If you want to make changes to the head or body code on this page, 
-please remove the `li-layout` tag from the body element. 
-This will create a separate layout file for this page, allowing you to apply custom modifications.
-Learn more: https://www.liquify.pro/docu/getting-started#template-structure
- -->
 <script src="{{ 'li_helper.js' | asset_url }}" type="text/javascript"></script>{{ content_for_header }}</head>
-<body li-page="cart">
-  <div class="page-wrapper">
-    {% render 'global_styles' %}
-    {% sections 'header_group' %}
-    {{ content_for_layout }}
-    {% sections 'footer_group' %}
-  </div>
+<body>
+  <div class="page-transition"></div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6888d102d478b2446d70b62e" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="{{ 'webflow.js' | asset_url }}" type="text/javascript"></script>
   <script src="https://cdn.prod.website-files.com/gsap/3.13.0/gsap.min.js" type="text/javascript"></script>
@@ -798,46 +782,6 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     boot();
   }
-})();
-</script>
-  <script>
-(function () {
-  function getToggle() {
-    return document.querySelector('[li-element="mini-cart-toggle"]') 
-        || document.getElementById('w-dropdown-toggle-0');
-  }
-  function simulateClick(el) {
-    // Fire a full click sequence for stubborn handlers
-    try { el.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, view: window })); } catch (e) {}
-    el.dispatchEvent(new MouseEvent('mousedown',   { bubbles: true, cancelable: true, view: window }));
-    el.dispatchEvent(new MouseEvent('mouseup',     { bubbles: true, cancelable: true, view: window }));
-    el.dispatchEvent(new MouseEvent('click',       { bubbles: true, cancelable: true, view: window }));
-  }
-  function tryClickOnce() {
-    var el = getToggle();
-    if (!el) return false;
-    simulateClick(el);
-    return true;
-  }
-  function run() {
-    // Give Webflow a tick to bind its listeners, then click
-    requestAnimationFrame(function () {
-      if (tryClickOnce()) return;
-      // If the header/toggle mounts late, observe briefly
-      var mo = new MutationObserver(function () {
-        if (tryClickOnce()) { mo.disconnect(); }
-      });
-      mo.observe(document.documentElement, { childList: true, subtree: true });
-      setTimeout(function(){ try { mo.disconnect(); } catch(e){} }, 5000);
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
-  } else {
-    run();
-  }
-  // If you use Swup, also click after content swap:
-  document.addEventListener('swup:contentReplaced', function () { run(); });
 })();
 </script>
 </body>
