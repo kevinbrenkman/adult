@@ -30,14 +30,6 @@
               <link rel="apple-touch-icon" type="image/png" href="{{ settings.apple_touch_icon | img_url: '32x32' }}">
             {% endif %}
         
-  <style>
-.main-wrapper{
-opacity:0;
-}
-.section_footer{
-opacity:0;
-}
-</style>
   <!--  Alpine Focus Plugin  -->
   <script defer="" src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
   <!--  Alpine JS  -->
@@ -164,6 +156,7 @@ html.shopify-design-mode .shopify-section.logo-wrapper {
     outline-offset: 0.125rem;
 }
 </style>
+  <link rel="stylesheet" href="{{ 'cookie-banner-styling.css' | asset_url }}">
   <!--  
 IMPORTANT: If you want to make changes to the <head> or <body> code on this page, 
 please remove the `li-layout` tag from the <body> element. 
