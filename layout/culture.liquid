@@ -30,25 +30,6 @@
               <link rel="apple-touch-icon" type="image/png" href="{{ settings.apple_touch_icon | img_url: '32x32' }}">
             {% endif %}
         
-  <script>document.documentElement.classList.add('js');</script>
-  <style>
-/* Hide built-ins ONLY when JS has started; keep them measurable */
-.js .menu-spacer.center .main-nav_link-list { position: relative; }
-.js .menu-spacer.center .main-nav_link-list .menu-underline {
-  visibility: hidden;             /* no !important so failsafe can override */
-  pointer-events: none;
-}
-/* Our single mover is hidden until positioned */
-.js .menu-spacer.center .main-nav_link-list .kb-nav-underline {
-  opacity: 0;
-  visibility: hidden;
-}
-.js .menu-spacer.center .main-nav_link-list.kb-underline-ready .kb-nav-underline {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 60ms linear; /* tiny reveal; movement handled in JS */
-}
-</style>
   <style>
 .main-wrapper{
 opacity:0;
@@ -673,15 +654,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const DURATION_MS   = 380;
   const EASE          = 'cubic-bezier(0.25, 0.1, 0.25, 1)';
   const STORAGE_KEY   = 'kb_nav_center_last_index';
-  // Helpers
   const $$  = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const rel = (el, container) => {
     const a = el.getBoundingClientRect(), b = container.getBoundingClientRect();
     return { left: a.left - b.left, top: a.top - b.top, width: a.width };
   };
   const pickActive = (links) => {
+    // Prefer Webflow's .w--current
     const viaCurrent = links.find(a => a.classList.contains('w--current'));
     if (viaCurrent) return viaCurrent;
+    // Force "Shop" on product pages
     const p = (location.pathname || '').toLowerCase();
     if (p.startsWith('/products/')) {
       return links.find(a => (a.textContent || '').trim().toLowerCase() === 'shop')
@@ -691,24 +673,75 @@ document.addEventListener('DOMContentLoaded', function () {
     return links[0] || null;
   };
   const saveIndex = (i) => { try { localStorage.setItem(STORAGE_KEY, String(i)); } catch {} };
-  const takeIndex = () => {
+  const takeIndex = () => { // one-shot consume
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw == null) return null;
-      localStorage.removeItem(STORAGE_KEY); // one-shot
+      localStorage.removeItem(STORAGE_KEY);
       const n = parseInt(raw, 10);
       return Number.isFinite(n) ? n : null;
     } catch { return null; }
   };
-  function initOne(container){
-    if (!container || container.dataset.kbUnderlineInit === '1') return;
-    container.dataset.kbUnderlineInit = '1';
+  function showOnlyActiveBuiltins(container, links) {
+    const active = pickActive(links);
+    links.forEach(a => {
+      const line = a.querySelector(LINE_SEL);
+      if (!line) return;
+      if (a === active) {
+        line.style.visibility = 'visible';
+        line.style.removeProperty('display');
+        line.setAttribute('aria-hidden', 'false');
+      } else {
+        // keep measurable but invisible in case you want hover later
+        line.style.visibility = 'hidden';
+        line.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+  function targetFor(container, a, baselineTop) {
+    // Prefer the hidden built-in underline geometry; fallback to text span / link
+    const line = a.querySelector(LINE_SEL);
+    if (line) {
+      const b = rel(line, container);
+      return { x: b.left, w: b.width, y: baselineTop };
+    }
+    const t = a.querySelector('.menu-item-text') || a;
+    const b = rel(t, container);
+    return { x: b.left, w: b.width, y: baselineTop };
+  }
+  function initOne(container) {
+    if (!container || container.dataset.kbNavHybrid === '1') return;
+    container.dataset.kbNavHybrid = '1';
     if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
     const links = $$(LINK_SEL, container);
     if (!links.length) return;
+    // Save index on click so next page knows where to start
+    links.forEach((a, idx) => {
+      a.addEventListener('click', () => saveIndex(idx), { capture: true, passive: true });
+    });
+    // Reference underline for style + vertical baseline
     const refLine = container.querySelector(LINE_SEL);
     if (!refLine) return;
-    // Build mover
+    const baselineTop = Math.round(rel(refLine, container).top);
+    // Read saved and current indices
+    const savedIndex = takeIndex();
+    const activeLink = pickActive(links) || links[0];
+    const activeIndex = Math.max(0, links.indexOf(activeLink));
+    // If no move needed, just ensure only active built-in is visible and bail.
+    if (savedIndex == null || savedIndex === activeIndex) {
+      showOnlyActiveBuiltins(container, links);
+      return;
+    }
+    // Otherwise: animate from saved &rarr; active.
+    // 1) Hide all built-ins for a clean animation surface (but keep measurable)
+    links.forEach(a => {
+      const line = a.querySelector(LINE_SEL);
+      if (line) {
+        line.style.visibility = 'hidden';
+        line.setAttribute('aria-hidden', 'true');
+      }
+    });
+    // 2) Create a single mover line (X-only animation; Y locked via top)
     let mover = container.querySelector(':scope > .kb-nav-underline');
     if (!mover) {
       mover = document.createElement('div');
@@ -719,6 +752,7 @@ document.addEventListener('DOMContentLoaded', function () {
     Object.assign(mover.style, {
       position: 'absolute',
       left: '0',
+      top: baselineTop + 'px',
       height: rs.height || '2px',
       borderRadius: rs.borderRadius || '',
       background: rs.background || rs.backgroundColor || 'currentColor',
@@ -726,23 +760,16 @@ document.addEventListener('DOMContentLoaded', function () {
       transition: `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`,
       transformOrigin: '0 0',
       pointerEvents: 'none',
-      zIndex: '10'
+      zIndex: '10',
+      visibility: 'visible',
+      opacity: '1'
     });
-    // Fixed baseline Y
-    const baselineTop = Math.round(rel(refLine, container).top);
-    mover.style.top = baselineTop + 'px';
-    // Targets (X+width only)
-    const targetFor = (a) => {
-      const line = a.querySelector(LINE_SEL);
-      if (line) {
-        const b = rel(line, container);
-        return { left: b.left, width: b.width };
-      }
-      const t = a.querySelector('.menu-item-text') || a;
-      const b = rel(t, container);
-      return { left: b.left, width: b.width };
-    };
-    // Movement (no Y)
+    const clamp = (i) => Math.max(0, Math.min(links.length - 1, i));
+    const fromLink = links[clamp(savedIndex)];
+    const toLink   = activeLink;
+    const from = targetFor(container, fromLink, baselineTop);
+    const to   = targetFor(container, toLink,   baselineTop);
+    // 3) Place instantly at "from", then animate to "to"
     const placeInstant = (x, w) => {
       const prev = mover.style.transition;
       mover.style.transition = 'none';
@@ -757,64 +784,28 @@ document.addEventListener('DOMContentLoaded', function () {
         mover.style.width     = `${Math.round(Math.max(0, w))}px`;
       });
     };
-    // Initial placement &mdash; use saved index first (no jump), then animate to active if different
-    const savedIndex = takeIndex();
-    const active     = pickActive(links) || links[0];
-    const initial    = (savedIndex != null && links[savedIndex]) ? links[savedIndex] : active;
-    const t0         = targetFor(initial);
-    placeInstant(t0.left, t0.width);
-    // Reveal only after it&rsquo;s positioned
-    container.classList.add('kb-underline-ready');
-    if (initial !== active) {
-      const t = targetFor(active);
-      animateTo(t.left, t.width);
-    }
-    // Hover/focus &rarr; live remeasure & animate
-    const toAnchor = (a) => { const t = targetFor(a); animateTo(t.left, t.width); };
-    const backToActive = () => { const t = targetFor(pickActive(links) || links[0]); animateTo(t.left, t.width); };
-    container.addEventListener('mouseover', (e) => {
-      const a = e.target.closest && e.target.closest(LINK_SEL);
-      if (a && container.contains(a)) toAnchor(a);
-    });
-    container.addEventListener('mouseout', (e) => {
-      if (!container.contains(e.relatedTarget)) backToActive();
-    });
-    links.forEach((a, idx) => {
-      a.addEventListener('focus', () => toAnchor(a));
-      a.addEventListener('blur',  backToActive);
-      a.addEventListener('click', () => saveIndex(idx), { capture: true, passive: true });
-    });
-    // Resnap on layout changes
-    const resnap = () => {
-      // recompute top in case line height/padding changed
-      mover.style.top = Math.round(rel(refLine, container).top) + 'px';
-      const t = targetFor(pickActive(links) || links[0]);
-      placeInstant(t.left, t.width);
+    placeInstant(from.x, from.w);
+    animateTo(to.x, to.w);
+    // 4) After the animation ends, remove mover and show only the active built-in
+    const cleanup = () => {
+      mover.removeEventListener('transitionend', cleanup);
+      // Restore only the active built-in
+      showOnlyActiveBuiltins(container, links);
+      // Optional: remove mover to avoid duplicates (or keep for hover if you extend later)
+      try { mover.remove(); } catch {}
     };
-    window.addEventListener('resize', resnap);
-    window.addEventListener('load', resnap);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(resnap);
+    mover.addEventListener('transitionend', cleanup);
+    // Safety timeout (if transitionend doesn&rsquo;t fire for any reason)
+    setTimeout(cleanup, DURATION_MS + 60);
   }
-  // Boot + observe re-renders
-  function boot(){
-    const initAll = () => $$(CONTAINER_SEL).forEach(initOne);
-    initAll();
-    const mo = new MutationObserver(initAll);
+  function boot() {
+    $$(CONTAINER_SEL).forEach(initOne);
+    // If your header re-renders, keep this:
+    const mo = new MutationObserver(() => $$(CONTAINER_SEL).forEach(initOne));
     mo.observe(document.documentElement, { childList: true, subtree: true });
-    // Failsafe: if mover never revealed in 1500ms, unhide built-ins so you never lose the underline
-    setTimeout(() => {
-      $$(CONTAINER_SEL).forEach(container => {
-        if (!container.classList.contains('kb-underline-ready')) {
-          container.querySelectorAll(LINE_SEL).forEach(line => {
-            line.style.visibility = 'visible';
-            line.style.pointerEvents = '';
-          });
-        }
-      });
-    }, 1500);
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot, { once:true });
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
   } else {
     boot();
   }
