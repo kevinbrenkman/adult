@@ -9,12 +9,13 @@
 
   // ====== NEW MOMENTUM TUNABLES ======
   // velocity units are "timeline seconds per real second"
-  const DAMPING_PER_SEC      = 0.08;   // higher = more damping (0.0..1.0)
-  const WHEEL_VEL_GAIN       = 0.55;   // how much wheel adds to momentum
-  const TOUCH_VEL_GAIN       = 0.80;   // how much a quick touch move adds
-  const CURSOR_VEL_GAIN      = 0.60;   // mouse motion → momentum (forward only)
-  const TAP_IMPULSE          = 1.10;   // tap adds this forward velocity
-  const MAX_ABS_VEL          = 6.0;    // cap velocity (units: timeline sec / sec)
+  // ====== NEW MOMENTUM TUNABLES (adjusted for long timelines) ======
+  const DAMPING_PER_SEC      = 0.25;   // higher = stops sooner (0.1–0.4 range is good)
+  const WHEEL_VEL_GAIN       = 0.08;   // was 0.55
+  const TOUCH_VEL_GAIN       = 0.12;   // was 0.80
+  const CURSOR_VEL_GAIN      = 0.10;   // was 0.60
+  const TAP_IMPULSE          = 0.25;   // was 1.10 (tap adds gentle nudge)
+  const MAX_ABS_VEL          = 1.8;    // cap timeline speed (smaller = slower)
   const CROSSFADE_OFFSET     = 0.999;  // shows real last image before clone crossfade
 
   // ====== SAFETY: don't run in customizer ======
