@@ -68,6 +68,7 @@ document.addEventListener('alpine:init', () => {
                     this.cart.total_price = data.total_price;
                     this.cart.total_weight = data.total_weight;
                     this.cart.total_discount = data.total_discount;
+                    this.cart.original_total_price = data.original_total_price;
 
                     this.$dispatch('carttotalitems', data.item_count);
                 })
