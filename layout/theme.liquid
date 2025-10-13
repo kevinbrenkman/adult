@@ -31,10 +31,28 @@
             {% endif %}
         
   <style>
-.menu-spacer.center .main-nav_link-list{position:relative}
-.menu-spacer.center .main-nav_link-list .menu-underline{
-  visibility:hidden!important;
-  pointer-events:none!important;
+/* Hide built-in lines but keep them measurable */
+.menu-spacer.center .main-nav_link-list { position: relative; }
+.menu-spacer.center .main-nav_link-list .menu-underline {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+/* Our single mover starts hidden, revealed only after JS positions it */
+.menu-spacer.center .main-nav_link-list .kb-nav-underline {
+  opacity: 0;
+  visibility: hidden;
+}
+.menu-spacer.center .main-nav_link-list.kb-underline-ready .kb-nav-underline {
+  opacity: 1;
+  visibility: visible;
+}
+</style>
+  <style>
+.main-wrapper{
+opacity:0;
+}
+.section_footer{
+opacity:0;
 }
 </style>
   <!--  Alpine Focus Plugin  -->
@@ -648,15 +666,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
   <script>
 (() => {
-  // ===== Config =====
   const CONTAINER_SEL = '.menu-spacer.center .main-nav_link-list';
   const LINK_SEL      = 'a.menu_link.w-inline-block';
   const LINE_SEL      = '.menu-underline';
   const DURATION_MS   = 380;
   const EASE          = 'cubic-bezier(0.25, 0.1, 0.25, 1)';
-  const STORAGE_KEY   = 'kb_nav_center_last_index';   // localStorage key
-  const CROSS_PAGE_ANIMATE = true; // set false to snap to active with no cross-page slide
-  // ===== Utils =====
+  const STORAGE_KEY   = 'kb_nav_center_last_index';
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const relBox = (el, container) => {
     const a = el.getBoundingClientRect(), b = container.getBoundingClientRect();
@@ -678,8 +693,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw == null) return null;
-      // one-shot: clear so back/forward doesn&rsquo;t re-use incorrectly
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY); // one-shot
       const n = parseInt(raw, 10);
       return Number.isFinite(n) ? n : null;
     } catch { return null; }
@@ -690,10 +704,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
     const links = $$(LINK_SEL, container);
     if (!links.length) return;
-    // Reference built-in line (for style + vertical baseline)
     const refLine = container.querySelector(LINE_SEL);
     if (!refLine) return;
-    // Create the single mover line
+    // Build the mover (single underline)
     let mover = container.querySelector(':scope > .kb-nav-underline');
     if (!mover) {
       mover = document.createElement('div');
@@ -713,14 +726,11 @@ document.addEventListener('DOMContentLoaded', function () {
       pointerEvents: 'none',
       zIndex: '10'
     });
-    // Fixed baseline Y (lock vertical movement)
-    let baselineTop = 0;
-    const computeBaseline = () => {
-      baselineTop = Math.round(relBox(refLine, container).top);
-      mover.style.top = baselineTop + 'px';
-    };
-    computeBaseline();
-    // Target (X + width) for a given link
+    // Fixed baseline Y; mover only moves in X
+    const computeBaselineTop = () => Math.round(relBox(refLine, container).top);
+    let baselineTop = computeBaselineTop();
+    mover.style.top = baselineTop + 'px';
+    // Target for a given link (X + width only)
     const targetFor = (a) => {
       const line = a.querySelector(LINE_SEL);
       if (line) {
@@ -731,13 +741,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const b = relBox(t, container);
       return { left: b.left, width: b.width };
     };
-    // Movement helpers (X only)
+    // Movement helpers (no Y)
     const placeInstant = (x, w) => {
       const prev = mover.style.transition;
       mover.style.transition = 'none';
       mover.style.transform  = `translate3d(${Math.round(x)}px,0,0)`;
       mover.style.width      = `${Math.round(Math.max(0, w))}px`;
-      void mover.offsetWidth;
+      void mover.offsetWidth; // reflow
       mover.style.transition = prev || `transform ${DURATION_MS}ms ${EASE}, width ${DURATION_MS}ms ${EASE}`;
     };
     const animateTo = (x, w) => {
@@ -746,24 +756,22 @@ document.addEventListener('DOMContentLoaded', function () {
         mover.style.width     = `${Math.round(Math.max(0, w))}px`;
       });
     };
-    // Initial placement &mdash; use saved index first to avoid &ldquo;jump&rdquo;, then animate to active (optional)
+    // Initial placement &mdash; snap to saved index BEFORE revealing
     const savedIndex = takeIndex();
     const active = pickActive(links) || links[0];
-    const clamp = (i) => Math.max(0, Math.min(links.length - 1, i));
-    const initialLink = (savedIndex != null) ? links[clamp(savedIndex)] : active;
-    // Snap to saved (or active) instantly
-    {
-      const t = targetFor(initialLink);
-      placeInstant(t.left, t.width);
-    }
-    // Optionally cross-page animate to the actual active if different
-    if (CROSS_PAGE_ANIMATE && initialLink !== active) {
+    const initial = (savedIndex != null && links[savedIndex]) ? links[savedIndex] : active;
+    const t0 = targetFor(initial);
+    placeInstant(t0.left, t0.width);
+    // Now reveal (no flash at the wrong spot)
+    container.classList.add('kb-underline-ready');
+    // Optional: if initial != active, animate horizontally into the true active
+    if (initial !== active) {
       const t = targetFor(active);
       animateTo(t.left, t.width);
     }
-    // Hover/focus: move horizontally
+    // Hover/focus moves
     const toAnchor = (a) => { const t = targetFor(a); animateTo(t.left, t.width); };
-    const backToActive = () => { const t = targetFor(pickActive(links) || links[0]); animateTo(t.left, t.width); };
+    const backToActive = () => { const a = pickActive(links) || links[0]; const t = targetFor(a); animateTo(t.left, t.width); };
     container.addEventListener('mouseover', (e) => {
       const a = e.target.closest && e.target.closest(LINK_SEL);
       if (a && container.contains(a)) toAnchor(a);
@@ -774,13 +782,15 @@ document.addEventListener('DOMContentLoaded', function () {
     links.forEach((a, idx) => {
       a.addEventListener('focus', () => toAnchor(a));
       a.addEventListener('blur',  backToActive);
-      // Save index on click so the next page can start at this link (no jump)
+      // Save index ASAP on click so the next page can start at the right spot
       a.addEventListener('click', () => saveIndex(idx), { capture: true, passive: true });
     });
-    // Recompute baseline + resnap on layout changes
+    // Resnap if layout changes
     const resnap = () => {
-      computeBaseline();
-      const t = targetFor(pickActive(links) || links[0]);
+      baselineTop = computeBaselineTop();
+      mover.style.top = baselineTop + 'px';
+      const a = pickActive(links) || links[0];
+      const t = targetFor(a);
       placeInstant(t.left, t.width);
     };
     window.addEventListener('resize', resnap);
@@ -789,10 +799,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function boot(){
     $$(CONTAINER_SEL).forEach(initOne);
-    // Re-init if the menu gets re-rendered
+    // Re-init if the menu re-renders
     const mo = new MutationObserver(() => $$(CONTAINER_SEL).forEach(initOne));
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once:true });
   } else {
