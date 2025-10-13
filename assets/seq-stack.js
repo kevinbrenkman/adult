@@ -1,22 +1,28 @@
 (() => {
   // ====== YOUR TUNED VALUES ======
   const MAX_VISIBLE      = 2;
-  const WHEEL_SPEED      = 0.00005;
-  const TOUCH_SPEED      = 0.00025;
-  const CURSOR_SPEED     = 0.000065;
+  const WHEEL_SPEED      = 0.00008;  // responsive wheel scrub
+  const TOUCH_SPEED      = 0.00025;  // touch scrub factor
+  const CURSOR_SPEED     = 0.00002;  // mouse move scrub (very small)
   const CURSOR_THRESHOLD = 3;
   const PIN_TO           = '.main-wrapper';
 
-  // ====== NEW MOMENTUM TUNABLES ======
-  // velocity units are "timeline seconds per real second"
-  // ====== NEW MOMENTUM TUNABLES (adjusted for long timelines) ======
-  const DAMPING_PER_SEC      = 0.25;   // higher = stops sooner (0.1–0.4 range is good)
-  const WHEEL_VEL_GAIN       = 0.08;   // was 0.55
-  const TOUCH_VEL_GAIN       = 0.12;   // was 0.80
-  const CURSOR_VEL_GAIN      = 0.10;   // was 0.60
-  const TAP_IMPULSE          = 0.25;   // was 1.10 (tap adds gentle nudge)
-  const MAX_ABS_VEL          = 1.8;    // cap timeline speed (smaller = slower)
-  const CROSSFADE_OFFSET     = 0.999;  // shows real last image before clone crossfade
+  // ====== MOMENTUM TUNABLES (calmed & capped) ======
+  // velocity units: "timeline seconds per real second"
+  const DAMPING_PER_SEC  = 0.35;   // higher = settles quicker
+  const WHEEL_VEL_GAIN   = 0.06;   // wheel → momentum
+  const TOUCH_VEL_GAIN   = 0.10;   // touch → momentum
+  const CURSOR_VEL_GAIN  = 0.04;   // mouse move → momentum
+  const TAP_IMPULSE      = 0.18;   // tap adds gentle forward nudge
+  const MAX_ABS_VEL      = 0.8;    // hard cap on velocity
+
+  // per-event momentum caps (prevents micro inputs from huge fling)
+  const MAX_DV_WHEEL   = 0.25;
+  const MAX_DV_TOUCH   = 0.30;
+  const MAX_DV_CURSOR  = 0.20;
+
+  // End-cap crossfade offset so the REAL last image is actually seen
+  const CROSSFADE_OFFSET = 0.999;
 
   // ====== SAFETY: don't run in customizer ======
   if (window.Shopify && Shopify.designMode) {
@@ -111,7 +117,7 @@
     // ====== Build scrub timeline ======
     const tl = gsap.timeline({ paused: true });
 
-    // smoother fades (more fluid), still linear for precise scrubbing
+    // fluid fades (linear for precise scrubbing)
     const FADE_DUR = 1.2;
 
     imgs.forEach((img, i) => {
@@ -146,7 +152,7 @@
     if (imgs.length > 1) {
       const cloneIdx  = imgs.length - 1;      // auto-cloned first
       const lastReal  = cloneIdx - 1;
-      const loopPoint = lastReal + CROSSFADE_OFFSET; // slightly after the last step starts
+      const loopPoint = lastReal + CROSSFADE_OFFSET; // slightly after last step starts
       tl.to(imgs[cloneIdx], { opacity: 1, duration: FADE_DUR, ease: 'none' }, loopPoint);
       imgs.forEach((img, idx) => {
         if (idx !== cloneIdx) tl.to(img, { opacity: 0, duration: FADE_DUR, ease: 'none' }, loopPoint);
@@ -230,7 +236,7 @@
     // ====== Inputs (wheel/touch/mouse move/tap) ======
     const opts = { passive: false };
 
-    // Wheel (bi-directional)
+    // Wheel (bi-directional, responsive but not ballistic)
     const onWheel = (e) => {
       e.preventDefault();
       // normalize delta across browsers (deltaMode 0=pixels, 1=lines, 2=pages)
@@ -238,15 +244,17 @@
       const unit = e.deltaMode === 1 ? lineHeight : (e.deltaMode === 2 ? window.innerHeight : 1);
       const dy = e.deltaY * unit;
 
-      const deltaTime = dy * WHEEL_SPEED * dur;  // immediate time push
+      // immediate scrub (so it feels responsive)
+      const deltaTime = dy * WHEEL_SPEED * dur;
       setProgress(pos + deltaTime);
 
-      // add momentum (can be forward or backward)
-      const dv = (dy * WHEEL_SPEED * dur) * WHEEL_VEL_GAIN;
+      // add momentum (capped)
+      let dv = (dy * WHEEL_SPEED * dur) * WHEEL_VEL_GAIN;
+      dv = Math.max(-MAX_DV_WHEEL, Math.min(MAX_DV_WHEEL, dv));
       vel = clampVel(vel + dv);
     };
 
-    // Touch (bi-directional)
+    // Touch (bi-directional, inertial)
     const activeTouches = { id: null, y: 0, vy: 0, lastY: 0, lastTs: 0 };
     const onTouchStart = (e) => {
       if (!e.touches.length) return;
@@ -264,6 +272,7 @@
 
       const now = performance.now();
       const dy = activeTouches.y - t.clientY; // up = forward
+      // immediate scrub
       setProgress(pos + dy * TOUCH_SPEED * dur);
       activeTouches.y = t.clientY;
 
@@ -276,38 +285,43 @@
       activeTouches.lastTs = now;
     };
     const onTouchEnd = () => {
-      // push momentum in last direction
-      vel = clampVel(vel + (activeTouches.vy * TOUCH_VEL_GAIN));
+      // momentum push in last direction (capped)
+      let dv = activeTouches.vy * TOUCH_VEL_GAIN;
+      dv = Math.max(-MAX_DV_TOUCH, Math.min(MAX_DV_TOUCH, dv));
+      vel = clampVel(vel + dv);
       activeTouches.id = null;
     };
 
-    // Mouse move (forward only → add to velocity)
+    // Mouse move (forward only → adds small momentum; immediate scrub very small)
     let lastX = null, lastY = null, lastMoveTs = 0;
     const onMouseMove = (e) => {
       const now = performance.now();
       if (lastX != null && lastY != null) {
         const dx = e.clientX - lastX, dy = e.clientY - lastY;
         const dist = Math.sqrt(dx*dx + dy*dy);
+
         if (dist >= CURSOR_THRESHOLD) {
-          const deltaTime = dist * CURSOR_SPEED * dur; // immediate push forward
+          // tiny immediate push forward (so cursor still progresses a bit)
+          const deltaTime = dist * CURSOR_SPEED * dur;
           setProgress(pos + deltaTime);
 
-          // add forward momentum (no backward)
+          // add small forward momentum (no backward), capped
           const dt = Math.max(1, now - (lastMoveTs || now)) / 1000;
-          const instV = (dist * CURSOR_SPEED * dur) / dt;
-          vel = clampVel(vel + instV * CURSOR_VEL_GAIN);
+          let instV = (dist * CURSOR_SPEED * dur) / dt;
+          let dv = instV * CURSOR_VEL_GAIN;
+          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv)); // forward-only & capped
+          vel = clampVel(vel + dv);
         }
       }
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap → forward impulse
+    // Tap → gentle forward impulse (mobile & desktop)
     let pdTime = 0, pdX = 0, pdY = 0;
     const onPointerDown = (e) => { pdTime = performance.now(); pdX = e.clientX; pdY = e.clientY; };
-    const onPointerUp = (e) => {
+    const onPointerUp   = (e) => {
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
-      // treat as a tap if quick & not dragged much
       if (dt < 250 && moved < 12) {
         vel = clampVel(vel + TAP_IMPULSE);
       }
