@@ -6,6 +6,7 @@
 
   if (document.getElementById(CSS_ID)) return;
 
+  // Hide native banner immediately to avoid unstyled flash
   if (!document.getElementById(HIDE_ID)) {
     var hide = document.createElement('style');
     hide.id = HIDE_ID;
@@ -167,7 +168,10 @@
 }
 @media only screen and (max-width:750px){
   .shopify-pc__prefs__header-actions{ flex-direction:row !important; }
-  .shopify-pc__prefs__dialog header h2{ padding:.25rem !important; } /* ← CHANGED HERE */
+  .shopify-pc__prefs__dialog header h2{
+    padding:.25rem !important;
+    padding-left:.5rem !important; /* ← added per request */
+  }
 }
 /* last header action no right border */
 .shopify-pc__prefs__header-actions button:last-child{ border-right:0 !important; }
@@ -186,6 +190,7 @@
   function ready(fn){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fn);} else { fn(); } }
   ready(function(){ setTimeout(inject, DELAY_MS); });
 
+  // Quick tweak helper from console
   window.reinjectCookieCSS = function (newCss) {
     var s = document.getElementById(CSS_ID);
     if (s) s.remove();
