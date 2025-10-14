@@ -1,55 +1,49 @@
 (() => {
-  // ====== YOUR TUNED VALUES (kept) ======
+  // ====== YOUR TUNED VALUES ======
   const MAX_VISIBLE      = 2;
-  const WHEEL_SPEED      = 0.00008;  // wheel scrub factor
-  const TOUCH_SPEED      = 0.00025;  // touch scrub factor
-  const CURSOR_SPEED     = 0.00002;  // mouse move scrub (very small)
+  const WHEEL_SPEED      = 0.00008;
+  const TOUCH_SPEED      = 0.00025;
+  const CURSOR_SPEED     = 0.00002;
   const CURSOR_THRESHOLD = 3;
   const PIN_TO           = '.main-wrapper';
 
-  // ====== MOMENTUM — shortened tail / finer control ======
-  // velocity units: "timeline seconds per real second"
-  const DAMPING_PER_SEC  = 0.65;  // ↑ was 0.35 → settles faster
-  const WHEEL_VEL_GAIN   = 0.04;  // ↓ softer momentum from wheel
-  const TOUCH_VEL_GAIN   = 0.08;  // ↓ softer momentum from touch
-  const CURSOR_VEL_GAIN  = 0.03;  // ↓ softer momentum from mouse
-  const MAX_ABS_VEL      = 0.6;   // ↓ overall cap
+  // ====== MOMENTUM — shorter tail ======
+  const DAMPING_PER_SEC  = 0.65;  // higher => settles faster (was 0.35)
+  const WHEEL_VEL_GAIN   = 0.04;
+  const TOUCH_VEL_GAIN   = 0.08;
+  const CURSOR_VEL_GAIN  = 0.03;
+  const MAX_ABS_VEL      = 0.6;
 
-  // per-event caps (to avoid accidental big flings)
-  const MAX_DV_WHEEL   = 0.18;    // ↓
-  const MAX_DV_TOUCH   = 0.22;    // ↓
-  const MAX_DV_CURSOR  = 0.15;    // ↓
+  // per-event caps
+  const MAX_DV_WHEEL   = 0.18;
+  const MAX_DV_TOUCH   = 0.22;
+  const MAX_DV_CURSOR  = 0.15;
 
-  // Tap behavior (MUCH clearer): jump one step + momentum
-  const TAP_STEP_STEPS  = 1.0;    // tap jumps forward ~1 image step
-  const TAP_IMPULSE     = 0.9;    // strong but capped by MAX_ABS_VEL
+  // Tap behavior (clear)
+  const TAP_STEP_STEPS  = 1.0;  // jump ~1 image step
+  const TAP_IMPULSE     = 0.9;  // momentum tail
 
-  // End behavior
-  const CROSSFADE_OFFSET  = 0.999; // show last real image before clone
-  const HOLD_AT_END_STEPS = 1.5;   // ↑ linger longer (in “step” units)
+  // Loop behavior
+  const CROSSFADE_OFFSET  = 0.999;
+  const HOLD_AT_END_STEPS = 1.5; // linger last real image longer
 
-  // ====== SAFETY: don't run in customizer ======
-  if (window.Shopify && Shopify.designMode) {
-    console.log("[seqStack] Skipped: Shopify Customizer");
-    return;
-  }
+  // Don’t run in Shopify customizer
+  if (window.Shopify && Shopify.designMode) return;
 
-  // clean prior run if hot-reloading
   if (window.seqStackDestroy) window.seqStackDestroy();
 
   const loadScriptOnce = (src) =>
     new Promise((res, rej) => {
       if ([...document.scripts].some(s => s.src.includes(src))) return res();
-      const el = document.createElement('script');
-      el.src = src; el.async = true; el.onload = res; el.onerror = rej;
-      document.head.appendChild(el);
+      const s = document.createElement('script');
+      s.src = src; s.async = true; s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
     });
 
   (async function run(){
     await loadScriptOnce('https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js');
     gsap.registerPlugin();
 
-    // collect original nodes in DOM order
     const all = Array.from(document.querySelectorAll('.section_seq_image, .section_seq_text'));
     let imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
     const textSecs = all.filter(n => n.classList.contains('section_seq_text'));
@@ -57,7 +51,7 @@
 
     const IS_MOBILE = window.innerWidth <= 767;
 
-    // Stage + minimal CSS
+    // Stage
     const stage = document.createElement('div'); stage.id = 'seqStageStack';
     const style = document.createElement('style'); style.id = 'seqStageStack-style';
     style.textContent = `
@@ -72,36 +66,36 @@
     const pinContainer = document.querySelector(PIN_TO) || document.body;
     pinContainer.insertBefore(stage, pinContainer.firstChild);
 
-    // move nodes into stage (backup for cleanup)
+    // Move nodes into stage (for cleanup restore)
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
-    // === Auto loop clone handling ===
+    // Auto-clone first section to end when needed
     const firstImgInFirstSec = imgSecs[0]?.querySelector('img, .seq-image, picture img');
     const lastImgInLastSec  = imgSecs[imgSecs.length - 1]?.querySelector('img, .seq-image, picture img');
     const sameEnds = !!(firstImgInFirstSec && lastImgInLastSec &&
-                        (firstImgInFirstSec.currentSrc || firstImgInFirstSec.src) === (lastImgInLastSec.currentSrc || lastImgInLastSec.src));
+                        (firstImgInFirstSec.currentSrc || firstImgInFirstSec.src) ===
+                        (lastImgInLastSec.currentSrc  || lastImgInLastSec.src));
 
     let hasLoopClone = false;
     if (!sameEnds && imgSecs.length > 1) {
-      const firstSectionClone = imgSecs[0].cloneNode(true);
-      firstSectionClone.setAttribute('aria-hidden', 'true');
-      firstSectionClone.setAttribute('data-seq-clone', 'true');
-      firstSectionClone.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
-      stage.appendChild(firstSectionClone);
+      const firstClone = imgSecs[0].cloneNode(true);
+      firstClone.setAttribute('aria-hidden', 'true');
+      firstClone.dataset.seqClone = 'true';
+      firstClone.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
+      stage.appendChild(firstClone);
       hasLoopClone = true;
       imgSecs = Array.from(stage.querySelectorAll('.section_seq_image'));
     }
 
-    // inner images list
     const imgs = imgSecs.map(sec => sec.querySelector('img, .seq-image, picture img')).filter(Boolean);
 
-    // init states
+    // Initial states
     gsap.set(imgs, { opacity: 0 });
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
 
-    // map text -> image index right after it
+    // Map text -> image index right after it
     let seen = 0;
     const startIndex = new Map();
     Array.from(stage.querySelectorAll('.section_seq_image, .section_seq_text')).forEach(node => {
@@ -109,7 +103,7 @@
       if (node.classList.contains('section_seq_text')) startIndex.set(node, seen);
     });
 
-    // which image indices linger on mobile
+    // Mobile linger after text
     const lingerIndices = new Set();
     if (IS_MOBILE) {
       textSecs.forEach(txt => {
@@ -118,10 +112,8 @@
       });
     }
 
-    // ====== Build scrub timeline ======
+    // Timeline (linear ease for precise scrubbing)
     const tl = gsap.timeline({ paused: true });
-
-    // fluid fades (linear for precise scrubbing)
     const FADE_DUR = 1.2;
 
     imgs.forEach((img, i) => {
@@ -135,7 +127,7 @@
       }
     });
 
-    // mobile linger: schedule delayed fade-outs
+    // Mobile delayed fade-outs after linger
     if (IS_MOBILE && lingerIndices.size) {
       const durTemp = tl.duration();
       const wrap = (t) => ((t % durTemp) + durTemp) % durTemp;
@@ -145,33 +137,31 @@
       });
     }
 
-    // Text visibility: INSTANT show/hide (no fades)
+    // Text instant show/hide
     textSecs.forEach(txt => {
       const sIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
       tl.set(txt, { opacity: 1 }, sIdx + 0.001);
       tl.set(txt, { opacity: 0 }, sIdx + 2);
     });
 
-    // End-cap crossfade: keep LAST real image visible, then ease into clone
+    // End-cap: keep LAST real image, then crossfade to clone after hold
     if (imgs.length > 1) {
-      const cloneIdx  = imgs.length - 1;      // auto-cloned first
+      const cloneIdx  = imgs.length - 1;
       const lastReal  = cloneIdx - 1;
-      const loopPoint = lastReal + CROSSFADE_OFFSET + HOLD_AT_END_STEPS; // longer linger
+      const loopPoint = lastReal + CROSSFADE_OFFSET + HOLD_AT_END_STEPS;
 
-      // Bring in clone at loopPoint, fade others out there
       tl.to(imgs[cloneIdx], { opacity: 1, duration: FADE_DUR, ease: 'none' }, loopPoint);
       imgs.forEach((img, idx) => {
         if (idx !== cloneIdx) tl.to(img, { opacity: 0, duration: FADE_DUR, ease: 'none' }, loopPoint);
       });
     }
 
-    // Logo reversible scrub-fade: fades at cycle start, reappears on wrap to start
+    // Logo & progress bar
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
-    const LOGO_FADE_STEPS = 2; // how many image-steps long the logo fade lasts
+    const LOGO_FADE_STEPS = 2;
 
-    // Progress bar (exclude loop clone)
     const bar = document.querySelector('.section_progress-bar .progress-bar');
-    const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0)); // exclude clone for bar
+    const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
 
     let barWrapping = false;
     const setBar = (t) => {
@@ -192,13 +182,12 @@
       }
     };
 
-    // ====== Scrub driver with momentum ======
+    // Scrub driver with momentum
     let pos = 0;
     const dur = tl.duration();
-    let vel = 0; // timeline sec / real sec
+    let vel = 0;
     let rafId = null;
     let lastTs = 0;
-
     const clampVel = (v) => Math.max(-MAX_ABS_VEL, Math.min(MAX_ABS_VEL, v));
 
     const setProgress = (p) => {
@@ -206,10 +195,10 @@
       const proposed = p;
       const newPos = (proposed % dur + dur) % dur;
 
-      // detect wrap and animate progress bar + reset logo to 1.0
+      // Detect wrap → animate bar + reset logo to 1 (so it fades again next cycle)
       if (proposed > prevPos && newPos < prevPos) {
         animateBarWrap('forward');
-        if (logoEl) gsap.set(logoEl, { opacity: 1 }); // << ensure logo shows again on restart
+        if (logoEl) gsap.set(logoEl, { opacity: 1 });
       }
       if (proposed < prevPos && newPos > prevPos) {
         animateBarWrap('backward');
@@ -219,11 +208,11 @@
       pos = newPos;
       tl.time(pos, false);
 
-      // logo fades over the first few steps of EACH cycle
+      // logo fades over the start of each cycle
       if (logoEl) {
         const fadeEnd = Math.min(LOGO_FADE_STEPS, dur || 1);
-        const opCycle = 1 - Math.max(0, Math.min(1, pos / fadeEnd));
-        gsap.set(logoEl, { opacity: opCycle });
+        const op = 1 - Math.max(0, Math.min(1, pos / fadeEnd));
+        gsap.set(logoEl, { opacity: op });
       }
 
       setBar(pos);
@@ -232,39 +221,37 @@
     const tick = (ts) => {
       rafId = requestAnimationFrame(tick);
       if (!lastTs) { lastTs = ts; return; }
-      const dt = (ts - lastTs) / 1000; // seconds
+      const dt = (ts - lastTs) / 1000;
       lastTs = ts;
 
       if (Math.abs(vel) > 1e-4) {
         setProgress(pos + vel * dt);
-        // exponential damping per second (shorter kinetic tail)
         const damp = Math.max(0, 1 - DAMPING_PER_SEC * dt);
         vel *= damp;
         if (Math.abs(vel) < 1e-4) vel = 0;
       }
     };
-
     rafId = requestAnimationFrame(tick);
 
-    // ====== Inputs (wheel/touch/mouse move/tap) ======
+    // Inputs
     const opts = { passive: false };
 
-    // Wheel (bi-directional)
+    // Wheel
     const onWheel = (e) => {
       e.preventDefault();
       const lineHeight = 16;
       const unit = e.deltaMode === 1 ? lineHeight : (e.deltaMode === 2 ? window.innerHeight : 1);
       const dy = e.deltaY * unit;
 
-      const deltaTime = dy * WHEEL_SPEED * dur;
-      setProgress(pos + deltaTime);
+      const dtl = dy * WHEEL_SPEED * dur;
+      setProgress(pos + dtl);
 
-      let dv = (dy * WHEEL_SPEED * dur) * WHEEL_VEL_GAIN;
+      let dv = dtl * WHEEL_VEL_GAIN;
       dv = Math.max(-MAX_DV_WHEEL, Math.min(MAX_DV_WHEEL, dv));
       vel = clampVel(vel + dv);
     };
 
-    // Touch (bi-directional)
+    // Touch
     const activeTouches = { id: null, y: 0, vy: 0, lastY: 0, lastTs: 0 };
     const onTouchStart = (e) => {
       if (!e.touches.length) return;
@@ -299,46 +286,42 @@
       activeTouches.id = null;
     };
 
-    // Mouse move (forward-only momentum; tiny immediate scrub)
+    // Mouse move (forward-only momentum)
     let lastX = null, lastY = null, lastMoveTs = 0;
     const onMouseMove = (e) => {
       const now = performance.now();
       if (lastX != null && lastY != null) {
         const dx = e.clientX - lastX, dy = e.clientY - lastY;
         const dist = Math.sqrt(dx*dx + dy*dy);
-
         if (dist >= CURSOR_THRESHOLD) {
-          const deltaTime = dist * CURSOR_SPEED * dur;
-          setProgress(pos + deltaTime);
+          const dtl = dist * CURSOR_SPEED * dur;
+          setProgress(pos + dtl);
 
           const dt = Math.max(1, now - (lastMoveTs || now)) / 1000;
           let instV = (dist * CURSOR_SPEED * dur) / dt;
           let dv = instV * CURSOR_VEL_GAIN;
-          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv)); // forward-only
+          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv));
           vel = clampVel(vel + dv);
         }
       }
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap / Click → jump one step + momentum
+    // Tap / Click → jump a step + momentum
     let pdTime = 0, pdX = 0, pdY = 0;
     const onPointerDown = (e) => { pdTime = performance.now(); pdX = e.clientX; pdY = e.clientY; };
     const onPointerUp   = (e) => {
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
       if (dt < 350 && moved < 20) {
-        setProgress(pos + TAP_STEP_STEPS);           // instant visible step
-        vel = clampVel(vel + TAP_IMPULSE);           // momentum tail
-      }
-    };
-    // Fallback click (mobile Safari, some Androids)
-    const onClick = (e) => {
-      // ignore when the click obviously came from a drag-select
-      if (Math.hypot((e.clientX||0) - (pdX||0), (e.clientY||0) - (pdY||0)) < 30) {
         setProgress(pos + TAP_STEP_STEPS);
         vel = clampVel(vel + TAP_IMPULSE);
       }
+    };
+    const onClick = (e) => {
+      // Some browsers fire click without reliable pointer timings; still advance
+      setProgress(pos + TAP_STEP_STEPS);
+      vel = clampVel(vel + TAP_IMPULSE);
     };
 
     stage.addEventListener('wheel', onWheel, opts);
@@ -351,10 +334,10 @@
     stage.addEventListener('pointerup', onPointerUp, { passive: true });
     stage.addEventListener('click', onClick, { passive: true });
 
-    // init bar at 0
+    // Init bar at 0
     setBar(0);
 
-    // cleanup
+    // Cleanup
     window.seqStackDestroy = () => {
       cancelAnimationFrame(rafId);
       tl.kill();
@@ -373,7 +356,6 @@
       stage.removeEventListener('click', onClick);
       window.removeEventListener('mousemove', onMouseMove);
       delete window.seqStackDestroy;
-      console.log('[seqStack] destroyed');
     };
   })();
 })();
