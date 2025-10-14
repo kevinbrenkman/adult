@@ -128,6 +128,7 @@
   min-width:280px !important; display:flex !important; flex-direction:column !important;
   left:25% !important; width:50% !important; text-align:left !important;
   border:1px solid var(--_adult---adult-red) !important;
+  border-radius:0 !important; /* NEW */
 }
 
 /* Header + title */
@@ -166,6 +167,9 @@
 .shopify-pc__prefs__header-close:focus{
   outline:none !important; box-shadow:unset !important;
 }
+/* Hide entire close control */
+.shopify-pc__prefs__header-close{ display:none !important; } /* NEW */
+
 .shopify-pc__prefs__header-actions button:hover{
   cursor:pointer; text-underline-offset:2px; text-decoration:underline;
 }
@@ -175,7 +179,10 @@
   padding:.5rem !important; line-height:1 !important;
 }
 .shopify-pc__prefs__intro-main h3{ font-size:100% !important; }
-.shopify-pc__prefs__intro h3{ margin:0 0 6px 0 !important; line-height:1 !important; }
+.shopify-pc__prefs__intro h3{
+  margin:0 0 6px 0 !important; line-height:1 !important;
+  color:var(--_adult---adult-red) !important; /* NEW reinforce */
+}
 .shopify-pc__prefs__intro p{ color:var(--_adult---adult-red) !important; }
 
 /* Options wrapper + items */
@@ -193,7 +200,14 @@
   color:var(--_adult---adult-red) !important; font-size:100% !important; text-transform:uppercase !important;
 }
 .shopify-pc__prefs__option p{
-  color:var(--_adult---adult-red) !important; margin-top:-10px !important; margin-bottom:5px !important;
+  color:var(--_adult---adult-red) !important;
+  margin-top:-10px !important;
+  margin-bottom:5px !important;
+}
+/* NEW overrides for option paragraphs */
+.shopify-pc__prefs__option p{
+  margin-bottom:0px !important; /* NEW */
+  text-transform:none !important; /* NEW */
 }
 
 /* Checkbox icons — brand red + correct visibility */
