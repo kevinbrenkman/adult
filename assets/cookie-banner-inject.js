@@ -67,6 +67,12 @@
   color:var(--_adult---adult-red) !important;
 }
 .shopify-pc__banner__dialog button:hover{ text-decoration:underline; }
+/* NEW: kill focus shadow on banner buttons */
+.shopify-pc__banner__dialog button:focus,
+.shopify-pc__banner__dialog button:focus-visible{
+  box-shadow:unset !important;
+  outline:none !important;
+}
 
 /* Variant borders/colors for all three */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs,
@@ -79,6 +85,10 @@
   text-transform:uppercase;
   border-bottom:none !important;
   border-right:0 !important;
+}
+/* NEW: ensure Decline has right border too */
+.shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{
+  border-right:1px solid var(--_adult---adult-red) !important;
 }
 
 /* Per-button tweaks */
@@ -128,12 +138,12 @@
   min-width:280px !important; display:flex !important; flex-direction:column !important;
   left:25% !important; width:50% !important; text-align:left !important;
   border:1px solid var(--_adult---adult-red) !important;
-  border-radius:0 !important; /* NEW */
+  border-radius:0 !important;
 }
 
 /* Header + title */
 .shopify-pc__prefs__dialog header{
-  padding:0rem !important; /* changed from 1rem */
+  padding:0rem !important;
   border-bottom:1px solid var(--_adult---adult-red) !important;
 }
 .shopify-pc__prefs__dialog header h2{
@@ -168,7 +178,7 @@
   outline:none !important; box-shadow:unset !important;
 }
 /* Hide entire close control */
-.shopify-pc__prefs__header-close{ display:none !important; } /* NEW */
+.shopify-pc__prefs__header-close{ display:none !important; }
 
 .shopify-pc__prefs__header-actions button:hover{
   cursor:pointer; text-underline-offset:2px; text-decoration:underline;
@@ -181,7 +191,7 @@
 .shopify-pc__prefs__intro-main h3{ font-size:100% !important; }
 .shopify-pc__prefs__intro h3{
   margin:0 0 6px 0 !important; line-height:1 !important;
-  color:var(--_adult---adult-red) !important; /* NEW reinforce */
+  color:var(--_adult---adult-red) !important;
 }
 .shopify-pc__prefs__intro p{ color:var(--_adult---adult-red) !important; }
 
@@ -202,25 +212,38 @@
 .shopify-pc__prefs__option p{
   color:var(--_adult---adult-red) !important;
   margin-top:-10px !important;
-  margin-bottom:5px !important;
-}
-/* NEW overrides for option paragraphs */
-.shopify-pc__prefs__option p{
-  margin-bottom:0px !important; /* NEW */
-  text-transform:none !important; /* NEW */
+  margin-bottom:0px !important;
+  text-transform:none !important;
 }
 
-/* Checkbox icons — brand red + correct visibility */
-.shopify-pc__prefs__option [data-icon-type="checked"] path,
-.shopify-pc__prefs__option [data-icon-type="unchecked"] path{
-  fill:var(--_adult---adult-red) !important;
+/* Checkbox icons kept brand red via currentColor */
+.shopify-pc__prefs__option [data-icon-type="checked"],
+.shopify-pc__prefs__option [data-icon-type="unchecked"]{
+  color:var(--_adult---adult-red) !important;
 }
-/* ARIA pattern */
+
+/* NEW: eliminate all focus visuals on prefs checkboxes */
+.shopify-pc__prefs__option input[type="checkbox"]:focus,
+.shopify-pc__prefs__option input[type="checkbox"]:focus-visible{
+  outline:none !important;
+  box-shadow:none !important;
+}
+.shopify-pc__prefs__option label:focus,
+.shopify-pc__prefs__option label:focus-visible{
+  outline:none !important;
+  box-shadow:none !important;
+}
+.shopify-pc__prefs__option label input:focus ~ span svg,
+.shopify-pc__prefs__option label input:focus-visible ~ span svg{
+  box-shadow:unset !important;
+  outline:none !important;
+}
+
+/* Keep visibility logic consistent (if theme uses icon swap) */
 .shopify-pc__prefs__option [aria-checked="true"] [data-icon-type="checked"]{ display:block !important; }
 .shopify-pc__prefs__option [aria-checked="true"] [data-icon-type="unchecked"]{ display:none !important; }
 .shopify-pc__prefs__option [aria-checked="false"] [data-icon-type="checked"]{ display:none !important; }
 .shopify-pc__prefs__option [aria-checked="false"] [data-icon-type="unchecked"]{ display:block !important; }
-/* Input sibling pattern */
 .shopify-pc__prefs__option input[type="checkbox"]:checked ~ span [data-icon-type="checked"]{ display:block !important; }
 .shopify-pc__prefs__option input[type="checkbox"]:checked ~ span [data-icon-type="unchecked"]{ display:none !important; }
 .shopify-pc__prefs__option input[type="checkbox"]:not(:checked) ~ span [data-icon-type="checked"]{ display:none !important; }
