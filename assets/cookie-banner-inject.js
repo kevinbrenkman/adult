@@ -26,6 +26,11 @@
 }
 @media (min-width:1550px){ .shopify-pc__banner__dialog{ box-shadow:none !important; } }
 
+/* NEW: ≤800px add bottom border */
+@media (max-width:800px){
+  .shopify-pc__banner__dialog{ border-bottom:1px solid var(--_adult---adult-red) !important; }
+}
+
 /* Title */
 .shopify-pc__banner__dialog h2{
   font-size:100%;margin:0;color:var(--_adult---adult-red) !important;
@@ -64,6 +69,7 @@
   background:var(--_adult---adult-off-white) !important;color:var(--_adult---adult-red) !important;
   text-transform:uppercase;border-bottom:none !important;border-right:0 !important;
 }
+/* Decline: also has right border */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{ border-right:1px solid var(--_adult---adult-red) !important; }
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{ border-left:0 !important; }
 @media (min-width:1550px){ .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{ border-left:1px solid var(--_adult---adult-red) !important; } }
@@ -86,6 +92,7 @@
   .shopify-pc__banner__dialog h2{ width:100%; white-space:normal; border-bottom:1px solid var(--_adult---adult-red) !important; }
   .shopify-pc__banner__dialog p{ width:100% !important; }
   .shopify-pc__banner__btns{ flex-direction:row; width:100%; border-top:1px solid var(--_adult---adult-red) !important; }
+  /* Button order currently: Decline → Accept → Manage */
   .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{ order:1; border-left:0 !important; }
   .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{ order:2; }
   .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs{ order:3; }
@@ -95,6 +102,8 @@
 /* =======================
    PREFS DIALOG (BRANDED)
    ======================= */
+.shopify-pc__prefs__overlay{ background-color:#fcfcf7a8 !important; } /* NEW */
+
 .shopify-pc__prefs__dialog{
   position:fixed !important; z-index:2000002 !important; opacity:1 !important;
   background-color:hsl(0deg,0%,100%,100%) !important; max-height:80% !important; overflow-y:auto !important;
@@ -102,6 +111,7 @@
   min-width:280px !important; display:flex !important; flex-direction:column !important;
   left:25% !important; width:50% !important; text-align:left !important;
   border:1px solid var(--_adult---adult-red) !important; border-radius:0 !important;
+  box-shadow:unset !important; /* NEW */
 }
 
 /* Header + title */
@@ -160,27 +170,21 @@
    RESPONSIVE ADDITIONS
    ======================= */
 @media only screen and (max-width:1350px){
-  .shopify-pc__prefs__dialog{ left:0% !important; width:100% !important; }
+  .shopify-pc__prefs__dialog{
+    left:0% !important; width:100% !important;
+    /* NEW: only top & bottom borders on small desktops/tablets */
+    border:unset !important;
+    border-top:1px solid var(--_adult---adult-red) !important;
+    border-bottom:1px solid var(--_adult---adult-red) !important;
+  }
 }
-/* Keep ROW layout at ≤1200px, just add left padding + width guard */
 @media only screen and (max-width:1200px){
-  .shopify-pc__prefs__dialog header{
-    flex-direction:row !important;
-    padding-left:.5rem !important;
-    max-width:calc(100% - 2px) !important;
-  }
-  .shopify-pc__prefs__dialog header h2{
-    margin:0 !important;
-    padding:0 !important;
-    text-align:left !important;
-  }
+  .shopify-pc__prefs__dialog header{ flex-direction:row !important; padding-left:.5rem !important; max-width:calc(100% - 2px) !important; }
+  .shopify-pc__prefs__dialog header h2{ margin:0 !important; padding:0 !important; text-align:left !important; }
 }
 @media only screen and (max-width:750px){
   .shopify-pc__prefs__header-actions{ flex-direction:row !important; }
-  .shopify-pc__prefs__dialog header h2{
-    padding:.25rem !important;
-    padding-left:.5rem !important;
-  }
+  .shopify-pc__prefs__dialog header h2{ padding:.25rem !important; padding-left:.5rem !important; }
 }
 /* last header action no right border */
 .shopify-pc__prefs__header-actions button:last-child{ border-right:0 !important; }
