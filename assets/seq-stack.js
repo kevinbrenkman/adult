@@ -13,7 +13,7 @@
   const WHEEL_VEL_GAIN   = 0.06;   // wheel → momentum
   const TOUCH_VEL_GAIN   = 0.10;   // touch → momentum
   const CURSOR_VEL_GAIN  = 0.04;   // mouse move → momentum
-  const TAP_IMPULSE      = 0.18;   // tap adds gentle forward nudge
+  const TAP_IMPULSE      = 0.75;   // tap adds gentle forward nudge
   const MAX_ABS_VEL      = 0.8;    // hard cap on velocity
 
   // per-event momentum caps (prevents micro inputs from huge fling)
