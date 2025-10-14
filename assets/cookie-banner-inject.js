@@ -162,15 +162,24 @@
 @media only screen and (max-width:1350px){
   .shopify-pc__prefs__dialog{ left:0% !important; width:100% !important; }
 }
+/* NEW: at ≤1200px, make header a column and add left padding */
 @media only screen and (max-width:1200px){
-  .shopify-pc__prefs__dialog header{ flex-direction:row !important; max-width:calc(100% - 2px) !important; }
-  .shopify-pc__prefs__dialog header h2{ margin:0 !important; padding:0 !important; text-align:left !important; }
+  .shopify-pc__prefs__dialog header{
+    flex-direction:column !important;
+    padding-left:.5rem !important;
+    max-width:calc(100% - 2px) !important;
+  }
+  .shopify-pc__prefs__dialog header h2{
+    margin:0 !important;
+    padding:0 !important;
+    text-align:left !important;
+  }
 }
 @media only screen and (max-width:750px){
   .shopify-pc__prefs__header-actions{ flex-direction:row !important; }
   .shopify-pc__prefs__dialog header h2{
     padding:.25rem !important;
-    padding-left:.5rem !important; /* ← added per request */
+    padding-left:.5rem !important;
   }
 }
 /* last header action no right border */
@@ -190,7 +199,7 @@
   function ready(fn){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fn);} else { fn(); } }
   ready(function(){ setTimeout(inject, DELAY_MS); });
 
-  // Quick tweak helper from console
+  // Quick tweak helper
   window.reinjectCookieCSS = function (newCss) {
     var s = document.getElementById(CSS_ID);
     if (s) s.remove();
