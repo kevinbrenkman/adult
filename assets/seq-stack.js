@@ -171,11 +171,11 @@
       });
     }
 
-    // Progress bar (exclude loop clone)
+    // ===== Progress bar (exclude loop clone) =====
     const bar = document.querySelector('.section_progress-bar .progress-bar');
     const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
-
     let barWrapping = false;
+
     const setBar = (t) => {
       if (!bar || barWrapping) return;
       const p = Math.min(t / mainSteps, 1);
@@ -194,7 +194,7 @@
       }
     };
 
-    // ====== Scrub driver with momentum ======
+    // ====== Scrub driver with momentum (RESTORED) ======
     let pos = 0;
     const dur = tl.duration();
     let vel = 0;
@@ -347,7 +347,8 @@
     }, { passive: true });
 
     const onClick = () => {
-      if (performance.now() - lastTouchTapTime < 450) return; // avoid double after touch
+      // avoid double after touch
+      if (performance.now() - lastTouchTapTime < 450) return;
       const currentStep = Math.floor(pos);
       const nextStep = currentStep + 1;
       tweenTo(nextStep, TAP_TWEEN_DUR_DESKTOP);
@@ -387,26 +388,5 @@
       window.removeEventListener('mousemove', onMouseMove);
       delete window.seqStackDestroy;
     };
-
-    // ===== Helpers for progress bar =====
-    function setBar(t) {
-      const bar = document.querySelector('.section_progress-bar .progress-bar');
-      if (!bar) return;
-      const totalImgs = imgs.length - (hasLoopClone ? 1 : 0);
-      const p = Math.min(t / Math.max(1, totalImgs), 1);
-      bar.style.width = (p * 100).toFixed(3) + '%';
-    }
-    function animateBarWrap(dir) {
-      const bar = document.querySelector('.section_progress-bar .progress-bar');
-      if (!bar) return;
-      gsap.killTweensOf(bar);
-      if (dir === 'forward') {
-        bar.style.width = '100%';
-        gsap.to(bar, { width: '0%', duration: 0.35, ease: 'none' });
-      } else {
-        bar.style.width = '0%';
-        gsap.to(bar, { width: '100%', duration: 0.35, ease: 'none' });
-      }
-    }
   })();
 })();
