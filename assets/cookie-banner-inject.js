@@ -5,6 +5,7 @@
   var HIDE_ID = 'cookie-hide-inline';
   if (document.getElementById(CSS_ID)) return;
 
+  // Hide native banner immediately to avoid unstyled flash
   if (!document.getElementById(HIDE_ID)) {
     var hide = document.createElement('style');
     hide.id = HIDE_ID;
@@ -22,7 +23,13 @@
   border-top-left-radius:0;border-top-right-radius:0;
   border-top:1px solid var(--_adult---adult-red) !important;
 }
-@media (min-width:1550px){ .shopify-pc__banner__dialog{ box-shadow:none !important; } }
+@media (min-width:1550px){
+  .shopify-pc__banner__dialog{ box-shadow:none !important; }
+}
+/* ≤800px add bottom border */
+@media (max-width:800px){
+  .shopify-pc__banner__dialog{ border-bottom:1px solid var(--_adult---adult-red) !important; }
+}
 
 /* Title */
 .shopify-pc__banner__dialog h2{
@@ -32,7 +39,10 @@
 }
 
 /* Body */
-.shopify-pc__banner__dialog p{ color:var(--_adult---adult-red) !important; padding:.5rem !important; }
+.shopify-pc__banner__dialog p{
+  color:var(--_adult---adult-red) !important;
+  padding:.5rem !important;
+}
 
 /* Wrapper/body */
 .shopify-pc__banner__wrapper{ align-items:flex-end; flex-direction:row; }
@@ -41,23 +51,29 @@
   .shopify-pc__banner__body{ margin-bottom:-4px !important; }
   .shopify-pc__banner__dialog h2{ border-right:1px solid var(--_adult---adult-red) !important; }
 }
-.shopify-pc__banner__body{ margin-bottom:0;min-height:var(--_adult---default-height);display:flex;align-items:center;flex-direction:row; }
+.shopify-pc__banner__body{
+  margin-bottom:0;min-height:var(--_adult---default-height);
+  display:flex;align-items:center;flex-direction:row;
+}
 
-/* Buttons row */
+/* Buttons row (desktop keeps row-reverse) */
 .shopify-pc__banner__btns{
-  gap:0;flex-direction:row-reverse; /* desktop keeps row-reverse */
+  gap:0;flex-direction:row-reverse;
   width:auto;white-space:nowrap;border-top:0;
 }
 .shopify-pc__banner__dialog button{
   border:none;border-top:none!important;text-decoration:none;font:inherit;
   padding:0 .5rem !important;margin:0;flex:1 1 0;border-radius:0;line-height:100%;
-  text-align:center;height:var(--_adult---default-height);color:var(--_adult---adult-red) !important;
+  text-align:center;height:var(--_adult---default-height);
+  color:var(--_adult---adult-red) !important;
 }
 .shopify-pc__banner__dialog button:hover{ text-decoration:underline; }
 .shopify-pc__banner__dialog button:focus,
-.shopify-pc__banner__dialog button:focus-visible{ box-shadow:unset !important; outline:none !important; }
+.shopify-pc__banner__dialog button:focus-visible{
+  box-shadow:unset !important; outline:none !important;
+}
 
-/* Base borders: use only LEFT separators to avoid doubles */
+/* Base borders: LEFT separators only to avoid doubles on re-order */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs,
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline,
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{
@@ -70,20 +86,18 @@
   color:var(--_adult---adult-red) !important;
   text-transform:uppercase;
 }
-
-/* First visually: ACCEPT → no left separator */
+/* Accept is visually first → remove left separator */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{
   border-left:0 !important;
 }
-
-/* Remove any legacy rule that added a right border on Decline */
+/* Ensure Decline never gets a right border */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{
-  border-right:0 !important; /* ensure no extra right border */
+  border-right:0 !important;
 }
 
 /* Manage Prefs spacing + hover underline */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs{
-  padding-left:.5rem !important;padding-right:.5rem !important;text-decoration:none;
+  padding-left:.5rem !important; padding-right:.5rem !important; text-decoration:none;
 }
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs:hover{ text-decoration:underline; }
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs:focus span{ outline:none!important; }
@@ -95,33 +109,190 @@
 /* ===== VISUAL ORDER =====
    Goal: Accept → Decline → Preferences
 */
-
-/* Desktop (≥1550px) uses row-reverse, so give ACCEPT the HIGHEST order */
-@media (min-width:1550px){
+@media (min-width:1550px){ /* row-reverse on desktop */
   .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs{ order:1; }
-  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{ order:2; }
-  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{  order:3; }
+  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{      order:2; }
+  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{       order:3; }
 }
-
-/* Mobile/tablet (<1550px) switches to row and stacks other elements as before */
-@media (max-width:1549px){
+@media (max-width:1549px){ /* row on mobile/tablet */
   .shopify-pc__banner__wrapper{ flex-direction:column; max-height:none; }
   .shopify-pc__banner__body{ flex-direction:column; }
   .shopify-pc__banner__dialog h2{ width:100%; white-space:normal; border-bottom:1px solid var(--_adult---adult-red) !important; }
   .shopify-pc__banner__dialog p{ width:100% !important; }
   .shopify-pc__banner__btns{ flex-direction:row; width:100%; border-top:1px solid var(--_adult---adult-red) !important; }
 
-  /* Left-to-right because flex-direction: row */
-  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{  order:1; }
-  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{ order:2; }
+  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{       order:1; }
+  .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{      order:2; }
   .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs{ order:3; }
 }
 
-/* =======================
-   PREFS DIALOG (BRANDED) ... (unchanged below)
-   ======================= */
 
-/* (Keep your existing prefs styles + responsive additions here unchanged) */
+/* =======================
+   PREFERENCES DIALOG (BRANDED)
+   ======================= */
+.shopify-pc__prefs__overlay{
+  background-color:#fcfcf7a8 !important;
+}
+
+.shopify-pc__prefs__dialog{
+  position:fixed !important; z-index:2000002 !important; opacity:1 !important;
+  background-color:hsl(0deg,0%,100%,100%) !important;
+  max-height:80% !important; overflow-y:auto !important;
+  top:50% !important; transform:translate(0,-50%) !important;
+  min-width:280px !important; display:flex !important; flex-direction:column !important;
+  left:25% !important; width:50% !important; text-align:left !important;
+  border:1px solid var(--_adult---adult-red) !important;
+  border-radius:0 !important;
+  box-shadow:unset !important;
+}
+
+/* Header + title */
+.shopify-pc__prefs__dialog header{
+  padding:0rem !important;
+  border-bottom:1px solid var(--_adult---adult-red) !important;
+}
+.shopify-pc__prefs__dialog header h2{
+  color:var(--_adult---adult-red) !important;
+  font-size:1em !important;
+  margin-left:.5rem !important;
+}
+
+/* Header actions */
+.shopify-pc__prefs__header-actions{
+  padding:0 !important;
+  height:var(--_adult---default-height) !important;
+  margin-right:-1px !important;
+}
+.shopify-pc__prefs__header-actions button{
+  border-radius:0 !important;
+  border:1px solid var(--_adult---adult-red) !important;
+  color:var(--_adult---adult-red) !important;
+  text-transform:uppercase !important;
+  padding:.5rem .5rem !important;
+  margin:-1px !important;
+  font-size:100% !important;
+  line-height:100% !important;
+}
+.shopify-pc__prefs__header-actions button.primary{
+  background:var(--_adult---adult-red) !important; color:#fff !important;
+}
+.shopify-pc__prefs__header-actions button:focus{
+  outline:none !important; box-shadow:unset !important;
+}
+.shopify-pc__prefs__header-close:focus{
+  outline:none !important; box-shadow:unset !important;
+}
+.shopify-pc__prefs__header-close{
+  display:none !important;
+}
+.shopify-pc__prefs__header-actions button:hover{
+  cursor:pointer; text-underline-offset:2px; text-decoration:underline;
+}
+/* Ensure last header action has no right border */
+.shopify-pc__prefs__header-actions button:last-child{
+  border-right:0 !important;
+}
+
+/* Intro */
+.shopify-pc__prefs__intro-main{
+  padding:.5rem !important; line-height:1 !important;
+}
+.shopify-pc__prefs__intro-main h3{ font-size:100% !important; }
+.shopify-pc__prefs__intro h3{
+  margin:0 0 6px 0 !important; line-height:1 !important;
+  color:var(--_adult---adult-red) !important;
+}
+.shopify-pc__prefs__intro p{
+  color:var(--_adult---adult-red) !important;
+}
+
+/* Options */
+.shopify-pc__prefs__options{
+  padding:0rem !important;
+}
+.shopify-pc__prefs__option{
+  text-transform:uppercase !important;
+  border-top:1px solid var(--_adult---adult-red) !important;
+  padding:.5rem !important;
+}
+.shopify-pc__prefs__option:first-child{
+  border-top:1px solid var(--_adult---adult-red) !important;
+  padding:.5rem !important; margin:0 !important;
+}
+.shopify-pc__prefs__option label{
+  color:var(--_adult---adult-red) !important; font-size:100% !important; text-transform:uppercase !important;
+}
+.shopify-pc__prefs__option p{
+  color:var(--_adult---adult-red) !important;
+  margin-top:-10px !important;
+  margin-bottom:0px !important;
+  text-transform:none !important;
+}
+
+/* Checkbox focus off */
+.shopify-pc__prefs__option input[type="checkbox"]:focus,
+.shopify-pc__prefs__option input[type="checkbox"]:focus-visible{
+  outline:none !important; box-shadow:none !important;
+}
+.shopify-pc__prefs__option label:focus,
+.shopify-pc__prefs__option label:focus-visible{
+  outline:none !important; box-shadow:none !important;
+}
+.shopify-pc__prefs__option label input:focus ~ span svg,
+.shopify-pc__prefs__option label input:focus-visible ~ span svg{
+  box-shadow:unset !important; outline:none !important;
+}
+
+/* Icon color helpers (if theme uses data-icon-type) */
+.shopify-pc__prefs__option [data-icon-type="checked"],
+.shopify-pc__prefs__option [data-icon-type="unchecked"]{
+  color:var(--_adult---adult-red) !important;
+}
+
+/* Visibility helpers for icon swap setups */
+.shopify-pc__prefs__option [aria-checked="true"] [data-icon-type="checked"]{ display:block !important; }
+.shopify-pc__prefs__option [aria-checked="true"] [data-icon-type="unchecked"]{ display:none !important; }
+.shopify-pc__prefs__option [aria-checked="false"] [data-icon-type="checked"]{ display:none !important; }
+.shopify-pc__prefs__option [aria-checked="false"] [data-icon-type="unchecked"]{ display:block !important; }
+.shopify-pc__prefs__option input[type="checkbox"]:checked ~ span [data-icon-type="checked"]{ display:block !important; }
+.shopify-pc__prefs__option input[type="checkbox"]:checked ~ span [data-icon-type="unchecked"]{ display:none !important; }
+.shopify-pc__prefs__option input[type="checkbox"]:not(:checked) ~ span [data-icon-type="checked"]{ display:none !important; }
+.shopify-pc__prefs__option input[type="checkbox"]:not(:checked) ~ span [data-icon-type="unchecked"]{ display:block !important; }
+
+/* =======================
+   RESPONSIVE ADDITIONS
+   ======================= */
+/* Full-width dialog ≤1350px and top/bottom borders only */
+@media only screen and (max-width:1350px){
+  .shopify-pc__prefs__dialog{
+    left:0% !important;
+    width:100% !important;
+    border:unset !important;
+    border-top:1px solid var(--_adult---adult-red) !important;
+    border-bottom:1px solid var(--_adult---adult-red) !important;
+  }
+}
+/* Keep ROW layout ≤1200px, add left padding + width guard */
+@media only screen and (max-width:1200px){
+  .shopify-pc__prefs__dialog header{
+    flex-direction:row !important;
+    padding-left:.5rem !important;
+    max-width:calc(100% - 2px) !important;
+  }
+  .shopify-pc__prefs__dialog header h2{
+    margin:0 !important;
+    padding:0 !important;
+    text-align:left !important;
+  }
+}
+/* Tighten title padding ≤750px */
+@media only screen and (max-width:750px){
+  .shopify-pc__prefs__header-actions{ flex-direction:row !important; }
+  .shopify-pc__prefs__dialog header h2{
+    padding:.25rem !important;
+    padding-left:.5rem !important;
+  }
+}
 `;
 
   function inject() {
@@ -137,6 +308,7 @@
   function ready(fn){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fn);} else { fn(); } }
   ready(function(){ setTimeout(inject, DELAY_MS); });
 
+  // Console helper for quick tweaks
   window.reinjectCookieCSS = function (newCss) {
     var s = document.getElementById(CSS_ID);
     if (s) s.remove();
