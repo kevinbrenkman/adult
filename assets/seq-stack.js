@@ -7,25 +7,28 @@
   const CURSOR_THRESHOLD = 3;
   const PIN_TO           = '.main-wrapper';
 
-  // ====== MOMENTUM — shorter tail ======
-  const DAMPING_PER_SEC  = 0.65;  // higher => settles faster (was 0.35)
+  // ====== MOMENTUM — short tail / controlled ======
+  const DAMPING_PER_SEC  = 0.65;
   const WHEEL_VEL_GAIN   = 0.04;
   const TOUCH_VEL_GAIN   = 0.08;
   const CURSOR_VEL_GAIN  = 0.03;
-  const MAX_ABS_VEL      = 0.6;
+  const MAX_ABS_VEL      = 0.9;   // ↑ allow stronger taps without long tail
 
   // per-event caps
   const MAX_DV_WHEEL   = 0.18;
   const MAX_DV_TOUCH   = 0.22;
   const MAX_DV_CURSOR  = 0.15;
 
-  // Tap behavior (clear)
-  const TAP_STEP_STEPS  = 1.0;  // jump ~1 image step
-  const TAP_IMPULSE     = 0.9;  // momentum tail
+  // Tap (much stronger)
+  const TAP_STEP_STEPS  = 1.6;    // instant jump ~1.6 image steps
+  const TAP_IMPULSE     = 1.2;    // momentum boost
 
-  // Loop behavior
+  // Loop / end behavior
   const CROSSFADE_OFFSET  = 0.999;
-  const HOLD_AT_END_STEPS = 1.5; // linger last real image longer
+  const HOLD_AT_END_STEPS = 1.5;  // linger last real image longer
+
+  // Logo like texts (instant show/hide)
+  const LOGO_HIDE_STEPS   = 2;    // show at start, hide after 2 steps
 
   // Don’t run in Shopify customizer
   if (window.Shopify && Shopify.designMode) return;
@@ -144,6 +147,16 @@
       tl.set(txt, { opacity: 0 }, sIdx + 2);
     });
 
+    // Logo like texts (instant show/hide)
+    const logoEl = document.querySelector('.shopify-section.logo-wrapper');
+    if (logoEl) {
+      // Ensure visible on page load (desktop & mobile)
+      gsap.set(logoEl, { opacity: 1 });
+      // Show at cycle start, hide after LOGO_HIDE_STEPS (no fade)
+      tl.set(logoEl, { opacity: 1 }, 0.001);
+      tl.set(logoEl, { opacity: 0 }, LOGO_HIDE_STEPS);
+    }
+
     // End-cap: keep LAST real image, then crossfade to clone after hold
     if (imgs.length > 1) {
       const cloneIdx  = imgs.length - 1;
@@ -156,10 +169,7 @@
       });
     }
 
-    // Logo & progress bar
-    const logoEl = document.querySelector('.shopify-section.logo-wrapper');
-    const LOGO_FADE_STEPS = 2;
-
+    // Progress bar (exclude loop clone)
     const bar = document.querySelector('.section_progress-bar .progress-bar');
     const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
 
@@ -195,25 +205,12 @@
       const proposed = p;
       const newPos = (proposed % dur + dur) % dur;
 
-      // Detect wrap → animate bar + reset logo to 1 (so it fades again next cycle)
-      if (proposed > prevPos && newPos < prevPos) {
-        animateBarWrap('forward');
-        if (logoEl) gsap.set(logoEl, { opacity: 1 });
-      }
-      if (proposed < prevPos && newPos > prevPos) {
-        animateBarWrap('backward');
-        if (logoEl) gsap.set(logoEl, { opacity: 1 });
-      }
+      // Animate progress bar wrap on cycle wrap
+      if (proposed > prevPos && newPos < prevPos) animateBarWrap('forward');
+      if (proposed < prevPos && newPos > prevPos) animateBarWrap('backward');
 
       pos = newPos;
       tl.time(pos, false);
-
-      // logo fades over the start of each cycle
-      if (logoEl) {
-        const fadeEnd = Math.min(LOGO_FADE_STEPS, dur || 1);
-        const op = 1 - Math.max(0, Math.min(1, pos / fadeEnd));
-        gsap.set(logoEl, { opacity: op });
-      }
 
       setBar(pos);
     };
@@ -286,7 +283,7 @@
       activeTouches.id = null;
     };
 
-    // Mouse move (forward-only momentum)
+    // Mouse move (forward-only momentum; tiny immediate scrub)
     let lastX = null, lastY = null, lastMoveTs = 0;
     const onMouseMove = (e) => {
       const now = performance.now();
@@ -300,14 +297,14 @@
           const dt = Math.max(1, now - (lastMoveTs || now)) / 1000;
           let instV = (dist * CURSOR_SPEED * dur) / dt;
           let dv = instV * CURSOR_VEL_GAIN;
-          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv));
+          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv)); // forward-only
           vel = clampVel(vel + dv);
         }
       }
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap / Click → jump a step + momentum
+    // Tap / Click → jump a step + momentum (strong)
     let pdTime = 0, pdX = 0, pdY = 0;
     const onPointerDown = (e) => { pdTime = performance.now(); pdX = e.clientX; pdY = e.clientY; };
     const onPointerUp   = (e) => {
@@ -318,8 +315,7 @@
         vel = clampVel(vel + TAP_IMPULSE);
       }
     };
-    const onClick = (e) => {
-      // Some browsers fire click without reliable pointer timings; still advance
+    const onClick = () => {
       setProgress(pos + TAP_STEP_STEPS);
       vel = clampVel(vel + TAP_IMPULSE);
     };
@@ -334,7 +330,7 @@
     stage.addEventListener('pointerup', onPointerUp, { passive: true });
     stage.addEventListener('click', onClick, { passive: true });
 
-    // Init bar at 0
+    // Progress bar start
     setBar(0);
 
     // Cleanup
