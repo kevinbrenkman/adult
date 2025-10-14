@@ -1,13 +1,12 @@
-
+/* assets/cookie-banner-injector.js */
 (function () {
-  var DELAY_MS = 1000; // change to 0–1500 as you like
+  var DELAY_MS = 1000; // 1s delayed reveal
   var CSS_ID = 'cookie-banner-css';
   var HIDE_ID = 'cookie-hide-inline';
 
-  // If we've already injected, bail
   if (document.getElementById(CSS_ID)) return;
 
-  // 1) Hide banner immediately to avoid unstyled flash
+  // Hide native banner immediately to avoid unstyled flash
   if (!document.getElementById(HIDE_ID)) {
     var hide = document.createElement('style');
     hide.id = HIDE_ID;
@@ -15,7 +14,7 @@
     document.head.appendChild(hide);
   }
 
-  // 2) Your styling (1550px breakpoint; banner + prefs modal)
+  // Styles: banner (≥1550 row, <1550 stacked) + branded prefs dialog
   var css = `
 /* =======================
    MAIN BANNER
@@ -69,7 +68,7 @@
 }
 .shopify-pc__banner__dialog button:hover{ text-decoration:underline; }
 
-/* Variant borders/colors (all three) */
+/* Variant borders/colors for all three */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-manage-prefs,
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline,
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept{
@@ -132,63 +131,102 @@
 }
 
 /* Header + title */
-.shopify-pc__prefs__dialog header{ padding:1rem !important; border-bottom:1px solid var(--_adult---adult-red) !important; }
-.shopify-pc__prefs__dialog header h2{ color:var(--_adult---adult-red) !important; }
+.shopify-pc__prefs__dialog header{
+  padding:0rem !important; /* changed from 1rem */
+  border-bottom:1px solid var(--_adult---adult-red) !important;
+}
+.shopify-pc__prefs__dialog header h2{
+  color:var(--_adult---adult-red) !important;
+  font-size:1em !important;
+  margin-left:.5rem !important;
+}
 
 /* Header actions */
-.shopify-pc__prefs__header-actions{ padding:0 !important; }
-.shopify-pc__prefs__header-actions button{
-  border-radius:0 !important; border:1px solid var(--_adult---adult-red) !important;
-  color:var(--_adult---adult-red) !important; text-transform:uppercase !important;
-  padding:.5rem .75rem !important;
+.shopify-pc__prefs__header-actions{
+  padding:0 !important;
+  height:var(--_adult---default-height) !important;
+  margin-right:-1px !important;
 }
-.shopify-pc__prefs__header-actions button.primary{ background:var(--_adult---adult-red) !important; color:#fff !important; }
-.shopify-pc__prefs__header-actions button:focus{ outline:none !important; }
+.shopify-pc__prefs__header-actions button{
+  border-radius:0 !important;
+  border:1px solid var(--_adult---adult-red) !important;
+  color:var(--_adult---adult-red) !important;
+  text-transform:uppercase !important;
+  padding:.5rem .5rem !important;
+  margin:-1px !important;
+  font-size:100% !important;
+  line-height:100% !important;
+}
+.shopify-pc__prefs__header-actions button.primary{
+  background:var(--_adult---adult-red) !important; color:#fff !important;
+}
+.shopify-pc__prefs__header-actions button:focus{
+  outline:none !important; box-shadow:unset !important;
+}
+.shopify-pc__prefs__header-close:focus{
+  outline:none !important; box-shadow:unset !important;
+}
+.shopify-pc__prefs__header-actions button:hover{
+  cursor:pointer; text-underline-offset:2px; text-decoration:underline;
+}
 
-/* Hide default close icon if present */
-.shopify-pc__prefs__header-close svg{ display:none !important; }
-
-/* Content areas */
-.shopify-pc__prefs__intro-main{ padding:1rem !important; }
-.shopify-pc__prefs__intro h3{ color:var(--_adult---adult-red) !important; }
+/* Intro */
+.shopify-pc__prefs__intro-main{
+  padding:.5rem !important; line-height:1 !important;
+}
+.shopify-pc__prefs__intro-main h3{ font-size:100% !important; }
+.shopify-pc__prefs__intro h3{ margin:0 0 6px 0 !important; line-height:1 !important; }
 .shopify-pc__prefs__intro p{ color:var(--_adult---adult-red) !important; }
-.shopify-pc__prefs__options{ padding:1rem !important; }
-.shopify-pc__prefs__option:first-child{ padding:0 !important; margin:0 !important; border-top:unset !important; }
-.shopify-pc__prefs__option label{ color:var(--_adult---adult-red) !important; }
-.shopify-pc__prefs__option p{ color:var(--_adult---adult-red) !important; }
 
-/* Checkbox icons — force brand red and correct visibility */
+/* Options wrapper + items */
+.shopify-pc__prefs__options{ padding:0rem !important; }
+.shopify-pc__prefs__option{
+  text-transform:uppercase !important;
+  border-top:1px solid var(--_adult---adult-red) !important;
+  padding:.5rem !important;
+}
+.shopify-pc__prefs__option:first-child{
+  border-top:1px solid var(--_adult---adult-red) !important;
+  padding:.5rem !important; margin:0 !important;
+}
+.shopify-pc__prefs__option label{
+  color:var(--_adult---adult-red) !important; font-size:100% !important; text-transform:uppercase !important;
+}
+.shopify-pc__prefs__option p{
+  color:var(--_adult---adult-red) !important; margin-top:-10px !important; margin-bottom:5px !important;
+}
+
+/* Checkbox icons — brand red + correct visibility */
 .shopify-pc__prefs__option [data-icon-type="checked"] path,
-.shopify-pc__prefs__option [data-icon-type="unchecked"] path{ fill:var(--_adult---adult-red) !important; }
+.shopify-pc__prefs__option [data-icon-type="unchecked"] path{
+  fill:var(--_adult---adult-red) !important;
+}
+/* ARIA pattern */
 .shopify-pc__prefs__option [aria-checked="true"] [data-icon-type="checked"]{ display:block !important; }
 .shopify-pc__prefs__option [aria-checked="true"] [data-icon-type="unchecked"]{ display:none !important; }
 .shopify-pc__prefs__option [aria-checked="false"] [data-icon-type="checked"]{ display:none !important; }
 .shopify-pc__prefs__option [aria-checked="false"] [data-icon-type="unchecked"]{ display:block !important; }
+/* Input sibling pattern */
 .shopify-pc__prefs__option input[type="checkbox"]:checked ~ span [data-icon-type="checked"]{ display:block !important; }
 .shopify-pc__prefs__option input[type="checkbox"]:checked ~ span [data-icon-type="unchecked"]{ display:none !important; }
 .shopify-pc__prefs__option input[type="checkbox"]:not(:checked) ~ span [data-icon-type="checked"]{ display:none !important; }
 .shopify-pc__prefs__option input[type="checkbox"]:not(:checked) ~ span [data-icon-type="unchecked"]{ display:block !important; }
-  `.trim();
+`;
 
-  // 3) Inject after delay and unhide
   function inject() {
-    if (document.getElementById(CSS_ID)) return; // already injected
+    if (document.getElementById(CSS_ID)) return;
     var style = document.createElement('style');
     style.id = CSS_ID;
     style.appendChild(document.createTextNode(css));
     document.head.appendChild(style);
-    var hide = document.getElementById(HIDE_ID);
-    if (hide) hide.remove();
+    var h = document.getElementById(HIDE_ID);
+    if (h) h.remove();
   }
 
-  // Inject after DOM ready + delay
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ setTimeout(inject, DELAY_MS); });
-  } else {
-    setTimeout(inject, DELAY_MS);
-  }
+  function ready(fn){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fn);} else { fn(); } }
+  ready(function(){ setTimeout(inject, DELAY_MS); });
 
-  // Optional: expose a helper for quick tweaks in console
+  // Optional: quick tweak helper from console
   window.reinjectCookieCSS = function (newCss) {
     var s = document.getElementById(CSS_ID);
     if (s) s.remove();
