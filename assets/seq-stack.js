@@ -13,7 +13,7 @@
   const WHEEL_VEL_GAIN   = 0.06;   // wheel → momentum
   const TOUCH_VEL_GAIN   = 0.10;   // touch → momentum
   const CURSOR_VEL_GAIN  = 0.04;   // mouse move → momentum
-  const TAP_IMPULSE      = 1.25;   // tap adds gentle forward nudge
+  const TAP_IMPULSE      = 0.45;   // << stronger tap nudge
   const MAX_ABS_VEL      = 0.8;    // hard cap on velocity
 
   // per-event momentum caps (prevents micro inputs from huge fling)
@@ -23,7 +23,7 @@
 
   // End behavior
   const CROSSFADE_OFFSET    = 0.999;  // show last real image before clone
-  const HOLD_AT_END_STEPS   = 0.75;   // << NEW: linger time (in "step" units) for last real image
+  const HOLD_AT_END_STEPS   = 0.75;   // linger time (in "step" units) for last real image
 
   // ====== SAFETY: don't run in customizer ======
   if (window.Shopify && Shopify.designMode) {
@@ -144,7 +144,6 @@
 
     // Text visibility: INSTANT show/hide (no fades)
     textSecs.forEach(txt => {
-      // show aligned with its computed start; hide two steps later
       const sIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
       tl.set(txt, { opacity: 1 }, sIdx + 0.001);
       tl.set(txt, { opacity: 0 }, sIdx + 2);
@@ -154,8 +153,6 @@
     if (imgs.length > 1) {
       const cloneIdx  = imgs.length - 1;      // auto-cloned first
       const lastReal  = cloneIdx - 1;
-
-      // Hold the last real image a bit longer before crossfade
       const loopPoint = lastReal + CROSSFADE_OFFSET + HOLD_AT_END_STEPS;
 
       tl.to(imgs[cloneIdx], { opacity: 1, duration: FADE_DUR, ease: 'none' }, loopPoint);
@@ -321,15 +318,22 @@
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap → gentle forward impulse (mobile & desktop)
+    // Tap → stronger forward impulse, more mobile-safe
     let pdTime = 0, pdX = 0, pdY = 0;
-    const onPointerDown = (e) => { pdTime = performance.now(); pdX = e.clientX; pdY = e.clientY; };
-    const onPointerUp   = (e) => {
+    const onPointerDown = (e) => {
+      pdTime = performance.now();
+      pdX = e.clientX;
+      pdY = e.clientY;
+    };
+    const onTapLike = (x, y) => {
+      // immediate visible nudge + momentum
+      setProgress(pos + TAP_IMPULSE * 0.5);
+      vel = clampVel(vel + TAP_IMPULSE);
+    };
+    const onPointerUp = (e) => {
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
-      if (dt < 250 && moved < 12) {
-        vel = clampVel(vel + TAP_IMPULSE);
-      }
+      if (dt < 350 && moved < 20) onTapLike(e.clientX, e.clientY);
     };
 
     stage.addEventListener('wheel', onWheel, opts);
@@ -337,8 +341,16 @@
     stage.addEventListener('touchmove', onTouchMove, opts);
     stage.addEventListener('touchend', onTouchEnd, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
     stage.addEventListener('pointerdown', onPointerDown, { passive: true });
     stage.addEventListener('pointerup', onPointerUp, { passive: true });
+    // also bind touchend to catch browsers that don’t emit pointer events
+    stage.addEventListener('touchend', (e) => {
+      // treat a quick, low-move touchend as a tap
+      if (e.changedTouches && e.changedTouches[0]) {
+        onTapLike(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      }
+    }, { passive: true });
 
     // init bar at 0
     setBar(0);
