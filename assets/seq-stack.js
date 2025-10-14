@@ -1,29 +1,32 @@
 (() => {
-  // ====== YOUR TUNED VALUES ======
+  // ====== YOUR TUNED VALUES (kept) ======
   const MAX_VISIBLE      = 2;
-  const WHEEL_SPEED      = 0.00008;  // responsive wheel scrub
+  const WHEEL_SPEED      = 0.00008;  // wheel scrub factor
   const TOUCH_SPEED      = 0.00025;  // touch scrub factor
   const CURSOR_SPEED     = 0.00002;  // mouse move scrub (very small)
   const CURSOR_THRESHOLD = 3;
   const PIN_TO           = '.main-wrapper';
 
-  // ====== MOMENTUM TUNABLES (calmed & capped) ======
+  // ====== MOMENTUM — shortened tail / finer control ======
   // velocity units: "timeline seconds per real second"
-  const DAMPING_PER_SEC  = 0.35;   // higher = settles quicker
-  const WHEEL_VEL_GAIN   = 0.06;   // wheel → momentum
-  const TOUCH_VEL_GAIN   = 0.10;   // touch → momentum
-  const CURSOR_VEL_GAIN  = 0.04;   // mouse move → momentum
-  const TAP_IMPULSE      = 1.5;   // << stronger tap nudge
-  const MAX_ABS_VEL      = 0.8;    // hard cap on velocity
+  const DAMPING_PER_SEC  = 0.65;  // ↑ was 0.35 → settles faster
+  const WHEEL_VEL_GAIN   = 0.04;  // ↓ softer momentum from wheel
+  const TOUCH_VEL_GAIN   = 0.08;  // ↓ softer momentum from touch
+  const CURSOR_VEL_GAIN  = 0.03;  // ↓ softer momentum from mouse
+  const MAX_ABS_VEL      = 0.6;   // ↓ overall cap
 
-  // per-event momentum caps (prevents micro inputs from huge fling)
-  const MAX_DV_WHEEL   = 0.25;
-  const MAX_DV_TOUCH   = 0.30;
-  const MAX_DV_CURSOR  = 0.20;
+  // per-event caps (to avoid accidental big flings)
+  const MAX_DV_WHEEL   = 0.18;    // ↓
+  const MAX_DV_TOUCH   = 0.22;    // ↓
+  const MAX_DV_CURSOR  = 0.15;    // ↓
+
+  // Tap behavior (MUCH clearer): jump one step + momentum
+  const TAP_STEP_STEPS  = 1.0;    // tap jumps forward ~1 image step
+  const TAP_IMPULSE     = 0.9;    // strong but capped by MAX_ABS_VEL
 
   // End behavior
-  const CROSSFADE_OFFSET    = 0.999;  // show last real image before clone
-  const HOLD_AT_END_STEPS   = 0.75;   // linger time (in "step" units) for last real image
+  const CROSSFADE_OFFSET  = 0.999; // show last real image before clone
+  const HOLD_AT_END_STEPS = 1.5;   // ↑ linger longer (in “step” units)
 
   // ====== SAFETY: don't run in customizer ======
   if (window.Shopify && Shopify.designMode) {
@@ -149,19 +152,20 @@
       tl.set(txt, { opacity: 0 }, sIdx + 2);
     });
 
-    // End-cap crossfade that preserves the LAST real image on screen (with added hold)
+    // End-cap crossfade: keep LAST real image visible, then ease into clone
     if (imgs.length > 1) {
       const cloneIdx  = imgs.length - 1;      // auto-cloned first
       const lastReal  = cloneIdx - 1;
-      const loopPoint = lastReal + CROSSFADE_OFFSET + HOLD_AT_END_STEPS;
+      const loopPoint = lastReal + CROSSFADE_OFFSET + HOLD_AT_END_STEPS; // longer linger
 
+      // Bring in clone at loopPoint, fade others out there
       tl.to(imgs[cloneIdx], { opacity: 1, duration: FADE_DUR, ease: 'none' }, loopPoint);
       imgs.forEach((img, idx) => {
         if (idx !== cloneIdx) tl.to(img, { opacity: 0, duration: FADE_DUR, ease: 'none' }, loopPoint);
       });
     }
 
-    // Logo reversible scrub-fade: fades at cycle start, reappears on replay
+    // Logo reversible scrub-fade: fades at cycle start, reappears on wrap to start
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
     const LOGO_FADE_STEPS = 2; // how many image-steps long the logo fade lasts
 
@@ -188,7 +192,7 @@
       }
     };
 
-    // ====== Scrub driver with inertia (working version) ======
+    // ====== Scrub driver with momentum ======
     let pos = 0;
     const dur = tl.duration();
     let vel = 0; // timeline sec / real sec
@@ -202,17 +206,24 @@
       const proposed = p;
       const newPos = (proposed % dur + dur) % dur;
 
-      if (proposed > prevPos && newPos < prevPos) animateBarWrap('forward');
-      if (proposed < prevPos && newPos > prevPos) animateBarWrap('backward');
+      // detect wrap and animate progress bar + reset logo to 1.0
+      if (proposed > prevPos && newPos < prevPos) {
+        animateBarWrap('forward');
+        if (logoEl) gsap.set(logoEl, { opacity: 1 }); // << ensure logo shows again on restart
+      }
+      if (proposed < prevPos && newPos > prevPos) {
+        animateBarWrap('backward');
+        if (logoEl) gsap.set(logoEl, { opacity: 1 });
+      }
 
       pos = newPos;
       tl.time(pos, false);
 
-      // logo opacity is tied to the current cycle time
+      // logo fades over the first few steps of EACH cycle
       if (logoEl) {
         const fadeEnd = Math.min(LOGO_FADE_STEPS, dur || 1);
-        const op = 1 - Math.max(0, Math.min(1, pos / fadeEnd));
-        gsap.set(logoEl, { opacity: op });
+        const opCycle = 1 - Math.max(0, Math.min(1, pos / fadeEnd));
+        gsap.set(logoEl, { opacity: opCycle });
       }
 
       setBar(pos);
@@ -226,7 +237,7 @@
 
       if (Math.abs(vel) > 1e-4) {
         setProgress(pos + vel * dt);
-        // exponential damping per second
+        // exponential damping per second (shorter kinetic tail)
         const damp = Math.max(0, 1 - DAMPING_PER_SEC * dt);
         vel *= damp;
         if (Math.abs(vel) < 1e-4) vel = 0;
@@ -238,25 +249,22 @@
     // ====== Inputs (wheel/touch/mouse move/tap) ======
     const opts = { passive: false };
 
-    // Wheel (bi-directional, responsive but not ballistic)
+    // Wheel (bi-directional)
     const onWheel = (e) => {
       e.preventDefault();
-      // normalize delta across browsers (deltaMode 0=pixels, 1=lines, 2=pages)
-      const lineHeight = 16; // px heuristic
+      const lineHeight = 16;
       const unit = e.deltaMode === 1 ? lineHeight : (e.deltaMode === 2 ? window.innerHeight : 1);
       const dy = e.deltaY * unit;
 
-      // immediate scrub (so it feels responsive)
       const deltaTime = dy * WHEEL_SPEED * dur;
       setProgress(pos + deltaTime);
 
-      // add momentum (capped)
       let dv = (dy * WHEEL_SPEED * dur) * WHEEL_VEL_GAIN;
       dv = Math.max(-MAX_DV_WHEEL, Math.min(MAX_DV_WHEEL, dv));
       vel = clampVel(vel + dv);
     };
 
-    // Touch (bi-directional, inertial)
+    // Touch (bi-directional)
     const activeTouches = { id: null, y: 0, vy: 0, lastY: 0, lastTs: 0 };
     const onTouchStart = (e) => {
       if (!e.touches.length) return;
@@ -274,11 +282,9 @@
 
       const now = performance.now();
       const dy = activeTouches.y - t.clientY; // up = forward
-      // immediate scrub
       setProgress(pos + dy * TOUCH_SPEED * dur);
       activeTouches.y = t.clientY;
 
-      // velocity estimate
       const dy2 = activeTouches.lastY - t.clientY;
       const dt  = Math.max(1, now - activeTouches.lastTs) / 1000;
       const instVy = (dy2 * TOUCH_SPEED * dur) / dt;
@@ -287,14 +293,13 @@
       activeTouches.lastTs = now;
     };
     const onTouchEnd = () => {
-      // momentum push in last direction (capped)
       let dv = activeTouches.vy * TOUCH_VEL_GAIN;
       dv = Math.max(-MAX_DV_TOUCH, Math.min(MAX_DV_TOUCH, dv));
       vel = clampVel(vel + dv);
       activeTouches.id = null;
     };
 
-    // Mouse move (forward only → adds small momentum; immediate scrub very small)
+    // Mouse move (forward-only momentum; tiny immediate scrub)
     let lastX = null, lastY = null, lastMoveTs = 0;
     const onMouseMove = (e) => {
       const now = performance.now();
@@ -303,37 +308,37 @@
         const dist = Math.sqrt(dx*dx + dy*dy);
 
         if (dist >= CURSOR_THRESHOLD) {
-          // tiny immediate push forward (so cursor still progresses a bit)
           const deltaTime = dist * CURSOR_SPEED * dur;
           setProgress(pos + deltaTime);
 
-          // add small forward momentum (no backward), capped
           const dt = Math.max(1, now - (lastMoveTs || now)) / 1000;
           let instV = (dist * CURSOR_SPEED * dur) / dt;
           let dv = instV * CURSOR_VEL_GAIN;
-          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv)); // forward-only & capped
+          dv = Math.max(0, Math.min(MAX_DV_CURSOR, dv)); // forward-only
           vel = clampVel(vel + dv);
         }
       }
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap → stronger forward impulse, more mobile-safe
+    // Tap / Click → jump one step + momentum
     let pdTime = 0, pdX = 0, pdY = 0;
-    const onPointerDown = (e) => {
-      pdTime = performance.now();
-      pdX = e.clientX;
-      pdY = e.clientY;
-    };
-    const onTapLike = (x, y) => {
-      // immediate visible nudge + momentum
-      setProgress(pos + TAP_IMPULSE * 0.5);
-      vel = clampVel(vel + TAP_IMPULSE);
-    };
-    const onPointerUp = (e) => {
+    const onPointerDown = (e) => { pdTime = performance.now(); pdX = e.clientX; pdY = e.clientY; };
+    const onPointerUp   = (e) => {
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
-      if (dt < 350 && moved < 20) onTapLike(e.clientX, e.clientY);
+      if (dt < 350 && moved < 20) {
+        setProgress(pos + TAP_STEP_STEPS);           // instant visible step
+        vel = clampVel(vel + TAP_IMPULSE);           // momentum tail
+      }
+    };
+    // Fallback click (mobile Safari, some Androids)
+    const onClick = (e) => {
+      // ignore when the click obviously came from a drag-select
+      if (Math.hypot((e.clientX||0) - (pdX||0), (e.clientY||0) - (pdY||0)) < 30) {
+        setProgress(pos + TAP_STEP_STEPS);
+        vel = clampVel(vel + TAP_IMPULSE);
+      }
     };
 
     stage.addEventListener('wheel', onWheel, opts);
@@ -344,13 +349,7 @@
 
     stage.addEventListener('pointerdown', onPointerDown, { passive: true });
     stage.addEventListener('pointerup', onPointerUp, { passive: true });
-    // also bind touchend to catch browsers that don’t emit pointer events
-    stage.addEventListener('touchend', (e) => {
-      // treat a quick, low-move touchend as a tap
-      if (e.changedTouches && e.changedTouches[0]) {
-        onTapLike(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-      }
-    }, { passive: true });
+    stage.addEventListener('click', onClick, { passive: true });
 
     // init bar at 0
     setBar(0);
@@ -371,6 +370,7 @@
       stage.removeEventListener('touchend', onTouchEnd);
       stage.removeEventListener('pointerdown', onPointerDown);
       stage.removeEventListener('pointerup', onPointerUp);
+      stage.removeEventListener('click', onClick);
       window.removeEventListener('mousemove', onMouseMove);
       delete window.seqStackDestroy;
       console.log('[seqStack] destroyed');
