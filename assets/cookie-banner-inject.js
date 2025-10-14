@@ -86,7 +86,7 @@
   border-bottom:none !important;
   border-right:0 !important;
 }
-/* Ensure Decline has a right border too */
+/* Ensure Decline has right border too */
 .shopify-pc__banner__dialog button.shopify-pc__banner__btn-decline{
   border-right:1px solid var(--_adult---adult-red) !important;
 }
@@ -145,6 +145,7 @@
 .shopify-pc__prefs__dialog header{
   padding:0rem !important;
   border-bottom:1px solid var(--_adult---adult-red) !important;
+  /* ≤1200: keep header from overflowing borders */
 }
 .shopify-pc__prefs__dialog header h2{
   color:var(--_adult---adult-red) !important;
@@ -247,7 +248,7 @@
 .shopify-pc__prefs__option input[type="checkbox"]:not(:checked) ~ span [data-icon-type="unchecked"]{ display:block !important; }
 
 /* =======================
-   NEW RESPONSIVE RULES (requested)
+   RESPONSIVE ADDITIONS
    ======================= */
 @media only screen and (max-width:1350px){
   .shopify-pc__prefs__dialog{
@@ -258,6 +259,7 @@
 @media only screen and (max-width:1200px){
   .shopify-pc__prefs__dialog header{
     flex-direction:row !important;
+    max-width:calc(100% - 2px) !important; /* NEW */
   }
 }
 @media only screen and (max-width:1200px){
@@ -271,6 +273,13 @@
   .shopify-pc__prefs__header-actions{
     flex-direction:row !important;
   }
+  .shopify-pc__prefs__dialog header h2{
+    padding:.25rem !important; /* NEW */
+  }
+}
+/* Ensure last header action has no right border */
+.shopify-pc__prefs__header-actions button:last-child{
+  border-right:0 !important; /* NEW */
 }
 `;
 
