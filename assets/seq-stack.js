@@ -1,52 +1,55 @@
 (() => {
-  // ====== YOUR TUNED VALUES ======
-  const MAX_VISIBLE      = 2;
-  const WHEEL_SPEED      = 0.00008;
-  const TOUCH_SPEED      = 0.00025;
-  const CURSOR_SPEED     = 0.00002;
-  const CURSOR_THRESHOLD = 3;
-  const PIN_TO           = '.main-wrapper';
+  // ====== TUNABLES ======
+  const MAX_VISIBLE       = 2;
+  const WHEEL_SPEED       = 0.00008;
+  const TOUCH_SPEED       = 0.00025;
+  const CURSOR_SPEED      = 0.00002;
+  const CURSOR_THRESHOLD  = 3;
+  const PIN_TO            = '.main-wrapper';
 
-  // ====== MOMENTUM — short tail / controlled ======
-  const DAMPING_PER_SEC  = 0.65;
-  const WHEEL_VEL_GAIN   = 0.04;
-  const TOUCH_VEL_GAIN   = 0.08;
-  const CURSOR_VEL_GAIN  = 0.03;
-  const MAX_ABS_VEL      = 0.9;   // ↑ allow stronger taps without long tail
+  // Momentum (short tail / controlled)
+  const DAMPING_PER_SEC   = 0.75;
+  const WHEEL_VEL_GAIN    = 0.04;
+  const TOUCH_VEL_GAIN    = 0.08;
+  const CURSOR_VEL_GAIN   = 0.03;
+  const MAX_ABS_VEL       = 0.6;
+  const MAX_DV_WHEEL      = 0.18;
+  const MAX_DV_TOUCH      = 0.22;
+  const MAX_DV_CURSOR     = 0.15;
 
-  // per-event caps
-  const MAX_DV_WHEEL   = 0.18;
-  const MAX_DV_TOUCH   = 0.22;
-  const MAX_DV_CURSOR  = 0.15;
-
-  // Tap (much stronger)
-  const TAP_STEP_STEPS  = 1.6;    // instant jump ~1.6 image steps
-  const TAP_IMPULSE     = 1.2;    // momentum boost
+  // Tap → smooth tween to next step
+  const TAP_TWEEN_DUR     = 0.55;       // seconds
+  const TAP_TWEEN_EASE    = 'power2.out';
+  const TAP_IMPULSE       = 0.35;       // tiny extra momentum after tween
 
   // Loop / end behavior
   const CROSSFADE_OFFSET  = 0.999;
-  const HOLD_AT_END_STEPS = 1.5;  // linger last real image longer
+  const HOLD_AT_END_STEPS = 1.5;
 
-  // Logo like texts (instant show/hide)
-  const LOGO_HIDE_STEPS   = 2;    // show at start, hide after 2 steps
+  // Logo like text (page-load fade in, then fade out after first image)
+  const LOGO_FADEIN_DUR   = 0.6;        // page-load fade in
+  const LOGO_OUT_START    = 1.0;        // start fading after first image duration
+  const LOGO_FADEOUT_DUR  = 0.6;        // fade-out length (in "step" seconds)
 
   // Don’t run in Shopify customizer
   if (window.Shopify && Shopify.designMode) return;
 
+  // Cleanup previous
   if (window.seqStackDestroy) window.seqStackDestroy();
 
   const loadScriptOnce = (src) =>
     new Promise((res, rej) => {
       if ([...document.scripts].some(s => s.src.includes(src))) return res();
-      const s = document.createElement('script');
-      s.src = src; s.async = true; s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
+      const el = document.createElement('script');
+      el.src = src; el.async = true; el.onload = res; el.onerror = rej;
+      document.head.appendChild(el);
     });
 
   (async function run(){
     await loadScriptOnce('https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js');
     gsap.registerPlugin();
 
+    // Collect nodes
     const all = Array.from(document.querySelectorAll('.section_seq_image, .section_seq_text'));
     let imgSecs  = all.filter(n => n.classList.contains('section_seq_image'));
     const textSecs = all.filter(n => n.classList.contains('section_seq_text'));
@@ -54,7 +57,7 @@
 
     const IS_MOBILE = window.innerWidth <= 767;
 
-    // Stage
+    // Stage + minimal CSS
     const stage = document.createElement('div'); stage.id = 'seqStageStack';
     const style = document.createElement('style'); style.id = 'seqStageStack-style';
     style.textContent = `
@@ -69,11 +72,11 @@
     const pinContainer = document.querySelector(PIN_TO) || document.body;
     pinContainer.insertBefore(stage, pinContainer.firstChild);
 
-    // Move nodes into stage (for cleanup restore)
+    // Move nodes into stage (backup for cleanup)
     const backups = all.map(node => ({ node, parent: node.parentNode, next: node.nextSibling }));
     all.forEach(node => stage.appendChild(node));
 
-    // Auto-clone first section to end when needed
+    // Auto-clone first section for smooth loop if needed
     const firstImgInFirstSec = imgSecs[0]?.querySelector('img, .seq-image, picture img');
     const lastImgInLastSec  = imgSecs[imgSecs.length - 1]?.querySelector('img, .seq-image, picture img');
     const sameEnds = !!(firstImgInFirstSec && lastImgInLastSec &&
@@ -147,14 +150,12 @@
       tl.set(txt, { opacity: 0 }, sIdx + 2);
     });
 
-    // Logo like texts (instant show/hide)
+    // Logo: fade in on page load, stay through first image, then fade out and stay hidden
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
     if (logoEl) {
-      // Ensure visible on page load (desktop & mobile)
-      gsap.set(logoEl, { opacity: 1 });
-      // Show at cycle start, hide after LOGO_HIDE_STEPS (no fade)
-      tl.set(logoEl, { opacity: 1 }, 0.001);
-      tl.set(logoEl, { opacity: 0 }, LOGO_HIDE_STEPS);
+      gsap.set(logoEl, { opacity: 0 });
+      gsap.to(logoEl, { opacity: 1, duration: LOGO_FADEIN_DUR, ease: 'power1.out' }); // page-load fade in
+      tl.to(logoEl, { opacity: 0, duration: LOGO_FADEOUT_DUR, ease: 'power1.out' }, LOGO_OUT_START);
     }
 
     // End-cap: keep LAST real image, then crossfade to clone after hold
@@ -192,12 +193,13 @@
       }
     };
 
-    // Scrub driver with momentum
+    // ====== Scrub driver with momentum ======
     let pos = 0;
     const dur = tl.duration();
     let vel = 0;
     let rafId = null;
     let lastTs = 0;
+
     const clampVel = (v) => Math.max(-MAX_ABS_VEL, Math.min(MAX_ABS_VEL, v));
 
     const setProgress = (p) => {
@@ -211,7 +213,6 @@
 
       pos = newPos;
       tl.time(pos, false);
-
       setBar(pos);
     };
 
@@ -230,7 +231,7 @@
     };
     rafId = requestAnimationFrame(tick);
 
-    // Inputs
+    // ====== Inputs ======
     const opts = { passive: false };
 
     // Wheel
@@ -304,20 +305,45 @@
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap / Click → jump a step + momentum (strong)
+    // Tap / Click → SMOOTHLY tween to next step
     let pdTime = 0, pdX = 0, pdY = 0;
+    let tapTween = null;
+
+    const tweenTo = (targetTime, durSec = TAP_TWEEN_DUR, easeStr = TAP_TWEEN_EASE) => {
+      if (tapTween) tapTween.kill();
+      // stop current momentum while tweening
+      vel = 0;
+      const proxy = { t: pos };
+      tapTween = gsap.to(proxy, {
+        t: targetTime,
+        duration: durSec,
+        ease: easeStr,
+        onUpdate: () => setProgress(proxy.t),
+        onComplete: () => {
+          tapTween = null;
+          // tiny impulse at the end to keep it feeling alive
+          vel = Math.min(MAX_ABS_VEL, vel + TAP_IMPULSE);
+        }
+      });
+    };
+
     const onPointerDown = (e) => { pdTime = performance.now(); pdX = e.clientX; pdY = e.clientY; };
     const onPointerUp   = (e) => {
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
       if (dt < 350 && moved < 20) {
-        setProgress(pos + TAP_STEP_STEPS);
-        vel = clampVel(vel + TAP_IMPULSE);
+        // Compute next step (exclude loop-clone from intent; wrapping is ok)
+        const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
+        const currentStep = Math.floor(pos);
+        const nextStep = currentStep + 1;
+        tweenTo(nextStep);
       }
     };
     const onClick = () => {
-      setProgress(pos + TAP_STEP_STEPS);
-      vel = clampVel(vel + TAP_IMPULSE);
+      const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
+      const currentStep = Math.floor(pos);
+      const nextStep = currentStep + 1;
+      tweenTo(nextStep);
     };
 
     stage.addEventListener('wheel', onWheel, opts);
@@ -330,12 +356,13 @@
     stage.addEventListener('pointerup', onPointerUp, { passive: true });
     stage.addEventListener('click', onClick, { passive: true });
 
-    // Progress bar start
+    // Init progress bar
     setBar(0);
 
-    // Cleanup
+    // Cleanup hook
     window.seqStackDestroy = () => {
       cancelAnimationFrame(rafId);
+      if (tapTween) tapTween.kill();
       tl.kill();
       backups.forEach(({node, parent, next}) => {
         node.style.opacity = ''; node.style.zIndex = '';
