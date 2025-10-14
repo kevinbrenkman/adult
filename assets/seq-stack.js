@@ -18,18 +18,18 @@
   const MAX_DV_CURSOR     = 0.15;
 
   // Tap → smooth tween to next step
-  const TAP_TWEEN_DUR     = 0.55;       // seconds
-  const TAP_TWEEN_EASE    = 'power2.out';
-  const TAP_IMPULSE       = 0.35;       // tiny extra momentum after tween
+  const TAP_TWEEN_DUR_DESKTOP = 0.55;     // seconds
+  const TAP_TWEEN_DUR_MOBILE  = 0.40;     // snappier on phones
+  const TAP_TWEEN_EASE        = 'power2.out';
+  const TAP_IMPULSE           = 0.35;     // tiny momentum after tween
 
   // Loop / end behavior
   const CROSSFADE_OFFSET  = 0.999;
   const HOLD_AT_END_STEPS = 1.5;
 
-  // Logo like text (page-load fade in, then fade out after first image)
+  // Logo timing: fade in on load, then INSTANT hide like text
   const LOGO_FADEIN_DUR   = 0.6;        // page-load fade in
-  const LOGO_OUT_START    = 1.0;        // start fading after first image duration
-  const LOGO_FADEOUT_DUR  = 0.6;        // fade-out length (in "step" seconds)
+  const LOGO_OUT_START    = 1.0;        // step at which we instantly hide logo
 
   // Don’t run in Shopify customizer
   if (window.Shopify && Shopify.designMode) return;
@@ -150,12 +150,13 @@
       tl.set(txt, { opacity: 0 }, sIdx + 2);
     });
 
-    // Logo: fade in on page load, stay through first image, then fade out and stay hidden
+    // Logo: fade in on page load, then INSTANT hide like text at LOGO_OUT_START, and INSTANT show at cycle start
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
     if (logoEl) {
       gsap.set(logoEl, { opacity: 0 });
       gsap.to(logoEl, { opacity: 1, duration: LOGO_FADEIN_DUR, ease: 'power1.out' }); // page-load fade in
-      tl.to(logoEl, { opacity: 0, duration: LOGO_FADEOUT_DUR, ease: 'power1.out' }, LOGO_OUT_START);
+      tl.set(logoEl, { opacity: 1 }, 0.001);      // show at cycle start (instant)
+      tl.set(logoEl, { opacity: 0 }, LOGO_OUT_START); // instant hide at defined step
     }
 
     // End-cap: keep LAST real image, then crossfade to clone after hold
@@ -305,14 +306,14 @@
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap / Click → SMOOTHLY tween to next step
+    // Tap / Click → SMOOTH tween to next step
     let pdTime = 0, pdX = 0, pdY = 0;
     let tapTween = null;
+    let lastTouchTapTime = 0;
 
-    const tweenTo = (targetTime, durSec = TAP_TWEEN_DUR, easeStr = TAP_TWEEN_EASE) => {
+    const tweenTo = (targetTime, durSec, easeStr = TAP_TWEEN_EASE) => {
       if (tapTween) tapTween.kill();
-      // stop current momentum while tweening
-      vel = 0;
+      vel = 0; // stop momentum during tween
       const proxy = { t: pos };
       tapTween = gsap.to(proxy, {
         t: targetTime,
@@ -321,7 +322,6 @@
         onUpdate: () => setProgress(proxy.t),
         onComplete: () => {
           tapTween = null;
-          // tiny impulse at the end to keep it feeling alive
           vel = Math.min(MAX_ABS_VEL, vel + TAP_IMPULSE);
         }
       });
@@ -332,18 +332,25 @@
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
       if (dt < 350 && moved < 20) {
-        // Compute next step (exclude loop-clone from intent; wrapping is ok)
-        const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
         const currentStep = Math.floor(pos);
         const nextStep = currentStep + 1;
-        tweenTo(nextStep);
+        tweenTo(nextStep, IS_MOBILE ? TAP_TWEEN_DUR_MOBILE : TAP_TWEEN_DUR_DESKTOP);
       }
     };
-    const onClick = () => {
-      const mainSteps = Math.max(1, imgs.length - (hasLoopClone ? 1 : 0));
+
+    // Fast mobile tap (no 300ms delay) + double-trigger guard
+    stage.addEventListener('touchend', () => {
+      lastTouchTapTime = performance.now();
       const currentStep = Math.floor(pos);
       const nextStep = currentStep + 1;
-      tweenTo(nextStep);
+      tweenTo(nextStep, TAP_TWEEN_DUR_MOBILE);
+    }, { passive: true });
+
+    const onClick = () => {
+      if (performance.now() - lastTouchTapTime < 450) return; // avoid double after touch
+      const currentStep = Math.floor(pos);
+      const nextStep = currentStep + 1;
+      tweenTo(nextStep, TAP_TWEEN_DUR_DESKTOP);
     };
 
     stage.addEventListener('wheel', onWheel, opts);
@@ -380,5 +387,26 @@
       window.removeEventListener('mousemove', onMouseMove);
       delete window.seqStackDestroy;
     };
+
+    // ===== Helpers for progress bar =====
+    function setBar(t) {
+      const bar = document.querySelector('.section_progress-bar .progress-bar');
+      if (!bar) return;
+      const totalImgs = imgs.length - (hasLoopClone ? 1 : 0);
+      const p = Math.min(t / Math.max(1, totalImgs), 1);
+      bar.style.width = (p * 100).toFixed(3) + '%';
+    }
+    function animateBarWrap(dir) {
+      const bar = document.querySelector('.section_progress-bar .progress-bar');
+      if (!bar) return;
+      gsap.killTweensOf(bar);
+      if (dir === 'forward') {
+        bar.style.width = '100%';
+        gsap.to(bar, { width: '0%', duration: 0.35, ease: 'none' });
+      } else {
+        bar.style.width = '0%';
+        gsap.to(bar, { width: '100%', duration: 0.35, ease: 'none' });
+      }
+    }
   })();
 })();
