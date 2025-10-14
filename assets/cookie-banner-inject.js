@@ -162,10 +162,10 @@
 @media only screen and (max-width:1350px){
   .shopify-pc__prefs__dialog{ left:0% !important; width:100% !important; }
 }
-/* NEW: at ≤1200px, make header a column and add left padding */
+/* Keep ROW layout at ≤1200px, just add left padding + width guard */
 @media only screen and (max-width:1200px){
   .shopify-pc__prefs__dialog header{
-    flex-direction:column !important;
+    flex-direction:row !important;
     padding-left:.5rem !important;
     max-width:calc(100% - 2px) !important;
   }
