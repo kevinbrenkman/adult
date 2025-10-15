@@ -641,11 +641,24 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
   <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Custom SVGs (brand red via CSS variable)
-    var checkedSVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_293_3)"><circle cx="12" cy="12" r="11.5" stroke="var(--_adult---adult-red)"/><circle cx="12" cy="12" r="7" fill="var(--_adult---adult-red)"/><defs><clipPath id="clip0_293_3"><rect width="24" height="24" fill="white"/>';
-    var uncheckedSVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_293_2)"><circle cx="12" cy="12" r="11.5" stroke="var(--_adult---adult-red)"/><defs><clipPath id="clip0_293_2"><rect width="24" height="24" fill="white"/>';
+    // Custom SVGs at 18px (brand red via CSS variable)
+    var checkedSVG =
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<g clip-path="url(#clip0_293_3)">' +
+          '<circle cx="12" cy="12" r="11.5" stroke="var(--_adult---adult-red)"/>' +
+          '<circle cx="12" cy="12" r="7" fill="var(--_adult---adult-red)"/>' +
+        '' +
+        '<defs><clipPath id="clip0_293_3"><rect width="24" height="24" fill="white"/>' +
+      '';
+    var uncheckedSVG =
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<g clip-path="url(#clip0_293_2)">' +
+          '<circle cx="12" cy="12" r="11.5" stroke="var(--_adult---adult-red)"/>' +
+        '' +
+        '<defs><clipPath id="clip0_293_2"><rect width="24" height="24" fill="white"/>' +
+      '';
     // Watch for prefs checkboxes to appear
-    var observer = new MutationObserver(function(mutationsList, observer) {
+    var observer = new MutationObserver(function() {
       var checkboxes = document.querySelectorAll('.shopify-pc__prefs__option input[type="checkbox"]');
       if (checkboxes.length > 0) {
         checkboxes.forEach(function(checkbox) {
