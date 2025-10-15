@@ -550,22 +550,22 @@
                 </div>
                 <div data-lenis-prevent="" class="modal-inside scroll">
                   <div class="text-rich-text w-richtext"> {{ section.settings.richtext_about_rich_text }} </div>
-                </div>
-                <div class="about-links">
-                  <div li-for:inside="link in linklists['about-left'].links" class="about_links-list left">
+                  <div class="about-links">
+                    <div li-for:inside="link in linklists['about-left'].links" class="about_links-list left">
         {% for link in linklists['about-left'].links %}                            
-                    
+                      
                             <a li-object="link.title" li-object:href="link.url" href="{{ link.url }}" class="link">{{ link.title }}</a>
                             
-                  
+                    
                     {% endfor %}    </div>
-                  <div li-for:inside="link in linklists['about-right'].links" class="about_links-list right">
+                    <div li-for:inside="link in linklists['about-right'].links" class="about_links-list right">
         {% for link in linklists['about-right'].links %}                            
-                    
+                      
                             <a li-object="link.title" li-object:href="link.url" href="{{ link.url }}" class="link">{{ link.title }}</a>
                             
-                  
+                    
                     {% endfor %}    </div>
+                  </div>
                 </div>
                 <a id="backAbout" href="#" class="button is-about-close w-button">back</a>
               </div>
