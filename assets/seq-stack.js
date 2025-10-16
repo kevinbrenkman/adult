@@ -8,10 +8,11 @@
   const PIN_TO            = '.main-wrapper';
 
   // Shared momentum (cursor/touch)
-  const DAMPING_PER_SEC   = 0.75;
-  const TOUCH_VEL_GAIN    = 0.08;
+  // More pronounced kinetic easing on mobile
+  const DAMPING_PER_SEC   = 0.45;   // slower decay → longer ease-out (~1s)
+  const TOUCH_VEL_GAIN    = 0.11;   // stronger flick momentum
   const CURSOR_VEL_GAIN   = 0.03;
-  const MAX_ABS_VEL       = 0.6;
+  const MAX_ABS_VEL       = 0.5;    // clamp to prevent overshoot
   const MAX_DV_TOUCH      = 0.22;
   const MAX_DV_CURSOR     = 0.15;
 
@@ -294,7 +295,7 @@
     };
     const onTouchEnd = () => {
       if (activeTouches.movedTotal > 6) {
-        let dv = activeTouches.vy * TOUCH_VEL_GAIN;
+        let dv = activeTouches.vy * TOUCH_VEL_GAIN * 1.25; // emphasize inertia tail
         dv = clamp(dv, -MAX_DV_TOUCH, MAX_DV_TOUCH);
         vel = clampVel(vel + dv);
       }
