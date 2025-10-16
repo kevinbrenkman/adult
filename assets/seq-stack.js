@@ -2,21 +2,15 @@
   // ========= TUNABLES =========
   const MAX_VISIBLE       = 2;
   const WHEEL_SPEED       = 0.000035;
-  const TOUCH_SPEED       = 0.00018;
   const CURSOR_SPEED      = 0.00002;
   const CURSOR_THRESHOLD  = 3;
   const PIN_TO            = '.main-wrapper';
 
   // Shared momentum
-  const DAMPING_PER_SEC   = 0.25;   // slower decay
-  const TOUCH_VEL_GAIN    = 0.28;   // stronger flick tail
+  const DAMPING_PER_SEC   = 0.35;
   const CURSOR_VEL_GAIN   = 0.03;
   const MAX_ABS_VEL       = 0.5;
-  const MAX_DV_TOUCH      = 0.22;
   const MAX_DV_CURSOR     = 0.15;
-
-  // Extra touch-tail smoothing (~1 s)
-  const TOUCH_TAIL_TAU    = 3.0;
 
   // Wheel kinetic tail
   const WHEEL_TAIL_GAIN   = 2.5;
@@ -102,7 +96,7 @@
       if (node.classList.contains('section_seq_text')) startIndex.set(node, seen);
     });
 
-    // Timeline (always MAX_VISIBLE=2)
+    // Timeline
     const tl = gsap.timeline({ paused: true });
     const FADE_DUR = 1.2;
     imgs.forEach((img, i) => {
@@ -113,7 +107,6 @@
       }
     });
 
-    // Text show/hide
     textSecs.forEach(txt => {
       const sIdx = Math.min(startIndex.get(txt) || 0, imgs.length - 1);
       tl.set(txt, { opacity: 1 }, sIdx + 0.001);
@@ -175,7 +168,6 @@
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
     const clampVel = (v) => clamp(v, -MAX_ABS_VEL, MAX_ABS_VEL);
     let wheelTailVel = 0;
-    let touchTailVel = 0; // NEW
 
     const setProgress = (p) => {
       const prev = pos;
@@ -188,7 +180,19 @@
       if (logoEl) fadeLogoTo(pos < LOGO_OUT_START);
     };
 
-    // Core tick
+    // ===== Touch inertia vars =====
+    let isTouching = false;
+    let lastTouchY = 0;
+    let touchVelocity = 0;
+    let lastTouchTs = 0;
+    let touchMomentum = 0;
+    let isMomentumActive = false;
+    const TOUCH_SCROLL_MULTIPLIER = 0.00022;
+    const TOUCH_DECAY = 0.97;
+    const TOUCH_SAMPLE_WINDOW = 4;
+    const touchHistory = [];
+
+    // ===== Tick
     const tick = (ts) => {
       requestAnimationFrame(tick);
       if (!lastTs) { lastTs = ts; return; }
@@ -201,19 +205,23 @@
         if (Math.abs(vel) < 1e-4) vel = 0;
       }
 
-      // Touch tail (~1s)
-      if (Math.abs(touchTailVel) > 1e-4) {
-        setProgress(pos + touchTailVel * dt);
-        const decay = Math.exp(-dt / TOUCH_TAIL_TAU);
-        touchTailVel *= decay;
-        if (Math.abs(touchTailVel) < 1e-4) touchTailVel = 0;
-      }
-
+      // wheel tail
       if (Math.abs(wheelTailVel) > 1e-4) {
         setProgress(pos + wheelTailVel * dt);
         const decay = Math.exp(-dt / WHEEL_TAIL_TAU);
         wheelTailVel *= decay;
         if (Math.abs(wheelTailVel) < 1e-4) wheelTailVel = 0;
+      }
+
+      // touch momentum
+      if (isMomentumActive) {
+        if (Math.abs(touchMomentum) < 0.00005) {
+          touchMomentum = 0;
+          isMomentumActive = false;
+        } else {
+          setProgress(pos + touchMomentum * dt);
+          touchMomentum *= TOUCH_DECAY;
+        }
       }
     };
     requestAnimationFrame(tick);
@@ -221,6 +229,7 @@
     // ===== Inputs
     const opts = { passive: false };
 
+    // Wheel
     const onWheel = (e) => {
       e.preventDefault();
       const unit = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? window.innerHeight : 1);
@@ -232,37 +241,39 @@
       wheelTailVel = clamp(wheelTailVel * 0.4 + newTail * 0.6, -MAX_WHEEL_TAIL, MAX_WHEEL_TAIL);
     };
 
-    // TOUCH improved
-    const activeTouches = { id:null, y:0, vy:0, lastY:0, lastTs:0, movedTotal:0 };
+    // ===== Touch (true inertial scrolling)
     const onTouchStart = (e) => {
-      const t = e.touches[0]; if (!t) return;
-      Object.assign(activeTouches, {
-        id: t.identifier, y: t.clientY, lastY: t.clientY, vy: 0, movedTotal: 0, lastTs: performance.now()
-      });
+      const t = e.touches[0];
+      if (!t) return;
+      isTouching = true;
+      lastTouchY = t.clientY;
+      touchVelocity = 0;
+      touchHistory.length = 0;
+      isMomentumActive = false;
     };
+
     const onTouchMove = (e) => {
-      const t = [...e.touches].find(t => t.identifier === activeTouches.id) || e.touches[0];
+      const t = e.touches[0];
       if (!t) return;
       e.preventDefault();
+      const dy = lastTouchY - t.clientY;
+      setProgress(pos + dy * TOUCH_SCROLL_MULTIPLIER * dur);
+
       const now = performance.now();
-      const dy = activeTouches.y - t.clientY;
-      setProgress(pos + dy * TOUCH_SPEED * dur);
-      activeTouches.y = t.clientY;
-      activeTouches.movedTotal += Math.abs(dy);
-      const dy2 = activeTouches.lastY - t.clientY;
-      const dt  = Math.max(1, now - activeTouches.lastTs) / 1000;
-      const instVy = (dy2 * TOUCH_SPEED * dur) / dt;
-      activeTouches.vy = activeTouches.vy * 0.5 + instVy * 0.5;
-      activeTouches.lastY = t.clientY;
-      activeTouches.lastTs = now;
+      const dt = now - lastTouchTs || 16;
+      const v = dy / dt;
+      touchHistory.push(v);
+      if (touchHistory.length > TOUCH_SAMPLE_WINDOW) touchHistory.shift();
+      lastTouchY = t.clientY;
+      lastTouchTs = now;
     };
+
     const onTouchEnd = () => {
-      if (activeTouches.movedTotal > 6) {
-        let dv = activeTouches.vy * TOUCH_VEL_GAIN * 1.25;
-        dv = clamp(dv, -MAX_DV_TOUCH, MAX_DV_TOUCH);
-        touchTailVel = clampVel(dv * 1.5); // slightly stronger starting inertia
-      }
-      activeTouches.id = null;
+      isTouching = false;
+      const avgV = touchHistory.reduce((a, b) => a + b, 0) / (touchHistory.length || 1);
+      touchMomentum = avgV * TOUCH_SCROLL_MULTIPLIER * dur * 16;
+      isMomentumActive = true;
+      touchHistory.length = 0;
     };
 
     // Cursor move
