@@ -9,7 +9,7 @@
 
   // Shared momentum
   const DAMPING_PER_SEC   = 0.35;   // slower decay
-  const TOUCH_VEL_GAIN    = 0.18;   // stronger flick tail
+  const TOUCH_VEL_GAIN    = 0.30;   // stronger flick tail
   const CURSOR_VEL_GAIN   = 0.03;
   const MAX_ABS_VEL       = 0.5;
   const MAX_DV_TOUCH      = 0.22;
