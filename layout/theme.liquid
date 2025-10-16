@@ -158,7 +158,7 @@ html.shopify-design-mode .shopify-section.logo-wrapper {
 </style>
   <style>
   /* Apply Webflow-style active underline to "Shop" link on product pages */
-body[li-page="product"] .menu_link[href="/collections/all"] {
+body[data="product"] .menu_link[href="/collections/all"] {
   text-underline-offset: 2px;
   text-decoration: underline;
 }
@@ -169,7 +169,7 @@ This will create a separate layout file for this page, allowing you to apply cus
 Learn more: https://www.liquify.pro/docu/getting-started#template-structure
  -->
 <script src="{{ 'li_helper.js' | asset_url }}" type="text/javascript"></script>{{ content_for_header }}</head>
-<body li-page="product" li-layout="theme">
+<body li-page="product" li-layout="theme" data="product">
   <div class="page-wrapper">
     {% render 'global_styles' %}
     {% sections 'header_group' %}
