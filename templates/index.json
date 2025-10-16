@@ -230,9 +230,9 @@
       "name": "Sequence Image",
       "settings": {
         "image_image": "shopify://shop_images/ADULT_SS_182.jpg",
-        "width": "l",
+        "width": "s",
         "align": "flex-end",
-        "padding": 2
+        "padding": 0
       }
     }
   },
