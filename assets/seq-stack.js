@@ -16,8 +16,8 @@
   const MAX_DV_CURSOR     = 0.15;
 
   // NEW: Wheel kinetic tail (guaranteed ~1s ease-out after scroll stops)
-  const WHEEL_TAIL_GAIN   = 0.90;      // how much of the last wheel delta contributes to tail
-  const WHEEL_TAIL_TAU    = 0.95;      // seconds — larger = longer coast
+  const WHEEL_TAIL_GAIN   = 1.50;      // how much of the last wheel delta contributes to tail
+  const WHEEL_TAIL_TAU    = 1.50;      // seconds — larger = longer coast
   const MAX_WHEEL_TAIL    = 0.45;      // clamp safety for huge flicks
 
   // Tap tween
