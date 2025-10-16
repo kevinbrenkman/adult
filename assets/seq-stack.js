@@ -1,7 +1,7 @@
 (() => {
 
   // Debug note for cache verification
-const VERSION_NOTE = "seq-stack v3.1.2 (true inertia build)";
+const VERSION_NOTE = "seq-stack v3.1.3 (true inertia build)";
 {
   const el = document.createElement("div");
   el.textContent = VERSION_NOTE;
@@ -209,9 +209,9 @@ const VERSION_NOTE = "seq-stack v3.1.2 (true inertia build)";
     let lastTouchY = 0;
     let touchVel = 0;
     let touchMomentumActive = false;
-    const TOUCH_ACC = 0.00045;
+    const TOUCH_ACC = 0.00075;
     const TOUCH_DECAY = 0.94;
-    const TOUCH_MAX_VEL = 0.05;
+    const TOUCH_MAX_VEL = 0.07;
 
     const onTouchStart = (e) => {
       const t = e.touches[0];
