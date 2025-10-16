@@ -16,7 +16,7 @@
   const MAX_DV_CURSOR     = 0.15;
 
   // Extra touch-tail smoothing (~1 s)
-  const TOUCH_TAIL_TAU    = 1.1;
+  const TOUCH_TAIL_TAU    = 2.0;
 
   // Wheel kinetic tail
   const WHEEL_TAIL_GAIN   = 2.5;
