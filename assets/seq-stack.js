@@ -1,4 +1,28 @@
 (() => {
+
+  // Debug note for cache verification
+const VERSION_NOTE = "seq-stack v3.1 (true inertia build)";
+{
+  const el = document.createElement("div");
+  el.textContent = VERSION_NOTE;
+  Object.assign(el.style, {
+    position: "fixed",
+    bottom: "6px",
+    right: "8px",
+    zIndex: 999999,
+    fontSize: "11px",
+    fontFamily: "monospace",
+    color: "#999",
+    background: "rgba(255,255,255,0.4)",
+    padding: "2px 4px",
+    borderRadius: "3px",
+    pointerEvents: "none"
+  });
+  document.body.appendChild(el);
+  console.log(VERSION_NOTE);
+}
+
+
   // ========= TUNABLES =========
   const MAX_VISIBLE       = 2;
   const WHEEL_SPEED       = 0.000035;
