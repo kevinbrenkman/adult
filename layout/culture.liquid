@@ -156,7 +156,13 @@ html.shopify-design-mode .shopify-section.logo-wrapper {
     outline-offset: 0.125rem;
 }
 </style>
-  <!--  
+  <style>
+  /* Apply Webflow-style active underline to "Shop" link on product pages */
+body[li-page="product"] .menu_link[href="/collections/all"] {
+  text-underline-offset: 2px;
+  text-decoration: underline;
+}
+</style><!--  
 IMPORTANT: If you want to make changes to the head or body code on this page, 
 please remove the `li-layout` tag from the body element. 
 This will create a separate layout file for this page, allowing you to apply custom modifications.
@@ -674,15 +680,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     observer.observe(document.body, { childList: true, subtree: true });
   });
-</script>
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const path = window.location.pathname;
-  const shopLink = document.querySelector('.menu_link[href*="/collections"], .menu_link[href="/collections/all"]');
-  if (path.startsWith("/products/") && shopLink) {
-    shopLink.classList.add("w--current");
-  }
-});
 </script>
   <script src="{{ 'seq-stack.js' | asset_url }}" defer=""></script>
 </body>
