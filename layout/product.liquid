@@ -1,12 +1,12 @@
 <!doctype html>
-<html data-wf-page="6888d108d478b2446d70ba79" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
+<html data-wf-page="6888d108d478b2446d70ba80" data-wf-site="6888d102d478b2446d70b62e" lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8">
-  <title>{{ page_title }}</title>
+  <title>{{ shop.name }} – {{ page_title }}</title>
   <meta content="{{ page_description }}" name="description">
-  <meta content="{{ page_title }}" property="og:title">
+  <meta content="{{ shop.name }} – {{ page_title }}" property="og:title">
   <meta content="{{ page_description }}" property="og:description">
-  <meta content="{{ page_title }}" property="twitter:title">
+  <meta content="{{ shop.name }} – {{ page_title }}" property="twitter:title">
   <meta content="{{ page_description }}" property="twitter:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
@@ -169,8 +169,8 @@ This will create a separate layout file for this page, allowing you to apply cus
 Learn more: https://www.liquify.pro/docu/getting-started#template-structure
  -->
 <script src="{{ 'li_helper.js' | asset_url }}" type="text/javascript"></script>{{ content_for_header }}</head>
-<body li-page="list-collections" li-layout="theme">
-  <div class="page-wrapper">
+<body li-page="product">
+  <div data="product" class="page-wrapper">
     {% render 'global_styles' %}
     {% sections 'header_group' %}
     {{ content_for_layout }}
