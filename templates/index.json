@@ -231,8 +231,8 @@
       "settings": {
         "image_image": "shopify://shop_images/ADULT_SS_182.jpg",
         "width": "l",
-        "align": "center",
-        "padding": 0
+        "align": "flex-end",
+        "padding": 2
       }
     }
   },
