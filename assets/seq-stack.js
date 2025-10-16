@@ -8,8 +8,8 @@
   const PIN_TO            = '.main-wrapper';
 
   // Shared momentum
-  const DAMPING_PER_SEC   = 0.35;   // slower decay
-  const TOUCH_VEL_GAIN    = 0.75;   // stronger flick tail
+  const DAMPING_PER_SEC   = 0.25;   // slower decay
+  const TOUCH_VEL_GAIN    = 0.28;   // stronger flick tail
   const CURSOR_VEL_GAIN   = 0.03;
   const MAX_ABS_VEL       = 0.5;
   const MAX_DV_TOUCH      = 0.22;
@@ -260,7 +260,7 @@
       if (activeTouches.movedTotal > 6) {
         let dv = activeTouches.vy * TOUCH_VEL_GAIN * 1.25;
         dv = clamp(dv, -MAX_DV_TOUCH, MAX_DV_TOUCH);
-        touchTailVel = clampVel(dv); // independent tail (~1 s)
+        touchTailVel = clampVel(dv * 1.5); // slightly stronger starting inertia
       }
       activeTouches.id = null;
     };
