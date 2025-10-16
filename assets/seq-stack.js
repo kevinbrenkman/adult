@@ -9,14 +9,14 @@
 
   // Shared momentum
   const DAMPING_PER_SEC   = 0.35;   // slower decay
-  const TOUCH_VEL_GAIN    = 0.30;   // stronger flick tail
+  const TOUCH_VEL_GAIN    = 0.18;   // stronger flick tail
   const CURSOR_VEL_GAIN   = 0.03;
   const MAX_ABS_VEL       = 0.5;
   const MAX_DV_TOUCH      = 0.22;
   const MAX_DV_CURSOR     = 0.15;
 
   // Extra touch-tail smoothing (~1 s)
-  const TOUCH_TAIL_TAU    = 2.0;
+  const TOUCH_TAIL_TAU    = 3.0;
 
   // Wheel kinetic tail
   const WHEEL_TAIL_GAIN   = 2.5;
