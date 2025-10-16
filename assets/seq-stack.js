@@ -1,7 +1,9 @@
 (() => {
   // ====== TUNABLES ======
   const MAX_VISIBLE       = 2;
-  const WHEEL_SPEED       = 0.00008;
+
+  // Make wheel less sensitive + softer momentum
+  const WHEEL_SPEED       = 0.000035;  // was 0.00008
   const TOUCH_SPEED       = 0.00025;
   const CURSOR_SPEED      = 0.00002;
   const CURSOR_THRESHOLD  = 3;
@@ -9,27 +11,28 @@
 
   // Momentum (short tail / controlled)
   const DAMPING_PER_SEC   = 0.75;
-  const WHEEL_VEL_GAIN    = 0.04;
+  const WHEEL_VEL_GAIN    = 0.025;     // was 0.04
   const TOUCH_VEL_GAIN    = 0.08;
   const CURSOR_VEL_GAIN   = 0.03;
   const MAX_ABS_VEL       = 0.6;
-  const MAX_DV_WHEEL      = 0.18;
+  const MAX_DV_WHEEL      = 0.12;      // was 0.18
   const MAX_DV_TOUCH      = 0.22;
   const MAX_DV_CURSOR     = 0.15;
 
   // Tap → smooth tween to next step
-  const TAP_TWEEN_DUR_DESKTOP = 0.55;     // seconds
-  const TAP_TWEEN_DUR_MOBILE  = 0.40;     // snappier on phones
+  const TAP_TWEEN_DUR_DESKTOP = 0.55;
+  const TAP_TWEEN_DUR_MOBILE  = 0.40;
   const TAP_TWEEN_EASE        = 'power2.out';
-  const TAP_IMPULSE           = 0.35;     // tiny momentum after tween
+  const TAP_IMPULSE           = 0.35;
 
   // Loop / end behavior
   const CROSSFADE_OFFSET  = 0.999;
   const HOLD_AT_END_STEPS = 1.5;
 
-  // Logo timing: fade in on load, then INSTANT hide like text
-  const LOGO_FADEIN_DUR   = 0.6;        // page-load fade in
-  const LOGO_OUT_START    = 1.0;        // step at which we instantly hide logo
+  // Logo timing (event-driven fade so it never stalls mid-opacity)
+  const LOGO_FADEIN_ON_LOAD = 0.6;   // page-load fade in
+  const LOGO_FADE_DUR       = 0.35;  // quick fade in/out during sequence
+  const LOGO_OUT_START      = 1.0;   // step where we hide the logo
 
   // Don’t run in Shopify customizer
   if (window.Shopify && Shopify.designMode) return;
@@ -150,13 +153,19 @@
       tl.set(txt, { opacity: 0 }, sIdx + 2);
     });
 
-    // Logo: fade in on page load, then INSTANT hide like text at LOGO_OUT_START, and INSTANT show at cycle start
+    // Logo: page-load fade in; subsequent fades are event-driven (not scrubbed)
     const logoEl = document.querySelector('.shopify-section.logo-wrapper');
+    let logoVisible = false;
+    const fadeLogoTo = (visible) => {
+      if (!logoEl) return;
+      if (logoVisible === visible) return;
+      logoVisible = visible;
+      gsap.killTweensOf(logoEl);
+      gsap.to(logoEl, { opacity: visible ? 1 : 0, duration: LOGO_FADE_DUR, ease: 'power1.out' });
+    };
     if (logoEl) {
       gsap.set(logoEl, { opacity: 0 });
-      gsap.to(logoEl, { opacity: 1, duration: LOGO_FADEIN_DUR, ease: 'power1.out' }); // page-load fade in
-      tl.set(logoEl, { opacity: 1 }, 0.001);      // show at cycle start (instant)
-      tl.set(logoEl, { opacity: 0 }, LOGO_OUT_START); // instant hide at defined step
+      gsap.to(logoEl, { opacity: 1, duration: LOGO_FADEIN_ON_LOAD, ease: 'power1.out', onComplete: () => (logoVisible = true) });
     }
 
     // End-cap: keep LAST real image, then crossfade to clone after hold
@@ -194,12 +203,15 @@
       }
     };
 
-    // ====== Scrub driver with momentum (RESTORED) ======
+    // ====== Scrub driver with momentum ======
     let pos = 0;
     const dur = tl.duration();
     let vel = 0;
     let rafId = null;
     let lastTs = 0;
+
+    // For logo event-driven fades
+    let lastPosForLogo = 0;
 
     const clampVel = (v) => Math.max(-MAX_ABS_VEL, Math.min(MAX_ABS_VEL, v));
 
@@ -209,12 +221,26 @@
       const newPos = (proposed % dur + dur) % dur;
 
       // Animate progress bar wrap on cycle wrap
-      if (proposed > prevPos && newPos < prevPos) animateBarWrap('forward');
-      if (proposed < prevPos && newPos > prevPos) animateBarWrap('backward');
+      const wrappedForward  = (proposed > prevPos && newPos < prevPos);
+      const wrappedBackward = (proposed < prevPos && newPos > prevPos);
+
+      if (wrappedForward)  animateBarWrap('forward');
+      if (wrappedBackward) animateBarWrap('backward');
 
       pos = newPos;
       tl.time(pos, false);
       setBar(pos);
+
+      // ---- Logo fade logic (event driven, non-scrub) ----
+      // Fade out once we cross LOGO_OUT_START forward
+      if (logoEl) {
+        const crossedForward = (lastPosForLogo < LOGO_OUT_START && pos >= LOGO_OUT_START) || wrappedForward;
+        const crossedBackward = (lastPosForLogo >= LOGO_OUT_START && pos < LOGO_OUT_START) || wrappedBackward;
+
+        if (crossedForward)  fadeLogoTo(false);
+        if (crossedBackward) fadeLogoTo(true);
+      }
+      lastPosForLogo = pos;
     };
 
     const tick = (ts) => {
@@ -235,7 +261,7 @@
     // ====== Inputs ======
     const opts = { passive: false };
 
-    // Wheel
+    // Wheel (less responsive)
     const onWheel = (e) => {
       e.preventDefault();
       const lineHeight = 16;
@@ -251,7 +277,7 @@
     };
 
     // Touch
-    const activeTouches = { id: null, y: 0, vy: 0, lastY: 0, lastTs: 0 };
+    const activeTouches = { id: null, y: 0, vy: 0, lastY: 0, lastTs: 0, movedTotal: 0 };
     const onTouchStart = (e) => {
       if (!e.touches.length) return;
       const t = e.touches[0];
@@ -259,6 +285,7 @@
       activeTouches.y = t.clientY;
       activeTouches.lastY = t.clientY;
       activeTouches.vy = 0;
+      activeTouches.movedTotal = 0;
       activeTouches.lastTs = performance.now();
     };
     const onTouchMove = (e) => {
@@ -271,6 +298,8 @@
       setProgress(pos + dy * TOUCH_SPEED * dur);
       activeTouches.y = t.clientY;
 
+      activeTouches.movedTotal += Math.abs(dy);
+
       const dy2 = activeTouches.lastY - t.clientY;
       const dt  = Math.max(1, now - activeTouches.lastTs) / 1000;
       const instVy = (dy2 * TOUCH_SPEED * dur) / dt;
@@ -279,9 +308,12 @@
       activeTouches.lastTs = now;
     };
     const onTouchEnd = () => {
-      let dv = activeTouches.vy * TOUCH_VEL_GAIN;
-      dv = Math.max(-MAX_DV_TOUCH, Math.min(MAX_DV_TOUCH, dv));
-      vel = clampVel(vel + dv);
+      // If user actually scrolled (moved enough), apply momentum; else treat as a tap via pointer handlers.
+      if (activeTouches.movedTotal > 6) {
+        let dv = activeTouches.vy * TOUCH_VEL_GAIN;
+        dv = Math.max(-MAX_DV_TOUCH, Math.min(MAX_DV_TOUCH, dv));
+        vel = clampVel(vel + dv);
+      }
       activeTouches.id = null;
     };
 
@@ -306,7 +338,7 @@
       lastX = e.clientX; lastY = e.clientY; lastMoveTs = now;
     };
 
-    // Tap / Click → SMOOTH tween to next step
+    // Tap / Click → SMOOTH tween to next step (pointer-based; no unconditional touchend)
     let pdTime = 0, pdX = 0, pdY = 0;
     let tapTween = null;
     let lastTouchTapTime = 0;
@@ -331,20 +363,14 @@
     const onPointerUp   = (e) => {
       const dt = performance.now() - pdTime;
       const moved = Math.hypot(e.clientX - pdX, e.clientY - pdY);
-      if (dt < 350 && moved < 20) {
+      // Treat as tap ONLY if quick and barely moved
+      if (dt < 300 && moved < 12) {
+        if (e.pointerType === 'touch') lastTouchTapTime = performance.now();
         const currentStep = Math.floor(pos);
         const nextStep = currentStep + 1;
         tweenTo(nextStep, IS_MOBILE ? TAP_TWEEN_DUR_MOBILE : TAP_TWEEN_DUR_DESKTOP);
       }
     };
-
-    // Fast mobile tap (no 300ms delay) + double-trigger guard
-    stage.addEventListener('touchend', () => {
-      lastTouchTapTime = performance.now();
-      const currentStep = Math.floor(pos);
-      const nextStep = currentStep + 1;
-      tweenTo(nextStep, TAP_TWEEN_DUR_MOBILE);
-    }, { passive: true });
 
     const onClick = () => {
       // avoid double after touch
