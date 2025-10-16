@@ -676,5 +676,15 @@ document.addEventListener('DOMContentLoaded', function () {
     observer.observe(document.body, { childList: true, subtree: true });
   });
 </script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+  const shopLink = document.querySelector('.menu_link[href*="/collections"], .menu_link[href="/collections/all"]');
+  // Check if current page is a product
+  if (path.startsWith("/products/") && shopLink) {
+    shopLink.classList.add("w--current");
+  }
+});
+</script>
 </body>
 </html>

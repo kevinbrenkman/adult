@@ -677,6 +677,16 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 </script>
   <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+  const shopLink = document.querySelector('.menu_link[href*="/collections"], .menu_link[href="/collections/all"]');
+  // Check if current page is a product
+  if (path.startsWith("/products/") && shopLink) {
+    shopLink.classList.add("w--current");
+  }
+});
+</script>
+  <script>
 (function () {
   function getToggle() {
     return document.querySelector('[li-element="mini-cart-toggle"]') 
