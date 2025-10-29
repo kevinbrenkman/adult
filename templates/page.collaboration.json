@@ -22,6 +22,28 @@
         "padding": "only-desktop"
       }
     },
+    "full_image_pGRjUj": {
+      "type": "full_image",
+      "name": "Full Image",
+      "settings": {
+        "image_image": "shopify://shop_images/4f7ad42c9e578be5115b958f572826c02742feee_2.jpg",
+        "background": "#ffffff",
+        "padding": "off"
+      }
+    },
+    "image_and_text_B6TdUe": {
+      "type": "image_and_text",
+      "name": "Image and text",
+      "settings": {
+        "image_image": "shopify://shop_images/68befffca01fe2af5ae4b8f8df6ece8da093671b_2.jpg",
+        "richtext_body_text": "<h1>We offer custom production and sampling services with no minimum order quantity. </h1><p>We are able to adapt to your specific needs as a designer, brand, or artist. Every stage — from material selection to final assembly — takes place under one command, ensuring consistency, confidentiality, and attention to detail.</p>",
+        "text_small_title": "",
+        "image_text_color": "{{ shop.brand.colors.primary[0].background }}",
+        "image_text_background": "{{ shop.brand.colors.primary[0].foreground }}",
+        "flex-direction": "row-reverse",
+        "padding": "on"
+      }
+    },
     "contact_WAAzHf": {
       "type": "contact",
       "name": "Contact",
@@ -36,15 +58,6 @@
         "padding": "on"
       }
     },
-    "full_image_pGRjUj": {
-      "type": "full_image",
-      "name": "Full Image",
-      "settings": {
-        "image_image": "shopify://shop_images/4f7ad42c9e578be5115b958f572826c02742feee_2.jpg",
-        "background": "#ffffff",
-        "padding": "off"
-      }
-    },
     "images_in_columns_6mkzLy": {
       "type": "images_in_columns",
       "name": "Images in columns",
@@ -52,19 +65,6 @@
         "image_image_1": "shopify://shop_images/684e0503f43a25ce246d0c2a2960e98149e29ddc_2.jpg",
         "image_image_2": "shopify://shop_images/1ddd6aab4dc741ec017c3c32c88d9237d0be9d70_2.jpg",
         "background": "{{ shop.brand.colors.primary[0].background }}",
-        "padding": "on"
-      }
-    },
-    "image_and_text_B6TdUe": {
-      "type": "image_and_text",
-      "name": "Image and text",
-      "settings": {
-        "image_image": "shopify://shop_images/68befffca01fe2af5ae4b8f8df6ece8da093671b_2.jpg",
-        "richtext_body_text": "<h1>We offer custom production and sampling services with no minimum order quantity. </h1><p>We are able to adapt to your specific needs as a designer, brand, or artist. Every stage — from material selection to final assembly — takes place under one command, ensuring consistency, confidentiality, and attention to detail.</p>",
-        "text_small_title": "",
-        "image_text_color": "{{ shop.brand.colors.primary[0].background }}",
-        "image_text_background": "{{ shop.brand.colors.primary[0].foreground }}",
-        "flex-direction": "row-reverse",
         "padding": "on"
       }
     },
@@ -92,7 +92,7 @@
       "name": "Image and text",
       "settings": {
         "image_image": "shopify://shop_images/9b908c5b8f0efc8b78b8028cea8f01b08dd0d963_2.jpg",
-        "richtext_body_text": "<h1>However, experimentation and combination of unusual materials are also part of our core design values. We have worked with suspended flowers in acrylic heels, leather applications opening up to reveal satin under layers, vegetal furs bursting out of tiny pumps…<br/>              </h1>",
+        "richtext_body_text": "<h1>If you’re looking for a partner who understands both experimentation and execution, our team can help turn your concepts into finished pieces.</h1>",
         "text_small_title": "Title",
         "image_text_color": "{{ shop.brand.colors.primary[0].foreground }}",
         "image_text_background": "{{ shop.brand.colors.primary[0].background }}",
@@ -114,13 +114,13 @@
   "wrapper": "main.main-wrapper",
   "order": [
     "image_and_text_Wb33WV",
-    "contact_WAAzHf",
     "full_image_pGRjUj",
-    "images_in_columns_6mkzLy",
     "image_and_text_B6TdUe",
-    "full_image_ADqArY",
-    "images_in_columns_BhjVeA",
+    "contact_WAAzHf",
+    "images_in_columns_6mkzLy",
     "image_and_text_KNHRtk",
+    "images_in_columns_BhjVeA",
+    "full_image_ADqArY",
     "full_image_47GkAm"
   ]
 }
