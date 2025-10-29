@@ -14,8 +14,8 @@
       "name": "Image and text",
       "settings": {
         "image_image": "shopify://shop_images/36d2c7176a78fd710de33741eaf060e056714d37_2.jpg",
-        "richtext_body_text": "<h1>Adult is the unexpected result of spontaneous encounters. Our craft allows us to express your ideas, even when you're not sure what they are. </h1><h1>Get in touch with us to get the magic started.</h1><h1></h1>",
-        "text_small_title": "Title",
+        "richtext_body_text": "<h1>Adult is also a versatile tool.</h1><p>Our in-house atelier allows us to <strong>design, prototype, and produce</strong> footwear and leather goods with full creative control. We combine traditional craftsmanship with a contemporary approach to development: precise and flexible, based on close collaboration.</p>",
+        "text_small_title": "",
         "image_text_color": "{{ shop.brand.colors.primary[0].background }}",
         "image_text_background": "{{ shop.brand.colors.primary[0].foreground }}",
         "flex-direction": "row",
@@ -60,8 +60,8 @@
       "name": "Image and text",
       "settings": {
         "image_image": "shopify://shop_images/68befffca01fe2af5ae4b8f8df6ece8da093671b_2.jpg",
-        "richtext_body_text": "<h1>Whether you are looking to treat yourself without knowing precisely how, or a brand in need of show-stopping footwear, we can help.</h1><h1>No minimum quantity, flexible production facility and entirely handmade in Belgium with sustainably sourced materials.</h1>",
-        "text_small_title": "Title",
+        "richtext_body_text": "<h1>We offer custom production and sampling services with no minimum order quantity. </h1><p>We are able to adapt to your specific needs as a designer, brand, or artist. Every stage — from material selection to final assembly — takes place under one command, ensuring consistency, confidentiality, and attention to detail.</p>",
+        "text_small_title": "",
         "image_text_color": "{{ shop.brand.colors.primary[0].background }}",
         "image_text_background": "{{ shop.brand.colors.primary[0].foreground }}",
         "flex-direction": "row-reverse",
