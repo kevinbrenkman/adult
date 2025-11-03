@@ -31,6 +31,16 @@
         "padding": "off"
       }
     },
+    "images_in_columns_6mkzLy": {
+      "type": "images_in_columns",
+      "name": "Images in columns",
+      "settings": {
+        "image_image_1": "shopify://shop_images/684e0503f43a25ce246d0c2a2960e98149e29ddc_2.jpg",
+        "image_image_2": "shopify://shop_images/1ddd6aab4dc741ec017c3c32c88d9237d0be9d70_2.jpg",
+        "background": "{{ shop.brand.colors.primary[0].background }}",
+        "padding": "on"
+      }
+    },
     "image_and_text_B6TdUe": {
       "type": "image_and_text",
       "name": "Image and text",
@@ -55,16 +65,6 @@
         "image_text_color": "{{ shop.brand.colors.primary[0].foreground }}",
         "image_text_background": "{{ shop.brand.colors.primary[0].background }}",
         "flex-direction": "row-reverse",
-        "padding": "on"
-      }
-    },
-    "images_in_columns_6mkzLy": {
-      "type": "images_in_columns",
-      "name": "Images in columns",
-      "settings": {
-        "image_image_1": "shopify://shop_images/684e0503f43a25ce246d0c2a2960e98149e29ddc_2.jpg",
-        "image_image_2": "shopify://shop_images/1ddd6aab4dc741ec017c3c32c88d9237d0be9d70_2.jpg",
-        "background": "{{ shop.brand.colors.primary[0].background }}",
         "padding": "on"
       }
     },
@@ -115,9 +115,9 @@
   "order": [
     "image_and_text_Wb33WV",
     "full_image_pGRjUj",
+    "images_in_columns_6mkzLy",
     "image_and_text_B6TdUe",
     "contact_WAAzHf",
-    "images_in_columns_6mkzLy",
     "images_in_columns_BhjVeA",
     "full_image_ADqArY",
     "image_and_text_KNHRtk",
