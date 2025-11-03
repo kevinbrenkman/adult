@@ -68,19 +68,6 @@
         "padding": "on"
       }
     },
-    "image_and_text_KNHRtk": {
-      "type": "image_and_text",
-      "name": "Image and text",
-      "settings": {
-        "image_image": "shopify://shop_images/9b908c5b8f0efc8b78b8028cea8f01b08dd0d963_2.jpg",
-        "richtext_body_text": "<h1>If you’re looking for a partner who understands both experimentation and execution, our team can help turn your concepts into finished pieces.</h1>",
-        "text_small_title": "Close collaboration",
-        "image_text_color": "{{ shop.brand.colors.primary[0].foreground }}",
-        "image_text_background": "{{ shop.brand.colors.primary[0].background }}",
-        "flex-direction": "row",
-        "padding": "off"
-      }
-    },
     "images_in_columns_BhjVeA": {
       "type": "images_in_columns",
       "name": "Images in columns",
@@ -97,6 +84,19 @@
       "settings": {
         "image_image": "shopify://shop_images/2972eadbcc4ec1e01d2630711be9563fe52a598.jpg",
         "background": "#ffffff",
+        "padding": "off"
+      }
+    },
+    "image_and_text_KNHRtk": {
+      "type": "image_and_text",
+      "name": "Image and text",
+      "settings": {
+        "image_image": "shopify://shop_images/9b908c5b8f0efc8b78b8028cea8f01b08dd0d963_2.jpg",
+        "richtext_body_text": "<h1>If you’re looking for a partner who understands both experimentation and execution, our team can help turn your concepts into finished pieces.</h1>",
+        "text_small_title": "Close collaboration",
+        "image_text_color": "{{ shop.brand.colors.primary[0].foreground }}",
+        "image_text_background": "{{ shop.brand.colors.primary[0].background }}",
+        "flex-direction": "row",
         "padding": "off"
       }
     },
@@ -118,9 +118,9 @@
     "image_and_text_B6TdUe",
     "contact_WAAzHf",
     "images_in_columns_6mkzLy",
-    "image_and_text_KNHRtk",
     "images_in_columns_BhjVeA",
     "full_image_ADqArY",
+    "image_and_text_KNHRtk",
     "full_image_47GkAm"
   ]
 }
