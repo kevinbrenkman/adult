@@ -675,5 +675,79 @@ document.addEventListener('DOMContentLoaded', function () {
     observer.observe(document.body, { childList: true, subtree: true });
   });
 </script>
+  <script>
+(function () {
+  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}return a;}
+  function hydrateRandomRecs(scope){
+    const root = (scope||document).querySelector('.product-recommendations');
+    if (!root) return;
+    const urlAttr = root.getAttribute('data-url');
+    if (!urlAttr) { root.style.display='none'; return; }
+    const url = new URL(urlAttr, window.location.origin);
+    const LIMIT = 3; // hard cap
+    // If variables didn&rsquo;t resolve yet (Designer), bail
+    if (!url.searchParams.get('product_id') || !url.searchParams.get('section_id')) {
+      root.style.display='none';
+      return;
+    }
+    fetch(url.toString(), {credentials:'same-origin'})
+      .then(r => r.text())
+      .then(html => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        const section = tmp.querySelector('.product-recommendations') || tmp;
+        let nodes = Array.from(section.querySelectorAll('[role="list"] > li, .grid__item, .card-wrapper, li'));
+        let cards = nodes.map(n => {
+          const a = n.querySelector('a[href*="/products/"]') || n.closest('a');
+          return a ? {node:n, a} : null;
+        }).filter(Boolean);
+        if (!cards.length) { root.style.display='none'; return; }
+        cards = shuffle(cards).slice(0, LIMIT);
+        const list = root.querySelector('.product_list');
+        if (!list) { root.style.display='none'; return; }
+        list.innerHTML = '';
+        cards.forEach(({node, a}) => {
+          const href = a.getAttribute('href') || '#';
+          const imgEl = node.querySelector('img');
+          const imgSrc = imgEl ? (imgEl.currentSrc || imgEl.src) : '';
+          const titleEl = node.querySelector('.card__heading, [data-product-title]') || a;
+          const title = (titleEl && titleEl.textContent.trim()) || 'Product';
+          const li = document.createElement('li');
+          li.className = 'product_list-item';
+          li.innerHTML = `
+            <div class="product-item_component">
+              <div class="product-item_image-link">
+                <a class="product-item_image-wrapper page-transition w-inline-block" href="${href}">
+                  ${imgSrc ? `<img class="product-item_image" loading="lazy" alt="${(imgEl && imgEl.alt) || title}" src="${imgSrc}">
+                              <img class="product-item_image_hover" loading="lazy" alt="${(imgEl && imgEl.alt) || title}" src="${imgSrc}">` : ''}
+                </a>
+                <div class="product-item_tag_list"></div>
+              </div>
+              <div class="item-details-wrapper">
+                <div class="product-item_price"></div>
+                <a class="product-item_text-link w-inline-block" href="${href}">
+                  <div class="product-item_left">
+                    <div class="hide">Vendor</div>
+                    <div class="product-title">${title}</div>
+                  </div>
+                </a>
+              </div>
+              <div class="product-item_form-wrapper">
+                <a class="button max-width-full w-button" href="${href}">View product</a>
+              </div>
+            </div>`;
+          list.appendChild(li);
+        });
+      })
+      .catch(err => { console.warn('[recs] fetch failed', err); root.style.display='none'; });
+  }
+  // Initial run only (no Swup listener)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => hydrateRandomRecs(document));
+  } else {
+    hydrateRandomRecs(document);
+  }
+})();
+</script>
 </body>
 </html>
