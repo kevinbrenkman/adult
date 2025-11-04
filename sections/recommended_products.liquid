@@ -1,8 +1,8 @@
 <div data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4&intent=related" class="product-recommendations">
           <div class="product_list background">{% if section.settings.image_background_image_1 %}
-{{ section.settings.image_background_image_1 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background' }}
+{{ section.settings.image_background_image_1 | image_url: width: 1000 | image_tag: class: 'recommended-product-background', sizes: '(max-width: 1200px) 100vw, 1200px', loading: 'lazy' }}
 {% else %}
-<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background">
+<img class="recommended-product-background" src="{{ 'Newspaper-images-2.jpg' | asset_url }}" alt="" sizes="(max-width: 1200px) 100vw, 1200px" loading="lazy" srcset="{{ 'Newspaper-images-2.jpg' | asset_url }} 500w, {{ 'Newspaper-images-2.jpg' | asset_url }} 800w, {{ 'Newspaper-images-2.jpg' | asset_url }} 1080w, {{ 'Newspaper-images-2.jpg' | asset_url }} 1200w">
 {% endif %}{% if section.settings.image_background_image_2 %}
 {{ section.settings.image_background_image_2 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background' }}
 {% else %}
