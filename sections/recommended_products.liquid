@@ -1,4 +1,17 @@
 <div data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4&intent=related" class="product-recommendations">
+          <div class="product_list background">{% if section.settings.image_background_image_1 %}
+{{ section.settings.image_background_image_1 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background' }}
+{% else %}
+<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background">
+{% endif %}{% if section.settings.image_background_image_2 %}
+{{ section.settings.image_background_image_2 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background' }}
+{% else %}
+<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background">
+{% endif %}{% if section.settings.image_background_image_3 %}
+{{ section.settings.image_background_image_3 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background hot' }}
+{% else %}
+<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background hot">
+{% endif %}</div>
           <div class="headline-wrapper">
             <div>
 {{ section.settings.text_heading }}
@@ -15,19 +28,6 @@
                         </li>
 {% endfor %}
             </ul>
-            <div class="product_list background">{% if section.settings.image_background_image_1 %}
-{{ section.settings.image_background_image_1 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background' }}
-{% else %}
-<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background">
-{% endif %}{% if section.settings.image_background_image_2 %}
-{{ section.settings.image_background_image_2 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background' }}
-{% else %}
-<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background">
-{% endif %}{% if section.settings.image_background_image_3 %}
-{{ section.settings.image_background_image_3 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'recommended-product-background hot' }}
-{% else %}
-<img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" alt="" class="recommended-product-background hot">
-{% endif %}</div>
           </div>
         </div>
         <div class="hide w-embed w-script">
@@ -56,12 +56,6 @@
     "class": "section_product-recommended",
     "settings": [
         {
-            "id": "text_heading",
-            "type": "text",
-            "label": "Heading",
-            "default": "YOU MIGHT LIKE THESE"
-        },
-        {
             "id": "image_background_image_1",
             "type": "image_picker",
             "label": "Background Image 1"
@@ -75,6 +69,12 @@
             "id": "image_background_image_3",
             "type": "image_picker",
             "label": "Background Image 3"
+        },
+        {
+            "id": "text_heading",
+            "type": "text",
+            "label": "Heading",
+            "default": "YOU MIGHT LIKE THESE"
         }
     ],
     "presets": [
