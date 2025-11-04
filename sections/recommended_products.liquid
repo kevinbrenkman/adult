@@ -27,6 +27,22 @@
               
                         </li>
 {% endfor %}
+              {% for product in recommendations.products %}    <li li-for="product in recommendations.products" class="product_list-item">
+                                    
+                
+                            {% render 'product_item', product: product %}
+                            
+              
+                        </li>
+{% endfor %}
+              {% for product in recommendations.products %}    <li li-for="product in recommendations.products" class="product_list-item">
+                                    
+                
+                            {% render 'product_item', product: product %}
+                            
+              
+                        </li>
+{% endfor %}
             </ul>
           </div>
         </div>
