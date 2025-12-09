@@ -32,6 +32,9 @@
   const LOGO_FADE_DUR       = 0.35;
   const LOGO_OUT_START      = 1.0;
 
+  // Stage reveal
+  const STAGE_FADE_DUR      = 0.6;
+
   // ===== Guard
   if (window.Shopify && Shopify.designMode) return;
   if (window.seqStackDestroy) window.seqStackDestroy();
@@ -55,7 +58,7 @@
     const stage = document.createElement('div'); stage.id = 'seqStageStack';
     const style = document.createElement('style'); style.id = 'seqStageStack-style';
     style.textContent = `
-      #seqStageStack{position:relative;width:100%;height:100vh;overflow:hidden;touch-action:none;}
+      #seqStageStack{position:relative;width:100%;height:100vh;overflow:hidden;touch-action:none;opacity:0;}
       #seqStageStack>.section_seq_image,#seqStageStack>.section_seq_text{position:absolute;inset:0;pointer-events:auto;}
       #seqStageStack .section_seq_image img,#seqStageStack .section_seq_image .seq-image{mix-blend-mode:darken;opacity:0;transition:none;}
       #seqStageStack>.section_seq_text{opacity:0;z-index:999999;}
@@ -84,9 +87,42 @@
     }
 
     const imgs = imgSecs.map(sec => sec.querySelector('img, .seq-image, picture img')).filter(Boolean);
+
+    // Initial state: all images hidden; we'll reveal the first one only AFTER it's loaded,
+    // and fade the entire stage in at that same moment to avoid the staggered decode look.
     gsap.set(imgs, { opacity: 0 });
     if (imgs[0]) gsap.set(imgs[0], { opacity: 1 });
     gsap.set(textSecs, { opacity: 0 });
+
+    // ---- Stage reveal once first image is actually ready
+    (function setupStageReveal() {
+      const firstImg = imgs[0];
+      const reveal = () => {
+        // Guard multiple calls
+        if (stage.__kbRevealed) return;
+        stage.__kbRevealed = true;
+        gsap.to(stage, { opacity: 1, duration: STAGE_FADE_DUR, ease: 'power1.out' });
+      };
+
+      if (!firstImg) {
+        reveal();
+        return;
+      }
+
+      if (firstImg.complete && firstImg.naturalWidth > 0) {
+        reveal();
+        return;
+      }
+
+      const onceReveal = () => {
+        reveal();
+      };
+
+      firstImg.addEventListener('load', onceReveal, { once: true });
+      firstImg.addEventListener('error', onceReveal, { once: true });
+      // Extra safety: in case the img listeners miss it, fall back on full window load
+      window.addEventListener('load', onceReveal, { once: true });
+    })();
 
     // Map text → image
     let seen = 0;
