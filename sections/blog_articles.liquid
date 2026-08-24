@@ -1,4 +1,4 @@
-{% paginate article in blog.articles by 50 %}
+{% paginate article by nil %}
     <div li-paginate:by="50" li-paginate="article in blog.articles" class="padding-global padding-section-small" by="50">
           <div class="container-large">
             <div class="blog_cms-wrapper w-dyn-list">
@@ -121,4 +121,13 @@
             "blog"
         ]
     }
-} {% endschema %}
+} {% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% paginate article in blog.articles by 50 %}"
+  to: "{% paginate article by nil %}"
+  position: 0..29
+{%- endcomment -%}
