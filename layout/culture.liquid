@@ -156,7 +156,11 @@ html.shopify-design-mode .shopify-section.logo-wrapper {
     outline-offset: 0.125rem;
 }
 </style>
-  <!--  
+  <style>
+.shopify-pc__prefs__option label input:focus ~ span svg {
+    box-shadow: unset !important;
+}
+</style><!--  
 IMPORTANT: If you want to make changes to the head or body code on this page, 
 please remove the `li-layout` tag from the body element. 
 This will create a separate layout file for this page, allowing you to apply custom modifications.
